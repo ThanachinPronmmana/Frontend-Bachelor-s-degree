@@ -10,6 +10,13 @@ import Notfound from "../pages/admin/Notfound";
 import Layout from "../layouts/Layout";
 import LayoutAdmin from "../layouts/LayoutAdmin";
 import Deposit from "@/pages/Deposit";
+import Post from "@/pages/Post";
+import Login from "@/pages/Login/Login";
+import Register from "@/pages/Login/Register";
+import Register_buyer from "@/pages/Login/Register_buyer";
+import Register_Seller from "@/pages/Login/Register_Seller";
+import Register_buyer2 from "@/pages/Login/Register_buyer2";
+import Register_buyer3 from "@/pages/Login/Register_buyer3";
 
 const AppRouter = () => {
     return (
@@ -24,6 +31,13 @@ const AppRouter = () => {
                     <Route path="Post_for_sale" element={<Post_for_sale />} />
                     <Route path="Support" element={<Support />} />
                     <Route path="Deposit/:id" element={<Deposit/>}/>
+                    <Route path="Post" element={<Post/>}/>
+                    <Route path="Login" element={<Login/>}/>
+                    <Route path="register" element={<Register/>}/>
+                    <Route path="Register_buyer" element={<Register_buyer/>}/>
+                    <Route path="Register_seller" element={<Register_Seller/>}/>
+                    <Route path="Register_buyer2" element={<Register_buyer2/>}/>
+                    <Route path="Register_buyer3" element={<Register_buyer3/>}/>
                 </Route>
 
 

@@ -5,7 +5,7 @@ const Cards = ({ data, onImageClick }) => {
   return (
     <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 item ">
       {data.map((item) => (
-        <Link to={`Deposit/${item.id}`} key={item.id}>
+        <Link to={`Deposit/${item.name}`} key={item.id}>
           <Card
             className="overflow-hidden cursor-pointer relative rounded-xl "
             onClick={() => onImageClick(item.id)}
