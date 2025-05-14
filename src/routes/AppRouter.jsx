@@ -9,6 +9,7 @@ import Manage from "../pages/admin/Manage";
 import Notfound from "../pages/admin/Notfound";
 import Layout from "../layouts/Layout";
 import LayoutAdmin from "../layouts/LayoutAdmin";
+import Deposit from "@/pages/Deposit";
 
 const AppRouter = () => {
     return (
@@ -22,7 +23,7 @@ const AppRouter = () => {
                     <Route path="Profile" element={<Profile />} />
                     <Route path="Post_for_sale" element={<Post_for_sale />} />
                     <Route path="Support" element={<Support />} />
-
+                    <Route path="Deposit/:id" element={<Deposit/>}/>
                 </Route>
 
 
