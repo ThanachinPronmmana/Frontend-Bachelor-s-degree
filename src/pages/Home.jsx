@@ -9,7 +9,7 @@ import Credit from "@/components/Credit";
 const Home = () => {
   // Video list
   const videos = [
-    "/video\[4K] MIAMI 🇺🇸 1 Hour Drone Aerial Jazz Relaxation Film _ Florida FL USA United States.mp4",
+    "",
 
   ];
 
@@ -45,7 +45,7 @@ const Home = () => {
         {/* Background Video */}
         <video
           className="absolute top-0 left-0 w-full h-full object-cover"
-          src="/video\[4K] MIAMI 🇺🇸 1 Hour Drone Aerial Jazz Relaxation Film _ Florida FL USA United States.mp4"
+          src=""
           autoPlay
           loop
           muted
