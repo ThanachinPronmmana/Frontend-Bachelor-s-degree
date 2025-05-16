@@ -6,12 +6,12 @@ import Support from "./Support"
 const Navbar = () => {
   return (
     <nav className="py-4 px-5 shadow-md  ">
-      <div className="flex justify-center sm:justify-end">
+      <div className="flex justify-center sm:justify-end mr-70">
         <h1>Login</h1>
         <h1 className="flex px-2">/</h1>
         <h1>Register</h1>
       </div>
-      <div className="flex flex-col sm:flex-row sm:justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:justify-between items-center ml-70 mr-70">
         <Logo/>
         <div className="flex space-x-30 py-2">
           <h1><Home/></h1>
