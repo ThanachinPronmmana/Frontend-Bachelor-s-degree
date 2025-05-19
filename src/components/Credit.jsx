@@ -2,9 +2,9 @@ import { Link } from "react-router"
 
 const Credit = () => {
     return (
-        <div className="relative fjustify-center items-center">
-            <div className="flex bg-[#3D4C63] h-20 w-full border-b-2 border-while pt-5">
-                <p1 className="text-white pl-70 pr-70">Distription</p1>
+        <div className="relative fjustify-center items-center ">
+            <div className="flex items-center bg-[#3D4C63] h-20 border-b-2 border-white px-6 sm:px-10 lg:px-115">
+                <p1 className="text-white">Distription</p1>
             </div>
             <div className="flex bg-gray-200 h-100 w-full pl-70 pr-70 pt-5">
                 <h1 className="text-black">Credit</h1>

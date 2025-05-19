@@ -6,14 +6,9 @@ import Buttons from "@/components/Buttons";
 import Cards from "@/components/Cards";
 import { Link } from "react-router";
 import Credit from "@/components/Credit";
+
 const Home = () => {
-  // Video list
-  const videos = [
-    "",
-
-  ];
-
-  // Randomly select a video on load
+  const videos = [""]; // Video list
 
   const [selectedVideo, setSelectedVideo] = useState(videos[0]);
   const [imagedata, setImage] = useState([
@@ -27,72 +22,59 @@ const Home = () => {
     { id: "8", name: "คอนโด ตกแต่งภายใน", src: "https://i.pinimg.com/736x/13/81/2c/13812c2012d17b4a377e8714c013cca9.jpg" },
     { id: "9", name: "ที่ดิน ติดถนน", src: "https://i.pinimg.com/736x/19/e8/1d/19e81d4002bc4aebe1424672fa1ff46e.jpg" },
     { id: "10", name: "ที่ดิน", src: "https://i.pinimg.com/736x/2a/1a/88/2a1a8829545a6ab1c0789c3b78be1ae9.jpg" },
-  ])
+  ]);
+
   useEffect(() => {
     if (videos.length > 0) {
       const randomIndex = Math.floor(Math.random() * videos.length);
       setSelectedVideo(videos[randomIndex]);
     }
   }, [videos]);
+
   const handleImage = () => {
-    const newData = imagedata.filter((c) => c.id)
-    setImage(newData)
-  }
+    const newData = imagedata.filter((c) => c.id);
+    setImage(newData);
+  };
 
   return (
-    <div className="">
+    <div className="w-full">
+      {/* Background Video Section */}
       <div className="relative flex items-center justify-center h-150">
-        {/* Background Video */}
         <video
           className="absolute top-0 left-0 w-full h-full object-cover"
-          src=""
+          src={selectedVideo}
           autoPlay
           loop
           muted
           playsInline
         />
-        {/* Overlay Content */}
-        <div className="relative bg-white bg-opacity-80 p-6 rounded-2xl shadow-lg w-full max-w-155">
-          <div className="flex pl-3 pb-3 space-x-3">
+        <div className="relative bg-white bg-opacity-80 p-6 rounded-2xl shadow-lg w-150 max-w-4xl mx-4 sm:mx-8 lg:mx-16">
+          <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start space-y-3 sm:space-y-0 sm:space-x-3">
             <Iconselect />
-            <Buttons
-              text="Advanced Search"
-              color="bg-blue-600"
-            />
-            <Buttons
-              text="Ai Search"
-              color="bg-blue-600"
-            />
+            <Buttons text="Advanced Search" color="bg-blue-600" />
+            <Buttons text="Ai Search" color="bg-blue-600" />
           </div>
-          <div className="flex space-x-4">
+          <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-4">
             <Searchbar />
-            <Buttons
-              text="Search"
-              color="bg-black"
-              lenghbutton="p-7.5"
-            />
+            <Buttons text="Search" color="bg-black" lenghbutton="p-7.5" />
           </div>
         </div>
       </div>
-      {/* New Section - Additional Content */}
-      <div className=" p-20 ml-50 mr-50 ">
-        <div className="flex items-center justify-between mb-5">
-          <h1 className="text-red-500 text-3xl ">Hot</h1>
-          <h1 className="text-blue-800 text-sm pt-5">Orter</h1>
-        </div>
 
-        <div>
-          <Cards
-            data={imagedata}
-            onImageClick={handleImage}
-          />
-          <Link to="Profile" />
+      {/* Cards Section */}
+      <div className="p-4 sm:p-8 lg:p-20 mx-auto max-w-6xl">
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-5">
+          <h1 className="text-red-500 text-3xl mb-4 sm:mb-0">Hot</h1>
+          <h1 className="text-blue-800 text-sm">Order</h1>
         </div>
+        <Cards data={imagedata} onImageClick={handleImage} />
+        <Link to="Profile" />
       </div>
-      <div className="relative">
+
+      {/* Credit Section */}
+      <div className="relative ">
         <Credit />
       </div>
-
     </div>
   );
 };
