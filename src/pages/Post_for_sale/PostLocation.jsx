@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "@/context/FormContext";
 
 const PostLocation = () => {
   const navigate = useNavigate();
+  const { formData, updateFormData } = useForm(); // ✅ ใช้งาน FormContext
 
   const [provinces, setProvinces] = useState([]);
   const [amphures, setAmphures] = useState([]);
   const [tambons, setTambons] = useState([]);
 
-  const [selectedProvince, setSelectedProvince] = useState("");
-  const [selectedAmphure, setSelectedAmphure] = useState("");
-  const [selectedTambon, setSelectedTambon] = useState("");
-  const [address, setAddress] = useState("");
-
   const [allAmphures, setAllAmphures] = useState([]);
   const [allTambons, setAllTambons] = useState([]);
 
+  // ✅ โหลดข้อมูลจังหวัด/อำเภอ/ตำบล
   useEffect(() => {
     const fetchData = async () => {
       const [provinceRes, amphureRes, tambonRes] = await Promise.all([
@@ -38,28 +36,29 @@ const PostLocation = () => {
     fetchData();
   }, []);
 
+  // ✅ เปลี่ยนอำเภอเมื่อเลือกจังหวัด
   useEffect(() => {
-    if (selectedProvince) {
-      const province = provinces.find((p) => p.name_th === selectedProvince);
+    if (formData.province) {
+      const province = provinces.find((p) => p.name_th === formData.province);
       const filteredAmphures = allAmphures.filter((a) => a.province_id === province?.id);
       setAmphures(filteredAmphures);
-      setSelectedAmphure("");
-      setSelectedTambon("");
+      updateFormData("district", ""); // เคลียร์ค่าถ้าเปลี่ยน
+      updateFormData("subDistrict", "");
       setTambons([]);
     }
-  }, [selectedProvince]);
+  }, [formData.province, provinces, allAmphures]);
 
+  // ✅ เปลี่ยนตำบลเมื่อเลือกอำเภอ
   useEffect(() => {
-    if (selectedAmphure) {
-      const amphure = amphures.find((a) => a.name_th === selectedAmphure);
+    if (formData.district) {
+      const amphure = amphures.find((a) => a.name_th === formData.district);
       const filteredTambons = allTambons.filter((t) => t.amphure_id === amphure?.id);
       setTambons(filteredTambons);
-      setSelectedTambon("");
+      updateFormData("subDistrict", "");
     }
-  }, [selectedAmphure]);
+  }, [formData.district, amphures, allTambons]);
 
   const handleNext = () => {
-    // คุณสามารถเก็บค่าหรือส่งค่าตรงนี้ได้ตามต้องการ
     navigate("/postdetail");
   };
 
@@ -70,6 +69,7 @@ const PostLocation = () => {
   return (
     <div className="min-h-screen bg-[#34495E] flex flex-col items-center">
       <div className="bg-white mt-10 px-10 py-6 rounded-lg shadow-md w-[700px]">
+        {/* Steps */}
         <div className="flex justify-between mb-6">
           {["Location", "Details", "Price & Terms", "Seller Information", "Upload Photos", "Confirmation"].map((label, index) => (
             <div key={index} className="flex flex-col items-center w-1/6">
@@ -81,66 +81,81 @@ const PostLocation = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-2 gap-6 mb-6">
-          {/* Province */}
-          <div>
-            <label className="block mb-1 text-sm text-black">Province<span className="text-red-500">*</span></label>
-            <select
-              value={selectedProvince}
-              onChange={(e) => setSelectedProvince(e.target.value)}
-              className="w-full p-2 border rounded shadow-sm"
-            >
-              <option value="">Select province</option>
-              {provinces.map((item) => (
-                <option key={item.id} value={item.name_th}>{item.name_th}</option>
-              ))}
-            </select>
-          </div>
+        {/* Form */}
+    <div className="flex flex-col gap-4 mb-6">
+      {/* Province */}
+      <div>
+       <label className="block mb-1 text-sm text-black">
+          Province <span className="text-red-500">*</span>
+        </label>
+        <select
+          value={formData.province}
+          onChange={(e) => updateFormData("province", e.target.value)}
+          className="w-full p-2 border rounded shadow-sm"
+        >
+          <option value="">Select province</option>
+          {provinces.map((item) => (
+            <option key={item.id} value={item.name_th}>
+              {item.name_th}
+        </option>
+      ))}
+    </select>
+  </div>
 
-          {/* Subdistrict */}
-          <div>
-            <label className="block mb-1 text-sm text-black">Subdistrict<span className="text-red-500">*</span></label>
-            <select
-              value={selectedTambon}
-              onChange={(e) => setSelectedTambon(e.target.value)}
-              className="w-full p-2 border rounded shadow-sm"
-              disabled={!tambons.length}
-            >
-              <option value="">Select subdistrict</option>
-              {tambons.map((item) => (
-                <option key={item.id} value={item.name_th}>{item.name_th}</option>
-              ))}
-            </select>
-          </div>
+  {/* District */}
+  <div>
+    <label className="block mb-1 text-sm text-black">
+      District <span className="text-red-500">*</span>
+    </label>
+    <select
+      value={formData.district}
+      onChange={(e) => updateFormData("district", e.target.value)}
+      className="w-full p-2 border rounded shadow-sm"
+      disabled={!amphures.length}
+    >
+      <option value="">Select district</option>
+      {amphures.map((item) => (
+        <option key={item.id} value={item.name_th}>
+          {item.name_th}
+        </option>
+      ))}
+    </select>
+  </div>
 
-          {/* District */}
-          <div>
-            <label className="block mb-1 text-sm text-black">District<span className="text-red-500">*</span></label>
-            <select
-              value={selectedAmphure}
-              onChange={(e) => setSelectedAmphure(e.target.value)}
-              className="w-full p-2 border rounded shadow-sm"
-              disabled={!amphures.length}
-            >
-              <option value="">Select district</option>
-              {amphures.map((item) => (
-                <option key={item.id} value={item.name_th}>{item.name_th}</option>
-              ))}
-            </select>
-          </div>
+  {/* Subdistrict */}
+  <div>
+    <label className="block mb-1 text-sm text-black">
+      Subdistrict <span className="text-red-500">*</span>
+    </label>
+    <select
+      value={formData.subDistrict}
+      onChange={(e) => updateFormData("subDistrict", e.target.value)}
+      className="w-full p-2 border rounded shadow-sm"
+      disabled={!tambons.length}
+    >
+      <option value="">Select subdistrict</option>
+      {tambons.map((item) => (
+        <option key={item.id} value={item.name_th}>
+          {item.name_th}
+        </option>
+      ))}
+    </select>
+  </div>
 
-          {/* Address */}
-          <div className="col-span-2">
-            <label className="block mb-1 text-sm text-black">Address</label>
-            <input
-              type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className="w-full p-2 border rounded shadow-sm"
-            />
-          </div>
-        </div>
+  {/* Address */}
+  <div>
+    <label className="block mb-1 text-sm text-black">Address</label>
+    <input
+      type="text"
+      value={formData.address}
+      onChange={(e) => updateFormData("address", e.target.value)}
+      className="w-full p-2 border rounded shadow-sm"
+    />
+  </div>
+</div>
 
+
+        {/* Buttons */}
         <div className="flex justify-between">
           <button
             onClick={handleBack}

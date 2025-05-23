@@ -1,24 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "@/context/FormContext";
 
 const PostDetail = () => {
   const navigate = useNavigate();
+  const { formData, updateFormData } = useForm();
 
-  const [selectedPropertyTypes, setSelectedPropertyTypes] = useState([]);
-  const [selectedLandmarks, setSelectedLandmarks] = useState([]);
-  const [selectedAmenities, setSelectedAmenities] = useState([]);
-  const [parking, setParking] = useState("");
-  const [areaSize, setAreaSize] = useState("");
-  const [totalRooms, setTotalRooms] = useState("");
-  const [yearBuilt, setYearBuilt] = useState("");
-  const [bedrooms, setBedrooms] = useState("");
-  const [bathrooms, setBathrooms] = useState("");
-
-  const toggleSelection = (value, state, setState) => {
-    if (state.includes(value)) {
-      setState(state.filter((item) => item !== value));
+  const toggleSelection = (value, stateArrayName) => {
+    const current = formData[stateArrayName];
+    if (current.includes(value)) {
+      updateFormData(stateArrayName, current.filter((item) => item !== value));
     } else {
-      setState([...state, value]);
+      updateFormData(stateArrayName, [...current, value]);
     }
   };
 
@@ -26,7 +19,6 @@ const PostDetail = () => {
     "Condo", "House", "Townhouse", "Apartment", "Land",
     "Office", "Warehouse", "Hotel", "Factory", "Commercial Building"
   ];
-
   const landmarks = ["BTS / MRT", "School", "Hospital", "Mall/Market", "Park"];
   const amenities = ["Swimming Pool", "Fitness Center", "Co-working Space", "Pet Friendly", "Children's Playground"];
 
@@ -54,8 +46,8 @@ const PostDetail = () => {
             {propertyTypes.map((type) => (
               <button
                 key={type}
-                onClick={() => toggleSelection(type, selectedPropertyTypes, setSelectedPropertyTypes)}
-                className={`border rounded px-2 py-1 text-sm ${selectedPropertyTypes.includes(type) ? "bg-[#34495E] text-white" : "bg-white"}`}
+                onClick={() => toggleSelection(type, "propertyType")}
+                className={`border rounded px-2 py-1 text-sm ${formData.propertyType.includes(type) ? "bg-[#34495E] text-white" : "bg-white"}`}
               >
                 {type}
               </button>
@@ -68,98 +60,83 @@ const PostDetail = () => {
           <div>
             <label className="block mb-1 text-sm text-black">Area Size (sqm)</label>
             <input
-              type="text"
-              pattern="[0-9]*"
+              type="number"
               inputMode="numeric"
-              value={areaSize}
-              onChange={(e) => setAreaSize(e.target.value)}
+              pattern="[0-9]*"
+              value={formData.size}
+              onChange={(e) => updateFormData("size", e.target.value)}
               className="w-full p-2 border rounded shadow-sm"
+              placeholder="Enter area in square meters"
             />
           </div>
           <div>
             <label className="block mb-1 text-sm text-black">Total Rooms</label>
             <input
-              type="text"
-              pattern="[0-9]*"
+              type="number"
               inputMode="numeric"
-              value={totalRooms}
-              onChange={(e) => setTotalRooms(e.target.value)}
+              pattern="[0-9]*"
+              value={formData.totalRooms}
+              onChange={(e) => updateFormData("totalRooms", e.target.value)}
               className="w-full p-2 border rounded shadow-sm"
+              placeholder="Enter total number of rooms"
             />
           </div>
           <div>
-            <label className="block mb-1 text-sm text-black">Year Built</label>
+            <label className="block mb-1 text-sm text-black">
+              Year Built <span className="text-gray-500 text-xs">(If unknown,leave blank)</span>
+            </label>
             <input
-              type="text"
-              pattern="[0-9]*"
+              type="number"
               inputMode="numeric"
-              value={yearBuilt}
-              onChange={(e) => setYearBuilt(e.target.value)}
+              pattern="[0-9]*"
+              value={formData.yearBuilt}
+              onChange={(e) => updateFormData("yearBuilt", e.target.value)}
               className="w-full p-2 border rounded shadow-sm"
+              placeholder="e.g., 2015"
             />
           </div>
 
-         {/* Bedrooms */}
-<div>
-  <label className="block mb-1 text-sm text-black">Bedrooms</label>
-  <div className="flex items-center gap-2">
-    <button
-      onClick={() => setBedrooms((prev) => Math.max(Number(prev) - 1, 0))}
-      className="px-3 py-1 border rounded text-black bg-gray-100 hover:bg-gray-200"
-    >
-      -
-    </button>
-    <input
-      type="text"
-      pattern="[0-9]*"
-      inputMode="numeric"
-      value={bedrooms}
-      onChange={(e) => {
-        const val = e.target.value;
-        if (/^\d*$/.test(val)) setBedrooms(val);
-      }}
-      className="w-16 text-center p-2 border rounded shadow-sm"
-    />
-    <button
-      onClick={() => setBedrooms((prev) => Number(prev) + 1)}
-      className="px-3 py-1 border rounded text-black bg-gray-100 hover:bg-gray-200"
-    >
-      +
-    </button>
-  </div>
-</div>
+          {/* Bedrooms */}
+          <div>
+            <label className="block mb-1 text-sm text-black">Bedrooms</label>
+            <div className="flex items-center gap-2">
+              <button onClick={() => updateFormData("bedrooms", Math.max(Number(formData.bedrooms) - 1, 0))} className="px-3 py-1 border rounded bg-gray-100">-</button>
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={formData.bedrooms}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (/^\d*$/.test(val)) updateFormData("bedrooms", val);
+                }}
+                className="w-16 text-center p-2 border rounded shadow-sm"
+                placeholder="1,2,3,.."
+              />
+              <button onClick={() => updateFormData("bedrooms", Number(formData.bedrooms) + 1)} className="px-3 py-1 border rounded bg-gray-100">+</button>
+            </div>
+          </div>
 
-{/* Bathrooms */}
-<div>
-  <label className="block mb-1 text-sm text-black">Bathrooms</label>
-  <div className="flex items-center gap-2">
-    <button
-      onClick={() => setBathrooms((prev) => Math.max(Number(prev) - 1, 0))}
-      className="px-3 py-1 border rounded text-black bg-gray-100 hover:bg-gray-200"
-    >
-      -
-    </button>
-    <input
-      type="text"
-      pattern="[0-9]*"
-      inputMode="numeric"
-      value={bathrooms}
-      onChange={(e) => {
-        const val = e.target.value;
-        if (/^\d*$/.test(val)) setBathrooms(val);
-      }}
-      className="w-16 text-center p-2 border rounded shadow-sm"
-    />
-    <button
-      onClick={() => setBathrooms((prev) => Number(prev) + 1)}
-      className="px-3 py-1 border rounded text-black bg-gray-100 hover:bg-gray-200"
-    >
-      +
-    </button>
-  </div>
-</div>
-
-
+          {/* Bathrooms */}
+          <div>
+            <label className="block mb-1 text-sm text-black">Bathrooms</label>
+            <div className="flex items-center gap-2">
+              <button onClick={() => updateFormData("bathrooms", Math.max(Number(formData.bathrooms) - 1, 0))} className="px-3 py-1 border rounded bg-gray-100">-</button>
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={formData.bathrooms}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (/^\d*$/.test(val)) updateFormData("bathrooms", val);
+                }}
+                className="w-16 text-center p-2 border rounded shadow-sm"
+                placeholder="1,2,3,.."
+              />
+              <button onClick={() => updateFormData("bathrooms", Number(formData.bathrooms) + 1)} className="px-3 py-1 border rounded bg-gray-100">+</button>
+            </div>
+          </div>
         </div>
 
         {/* Nearby Landmarks */}
@@ -169,8 +146,8 @@ const PostDetail = () => {
             {landmarks.map((item) => (
               <button
                 key={item}
-                onClick={() => toggleSelection(item, selectedLandmarks, setSelectedLandmarks)}
-                className={`border rounded px-3 py-1 text-sm ${selectedLandmarks.includes(item) ? "bg-[#34495E] text-white" : "bg-white"}`}
+                onClick={() => toggleSelection(item, "nearbyPlaces")}
+                className={`border rounded px-3 py-1 text-sm ${formData.nearbyPlaces.includes(item) ? "bg-[#34495E] text-white" : "bg-white"}`}
               >
                 {item}
               </button>
@@ -185,8 +162,8 @@ const PostDetail = () => {
             {amenities.map((item) => (
               <button
                 key={item}
-                onClick={() => toggleSelection(item, selectedAmenities, setSelectedAmenities)}
-                className={`border rounded px-3 py-1 text-sm ${selectedAmenities.includes(item) ? "bg-[#34495E] text-white" : "bg-white"}`}
+                onClick={() => toggleSelection(item, "amenities")}
+                className={`border rounded px-3 py-1 text-sm ${formData.amenities.includes(item) ? "bg-[#34495E] text-white" : "bg-white"}`}
               >
                 {item}
               </button>
@@ -198,8 +175,8 @@ const PostDetail = () => {
         <div className="mb-6">
           <label className="block mb-2 text-sm text-black">Parking Space</label>
           <select
-            value={parking}
-            onChange={(e) => setParking(e.target.value)}
+            value={formData.parking}
+            onChange={(e) => updateFormData("parking", e.target.value)}
             className="w-full p-2 border rounded shadow-sm"
           >
             <option value="">Select parking option</option>
@@ -211,18 +188,8 @@ const PostDetail = () => {
 
         {/* Navigation Buttons */}
         <div className="flex justify-between">
-          <button
-            onClick={handleBack}
-            className="px-6 py-2 bg-[#95A5A6] text-white rounded hover:opacity-90"
-          >
-            Back
-          </button>
-          <button
-            onClick={handleNext}
-            className="px-6 py-2 bg-[#34495E] text-white rounded hover:bg-[#2c3e50]"
-          >
-            Next
-          </button>
+          <button onClick={handleBack} className="px-6 py-2 bg-[#95A5A6] text-white rounded hover:opacity-90">Back</button>
+          <button onClick={handleNext} className="px-6 py-2 bg-[#34495E] text-white rounded hover:bg-[#2c3e50]">Next</button>
         </div>
       </div>
     </div>

@@ -9,13 +9,13 @@ import Notfound from "../pages/admin/Notfound";
 import Layout from "../layouts/Layout";
 import LayoutAdmin from "../layouts/LayoutAdmin";
 import Deposit from "@/pages/Deposit";
-import PostTitle from "@/pages/PostTitle";
-import PostLocation from "@/pages/PostLocation";
-import PostDetail from "@/pages/PostDetail";
-import PostPrice from "@/pages/PostPrice";
-import PostInform from "@/pages/PostInform";
-import PostUpload from "@/pages/PostUpload";
-import PostConfirm from "@/pages/PostConfirm";
+import PostTitle from "@/pages/Post_for_sale/PostTitle";
+import PostLocation from "@/pages/Post_for_sale/PostLocation";
+import PostDetail from "@/pages/Post_for_sale/PostDetail";
+import PostPrice from "@/pages/Post_for_sale/PostPrice";
+import PostInform from "@/pages/Post_for_sale/PostInform";
+import PostUpload from "@/pages/Post_for_sale/PostUpload";
+import PostConfirm from "@/pages/Post_for_sale/PostConfirm";
 
 const AppRouter = () => {
     return (

@@ -1,19 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "@/context/FormContext";
 
 const PostConfirm = () => {
   const navigate = useNavigate();
-  const [agreeInfo, setAgreeInfo] = useState(false);
-  const [agreeReview, setAgreeReview] = useState(false);
+  const { formData, updateFormData } = useForm(); // << ใช้ context
 
   const handleSubmit = () => {
-    if (!agreeInfo || !agreeReview) {
+    if (!formData.confirm1 || !formData.confirm2) {
       alert("Please confirm all required items.");
       return;
     }
-    // ส่งข้อมูลขึ้นเซิร์ฟเวอร์ที่นี่ (ถ้ามี)
+
+    // ส่ง formData ไปยัง backend (ถ้ามี)
     alert("Your post has been submitted!");
-    navigate("/"); // หรือหน้า success
+    navigate("/");
+  };
+
+  const handleBack = () => {
+    navigate("/postupload");
   };
 
   return (
@@ -38,8 +43,8 @@ const PostConfirm = () => {
               type="checkbox"
               id="agreeInfo"
               className="mt-1 mr-2"
-              checked={agreeInfo}
-              onChange={() => setAgreeInfo(!agreeInfo)}
+              checked={formData.confirm1}
+              onChange={(e) => updateFormData("confirm1", e.target.checked)}
             />
             <label htmlFor="agreeInfo">
               I confirm that the information provided is correct.
@@ -50,8 +55,8 @@ const PostConfirm = () => {
               type="checkbox"
               id="agreeReview"
               className="mt-1 mr-2"
-              checked={agreeReview}
-              onChange={() => setAgreeReview(!agreeReview)}
+              checked={formData.confirm2}
+              onChange={(e) => updateFormData("confirm2", e.target.checked)}
             />
             <label htmlFor="agreeReview">
               I understand that the advertisement will be subject to review before being posted on the website.
@@ -59,13 +64,19 @@ const PostConfirm = () => {
           </div>
         </div>
 
-        {/* Submit Button */}
-        <div className="text-center">
+        {/* Navigation Buttons */}
+        <div className="flex justify-between">
+          <button
+            onClick={handleBack}
+            className="px-6 py-2 bg-[#95A5A6] text-white rounded hover:opacity-90"
+          >
+            Back
+          </button>
           <button
             onClick={handleSubmit}
-            disabled={!agreeInfo || !agreeReview}
+            disabled={!formData.confirm1 || !formData.confirm2}
             className={`px-6 py-2 rounded-md text-white w-40 ${
-              agreeInfo && agreeReview
+              formData.confirm1 && formData.confirm2
                 ? "bg-[#34495E] hover:bg-[#2c3e50]"
                 : "bg-gray-400 cursor-not-allowed"
             }`}

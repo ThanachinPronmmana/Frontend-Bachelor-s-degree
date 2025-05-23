@@ -1,16 +1,14 @@
-// PostTitle.jsx
-
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useForm } from "@/context/FormContext";
 
 const PostTitle = () => {
-  const [title, setTitle] = useState("");
+  const { formData, updateFormData } = useForm();
   const navigate = useNavigate();
 
   const handleNext = () => {
-    // หากต้องการเก็บ title ไว้ใช้ต่อใน context/global state ให้เพิ่มที่นี่
-    navigate("/postlocation"); // ไปหน้าถัดไปคือ PostLocation
+    navigate("/postlocation");
   };
 
   return (
@@ -21,8 +19,8 @@ const PostTitle = () => {
           type="text"
           className="w-full p-3 rounded shadow mb-4 border"
           placeholder="กรอกชื่อประกาศของคุณ"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          value={formData.title}
+          onChange={(e) => updateFormData("title", e.target.value)}
         />
 
         <div className="text-left text-sm text-gray-700 mt-2">

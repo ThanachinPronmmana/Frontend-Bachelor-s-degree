@@ -1,26 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaLine, FaFacebook } from "react-icons/fa";
+import { useForm } from "@/context/FormContext";
 
 const PostInform = () => {
   const navigate = useNavigate();
-
-  const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    useLine: false,
-    lineId: "",
-    useFacebook: false,
-    facebookLink: "",
-  });
+  const { formData, updateFormData } = useForm();
 
   const handleChange = (field, value) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
+    updateFormData(field, value);
   };
 
   const handleNext = () => {
-    // Save to context/state if needed
     navigate("/postupload");
   };
 
@@ -49,7 +40,7 @@ const PostInform = () => {
             <label className="block text-sm mb-1 text-black">Name</label>
             <input
               type="text"
-              value={form.name}
+              value={formData.name}
               onChange={(e) => handleChange("name", e.target.value)}
               className="w-full p-2 border rounded shadow-sm"
             />
@@ -58,7 +49,7 @@ const PostInform = () => {
             <label className="block text-sm mb-1 text-black">Phone number</label>
             <input
               type="text"
-              value={form.phone}
+              value={formData.phone}
               onChange={(e) => handleChange("phone", e.target.value)}
               className="w-full p-2 border rounded shadow-sm"
             />
@@ -70,7 +61,7 @@ const PostInform = () => {
           <label className="block text-sm mb-1 text-black">E-mail</label>
           <input
             type="email"
-            value={form.email}
+            value={formData.email}
             onChange={(e) => handleChange("email", e.target.value)}
             className="w-full p-2 border rounded shadow-sm"
           />
@@ -85,19 +76,19 @@ const PostInform = () => {
             <label className="flex items-center mb-1">
               <input
                 type="checkbox"
-                checked={form.useLine}
-                onChange={() => handleChange("useLine", !form.useLine)}
+                checked={formData.useLine}
+                onChange={() => handleChange("useLine", !formData.useLine)}
                 className="mr-2"
               />
               <FaLine className="text-green-500 mr-2" />
               Line
             </label>
-            {form.useLine && (
+            {formData.useLine && (
               <input
                 type="text"
                 placeholder="Enter Line ID"
-                value={form.lineId}
-                onChange={(e) => handleChange("lineId", e.target.value)}
+                value={formData.line}
+                onChange={(e) => handleChange("line", e.target.value)}
                 className="w-full p-2 border rounded shadow-sm"
               />
             )}
@@ -108,19 +99,19 @@ const PostInform = () => {
             <label className="flex items-center mb-1">
               <input
                 type="checkbox"
-                checked={form.useFacebook}
-                onChange={() => handleChange("useFacebook", !form.useFacebook)}
+                checked={formData.useFacebook}
+                onChange={() => handleChange("useFacebook", !formData.useFacebook)}
                 className="mr-2"
               />
               <FaFacebook className="text-blue-600 mr-2" />
               Facebook
             </label>
-            {form.useFacebook && (
+            {formData.useFacebook && (
               <input
                 type="text"
                 placeholder="Enter Facebook profile link"
-                value={form.facebookLink}
-                onChange={(e) => handleChange("facebookLink", e.target.value)}
+                value={formData.facebook}
+                onChange={(e) => handleChange("facebook", e.target.value)}
                 className="w-full p-2 border rounded shadow-sm"
               />
             )}

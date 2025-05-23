@@ -1,29 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUpload } from "react-icons/fa";
+import { useForm } from "@/context/FormContext";
 
 const PostUpload = () => {
   const navigate = useNavigate();
-
-  const [housePhotos, setHousePhotos] = useState([]);
-  const [documents, setDocuments] = useState([]);
+  const { formData, updateFormData } = useForm(); // << ดึงจาก context
 
   const handleHousePhotoUpload = (e) => {
     const files = Array.from(e.target.files);
-    setHousePhotos((prev) => [...prev, ...files]);
+    updateFormData("housePhotos", [...formData.housePhotos, ...files]);
   };
 
   const handleDocumentUpload = (e) => {
     const files = Array.from(e.target.files);
-    setDocuments((prev) => [...prev, ...files]);
+    updateFormData("documents", [...formData.documents, ...files]);
   };
 
   const handleNext = () => {
-    if (housePhotos.length < 5) {
+    if (formData.housePhotos.length < 5) {
       alert("Please upload at least 5 house photos.");
       return;
     }
-    // Proceed to confirmation page
     navigate("/postconfirm");
   };
 
@@ -61,7 +59,7 @@ const PostUpload = () => {
             />
           </label>
           <p className="mt-2 text-sm text-gray-600">
-            {housePhotos.length} photo(s) selected
+            {formData.housePhotos.length} photo(s) selected
           </p>
         </div>
 
@@ -79,7 +77,7 @@ const PostUpload = () => {
             />
           </label>
           <p className="mt-2 text-sm text-gray-600">
-            {documents.length} document(s) selected
+            {formData.documents.length} document(s) selected
           </p>
         </div>
 

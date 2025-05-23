@@ -1,26 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "@/context/FormContext";
 
 const PostPrice = () => {
   const navigate = useNavigate();
-
-  const [saleType, setSaleType] = useState("Sell");
-  const [amount, setAmount] = useState("");
-  const [expenses, setExpenses] = useState({
-    transfer: false,
-    insurance: false,
-    common: false,
-  });
-  const [installmentType, setInstallmentType] = useState("");
-  const [repaymentPeriod, setRepaymentPeriod] = useState("");
-  const [interest, setInterest] = useState("");
+  const { formData, updateFormData } = useForm();
 
   const handleExpenseChange = (field) => {
-    setExpenses((prev) => ({ ...prev, [field]: !prev[field] }));
+    updateFormData("expenses", {
+      ...formData.expenses,
+      [field]: !formData.expenses?.[field],
+    });
   };
 
   const handleNext = () => {
-    // Save to context or state management if needed
     navigate("/postinform");
   };
 
@@ -52,13 +45,13 @@ const PostPrice = () => {
                 <input
                   type="radio"
                   value={type}
-                  checked={saleType === type}
+                  checked={formData.saleType === type}
                   onChange={(e) => {
-                    setSaleType(e.target.value);
-                    setInstallmentType("");
-                    setRepaymentPeriod("");
-                    setInterest("");
-                    setAmount("");
+                    updateFormData("saleType", e.target.value);
+                    updateFormData("installmentType", "");
+                    updateFormData("repaymentPeriod", "");
+                    updateFormData("interest", "");
+                    updateFormData("amount", "");
                   }}
                   className="mr-2"
                 />
@@ -69,17 +62,17 @@ const PostPrice = () => {
         </div>
 
         {/* For Sell */}
-        {saleType === "Sell" && (
+        {formData.saleType === "Sell" && (
           <div className="mb-6">
             <label className="block mb-2 text-sm text-black">Specify the amount (numbers only)</label>
             <input
               type="text"
               inputMode="numeric"
               pattern="[0-9]*"
-              value={amount}
+              value={formData.amount || ""}
               onChange={(e) => {
                 const val = e.target.value;
-                if (/^\d*$/.test(val)) setAmount(val);
+                if (/^\d*$/.test(val)) updateFormData("amount", val);
               }}
               className="w-full p-2 border rounded shadow-sm"
             />
@@ -87,7 +80,7 @@ const PostPrice = () => {
         )}
 
         {/* For Rent */}
-        {saleType === "Rent" && (
+        {formData.saleType === "Rent" && (
           <div className="mb-6">
             <label className="block mb-2 text-sm text-black">Select installment method</label>
             <div className="flex flex-col gap-2 text-black">
@@ -97,8 +90,8 @@ const PostPrice = () => {
                     type="radio"
                     name="installment"
                     value={option}
-                    checked={installmentType === option}
-                    onChange={(e) => setInstallmentType(e.target.value)}
+                    checked={formData.installmentType === option}
+                    onChange={(e) => updateFormData("installmentType", e.target.value)}
                     className="mr-2"
                   />
                   {option}
@@ -107,7 +100,7 @@ const PostPrice = () => {
             </div>
 
             {/* If Directly to Owner */}
-            {installmentType === "Installment directly to the owner" && (
+            {formData.installmentType === "Installment directly to the owner" && (
               <div className="mt-4 space-y-4">
                 <div>
                   <label className="block mb-1 text-sm text-black">Specify the repayment period (months)</label>
@@ -115,10 +108,10 @@ const PostPrice = () => {
                     type="text"
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    value={repaymentPeriod}
+                    value={formData.repaymentPeriod || ""}
                     onChange={(e) => {
                       const val = e.target.value;
-                      if (/^\d*$/.test(val)) setRepaymentPeriod(val);
+                      if (/^\d*$/.test(val)) updateFormData("repaymentPeriod", val);
                     }}
                     className="w-full p-2 border rounded shadow-sm"
                   />
@@ -129,10 +122,10 @@ const PostPrice = () => {
                     type="text"
                     inputMode="decimal"
                     pattern="[0-9]*"
-                    value={interest}
+                    value={formData.interest || ""}
                     onChange={(e) => {
                       const val = e.target.value;
-                      if (/^\d*\.?\d*$/.test(val)) setInterest(val);
+                      if (/^\d*\.?\d*$/.test(val)) updateFormData("interest", val);
                     }}
                     className="w-full p-2 border rounded shadow-sm"
                   />
@@ -149,7 +142,7 @@ const PostPrice = () => {
             <label>
               <input
                 type="checkbox"
-                checked={expenses.transfer}
+                checked={formData.expenses?.transfer || false}
                 onChange={() => handleExpenseChange("transfer")}
                 className="mr-2"
               />
@@ -158,7 +151,7 @@ const PostPrice = () => {
             <label>
               <input
                 type="checkbox"
-                checked={expenses.insurance}
+                checked={formData.expenses?.insurance || false}
                 onChange={() => handleExpenseChange("insurance")}
                 className="mr-2"
               />
@@ -167,7 +160,7 @@ const PostPrice = () => {
             <label>
               <input
                 type="checkbox"
-                checked={expenses.common}
+                checked={formData.expenses?.common || false}
                 onChange={() => handleExpenseChange("common")}
                 className="mr-2"
               />
