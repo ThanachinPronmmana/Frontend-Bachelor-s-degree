@@ -12,11 +12,11 @@ const PostInform = () => {
   };
 
   const handleNext = () => {
-    navigate("/postupload");
+    navigate("/post-for-sale/upload");
   };
 
   const handleBack = () => {
-    navigate("/postprice");
+    navigate("/post-for-sale/price");
   };
 
   return (

@@ -14,11 +14,11 @@ const PostPrice = () => {
   };
 
   const handleNext = () => {
-    navigate("/postinform");
+    navigate("/post-for-sale/inform");
   };
 
   const handleBack = () => {
-    navigate("/postdetail");
+    navigate("/post-for-sale/detail");
   };
 
   return (

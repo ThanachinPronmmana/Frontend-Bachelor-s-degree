@@ -22,8 +22,9 @@ const PostDetail = () => {
   const landmarks = ["BTS / MRT", "School", "Hospital", "Mall/Market", "Park"];
   const amenities = ["Swimming Pool", "Fitness Center", "Co-working Space", "Pet Friendly", "Children's Playground"];
 
-  const handleBack = () => navigate("/postlocation");
-  const handleNext = () => navigate("/postprice");
+  const handleBack = () => navigate("/post-for-sale/location");
+  
+  const handleNext = () => navigate("/post-for-sale/price");
 
   return (
     <div className="min-h-screen bg-[#34495E] flex flex-col items-center">

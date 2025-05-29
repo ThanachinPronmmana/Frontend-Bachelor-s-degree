@@ -58,12 +58,12 @@ const PostLocation = () => {
     }
   }, [formData.district, amphures, allTambons]);
 
-  const handleNext = () => {
-    navigate("/postdetail");
+  const handleNext = () => { 
+    navigate("/post-for-sale/detail"); 
   };
 
   const handleBack = () => {
-    navigate("/posttitle");
+    navigate("/post-for-sale/title");
   };
 
   return (

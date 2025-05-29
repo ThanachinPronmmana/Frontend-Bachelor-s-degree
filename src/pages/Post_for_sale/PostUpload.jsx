@@ -22,11 +22,11 @@ const PostUpload = () => {
       alert("Please upload at least 5 house photos.");
       return;
     }
-    navigate("/postconfirm");
+    navigate("/post-for-sale/confirm");
   };
 
   const handleBack = () => {
-    navigate("/postinform");
+    navigate("/post-for-sale/inform");
   };
 
   return (

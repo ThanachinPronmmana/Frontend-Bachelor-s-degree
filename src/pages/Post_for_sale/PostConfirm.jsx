@@ -18,7 +18,7 @@ const PostConfirm = () => {
   };
 
   const handleBack = () => {
-    navigate("/postupload");
+    navigate("/post-for-sale/upload");
   };
 
   return (
