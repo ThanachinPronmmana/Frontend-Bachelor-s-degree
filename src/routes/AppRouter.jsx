@@ -1,7 +1,6 @@
 
 import { BrowserRouter, Routes, Route,Outlet } from "react-router";
 import Home from "../pages/Home";
-import Profile from "../pages/Profile";
 import Support from "../pages/Support";
 import Dashboard from "../pages/admin/dashboard";
 import Manage from "../pages/admin/Manage";
@@ -19,6 +18,13 @@ import PostConfirm from "@/pages/Post_for_sale/PostConfirm";
 import ProfileTypeSelector from "@/pages/Profile/ProfileTypeSelector";
 import ProfileSeller from "@/pages/Profile/ProfileSeller";
 import ProfileBuyer from "@/pages/Profile/ProfileBuyer";
+
+import Login from "@/pages/Login/Login";
+import Register from "@/pages/Login/Register";
+import Register_buyer from "@/pages/Login/Register_buyer";
+import Register_seller from "@/pages/Login/Register_Seller";
+import Register_buyer2 from "@/pages/Login/Register_buyer2";
+import Register_buyer3 from "@/pages/Login/Register_buyer3";
 
 const AppRouter = () => {
     return (
@@ -39,14 +45,15 @@ const AppRouter = () => {
                     <Route path="/post-for-sale/inform" element={<PostInform />} />
                     <Route path="/post-for-sale/upload" element={<PostUpload />} />
                     <Route path="/post-for-sale/confirm" element={<PostConfirm />} />
-                    <Route path="Support" element={<Support />} />
-                    <Route path="Deposit/:id" element={<Deposit/>}/>
-                    <Route path="Login" element={<Login/>}/>
-                    <Route path="register" element={<Register/>}/>
-                    <Route path="Register_buyer" element={<Register_buyer/>}/>
-                    <Route path="Register_seller" element={<Register_Seller/>}/>
-                    <Route path="Register_buyer2" element={<Register_buyer2/>}/>
-                    <Route path="Register_buyer3" element={<Register_buyer3/>}/>
+                    
+                    <Route path="/Support" element={<Support />} />
+                    <Route path="/Deposit/:id" element={<Deposit/>}/>
+                    <Route path="/Login" element={<Login/>}/>
+                    <Route path="/register" element={<Register/>}/>
+                    <Route path="/Register_buyer" element={<Register_buyer/>}/>
+                    <Route path="/Register_seller" element={<Register_seller/>}/>
+                    <Route path="/Register_buyer2" element={<Register_buyer2/>}/>
+                    <Route path="/Register_buyer3" element={<Register_buyer3/>}/>
                 </Route>
 
 

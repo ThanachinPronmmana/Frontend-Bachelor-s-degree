@@ -3,6 +3,7 @@ import Home from "./Home"
 import Profile from "./Profile"
 import Post_for_sale from "./Post_for_sale"
 import Support from "./Support"
+import { Link } from "react-router"
 const Navbar = () => {
   return (
     <nav className="py-4 px-5 shadow-md border-b border-gray-200 bg-white">

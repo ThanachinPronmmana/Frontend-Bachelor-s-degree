@@ -1,5 +1,5 @@
-import { Breadcrumb, BreadcrumbLink } from "./ui/breadcrumb"
 import { Link } from "react-router-dom"
+import { BreadcrumbLink } from "../ui/breadcrumb"
 
 const Post_for_sale = () => {
   return (
