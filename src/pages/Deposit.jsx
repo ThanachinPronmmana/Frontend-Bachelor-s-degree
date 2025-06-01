@@ -3,7 +3,7 @@ import Credit from "@/components/Credit"
 import { Button } from "@/components/ui/button"
 import mockHouses from "@/data/mockHouses"
 import { useState, useEffect } from "react"
-import { useNavigate, useParams } from "react-router"
+import { Link, useNavigate, useParams } from "react-router"
 import { BedSingle, Bath, Grid2x2 } from 'lucide-react';
 
 const Deposit = () => {
@@ -71,24 +71,29 @@ const Deposit = () => {
             <p className="text-xs font-bold ">เริ่มต้น</p>
             <h1 className="text-3xl font-bold">${house.price}</h1>
             <p className="text-xs font-bold mt-2">สินเชื่อที่อยู่อาศัย</p>
-            <p1 className="text-xl">20%</p1>
+            <p1 className="text-xl">{house.agent.loan}</p1>
             <div className="w-full flex justify-center mt-2">
-              <Buttons
-                text="มัดจำ"
-                color="bg-blue-500"
-                lenghbutton="w-50"
-                onClick={() => navigate("")}
-              />
+              <Link to="/Deposit_doc">
+                <Buttons
+                  text="มัดจำ"
+                  color="bg-blue-500"
+                  lenghbutton="w-50"
+                />
+              </Link>
             </div>
           </div>
           <div className="flex flex-col">
-            
-            <div className="absolute mx-130 shadow-xl rounded-3xl">
+
+            <div className="lg:absolute lg:mx-130 shadow-xl rounded-3xl flex-col ">
               <div className=" bg-white-500 h-50 w-100 rounded-3xl ">
                 <div className="bg-[#3D4C63] h-15 w-100 rounded-t-3xl flex justify-center items-center">
-                  <label className="text-white font-bold text-xl cursor-pointer" onClick={()=> navigate("/profile/seller")}>{house.agent.name}</label>
+                  <label className="text-white font-bold text-xl cursor-pointer" onClick={() => navigate("/profile/seller")}>{house.agent.name}</label>
                 </div>
-                
+                <div>
+                  <img
+                    src=""
+                  />
+                </div>
               </div>
             </div>
             <div className="flex flex-col items-center pl-10 h-[130px] space-x-10 gap-4 lg:flex-row">

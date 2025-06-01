@@ -25,6 +25,8 @@ import Register_buyer from "@/pages/Login/Register_buyer";
 import Register_seller from "@/pages/Login/Register_Seller";
 import Register_buyer2 from "@/pages/Login/Register_buyer2";
 import Register_buyer3 from "@/pages/Login/Register_buyer3";
+import Deposit_doc from "@/pages/Deposit_doc";
+import Payment from "@/pages/Payment";
 
 const AppRouter = () => {
     return (
@@ -54,6 +56,8 @@ const AppRouter = () => {
                     <Route path="/Register_seller" element={<Register_seller/>}/>
                     <Route path="/Register_buyer2" element={<Register_buyer2/>}/>
                     <Route path="/Register_buyer3" element={<Register_buyer3/>}/>
+                    <Route path="/Deposit_doc" element={<Deposit_doc/>}/>
+                    <Route path="/payment" element={<Payment/>}/>
                 </Route>
 
 
