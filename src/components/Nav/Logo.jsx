@@ -4,7 +4,7 @@ const Logo = () => {
   return (
   
     
-        <Button asChild>
+        <Button >
           <Link to ="/">Logo</Link>
         </Button>
     

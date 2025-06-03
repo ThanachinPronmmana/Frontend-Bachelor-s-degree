@@ -1,6 +1,7 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const Login = () => {
+  const navigate = useNavigate()
   return (
     <div className="bg-[#2C3E50] min-h-screen flex items-center justify-center">
       <div className="bg-white w-[900px] h-[550px] rounded-xl shadow-xl flex overflow-hidden">
@@ -50,7 +51,7 @@ const Login = () => {
             </button>
 
             <div className="text-right mt-2">
-              <a href="#" className="text-sm text-gray-500 hover:text-[#2C3E50]">Forgot password?</a>
+              <a href="#" className="text-sm text-gray-500 hover:text-[#2C3E50]" onClick={()=>navigate("/forgot")}>Forgot password?</a>
             </div>
             <Link to="/register">
             <div className="text-center mt-4 text-sm">

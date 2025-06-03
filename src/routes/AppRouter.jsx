@@ -27,6 +27,7 @@ import Register_buyer2 from "@/pages/Login/Register_buyer2";
 import Register_buyer3 from "@/pages/Login/Register_buyer3";
 import Deposit_doc from "@/pages/Deposit_doc";
 import Payment from "@/pages/Payment";
+import Forgotpassword from "@/pages/Login/Forgotpassword";
 
 const AppRouter = () => {
     return (
@@ -58,7 +59,8 @@ const AppRouter = () => {
                     <Route path="/Register_buyer3" element={<Register_buyer3/>}/>
                     <Route path="/Deposit_doc" element={<Deposit_doc/>}/>
                     <Route path="/payment" element={<Payment/>}/>
-                </Route>
+                    <Route path="/forgot" element={<Forgotpassword/>}/>
+                </Route>s
 
 
 

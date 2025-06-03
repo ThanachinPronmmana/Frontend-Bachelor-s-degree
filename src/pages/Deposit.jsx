@@ -14,23 +14,26 @@ const Deposit = () => {
   useEffect(() => {
     const foundHouse = mockHouses.find((h) => h.id === id)
     setHouse(foundHouse)
+    console.log("FOUND HOUSE:", foundHouse);
   }, [id])
 
   if (!house) return <div>Loading...</div>
 
   return (
+
     <div className="flex-row">
       <div className="pt-10 lg:px-70 py-30">
         <div className="flex flex-col lg:flex-row gap-10">
           {/* รูปใหญ่ */}
           <div className="flex w-full ">
-            {house.images?.[0] && (
-              <img
-                src={house.images[0]}
-                alt="main-house"
-                className="rounded-3xl w-300 h-[500px] object-cover"
-              />
-            )}
+            {
+              house.images?.[0] && (
+                <img
+                  src={house.images[0]}
+                  alt="main-house"
+                  className="rounded-3xl w-300 h-[500px] object-cover"
+                />
+              )}
           </div>
 
           {/* รูปเล็ก (ขนาดใหญ่ขึ้น) */}
@@ -71,9 +74,9 @@ const Deposit = () => {
             <p className="text-xs font-bold ">เริ่มต้น</p>
             <h1 className="text-3xl font-bold">${house.price}</h1>
             <p className="text-xs font-bold mt-2">สินเชื่อที่อยู่อาศัย</p>
-            <p1 className="text-xl">{house.agent.loan}</p1>
+            <p className="text-xl">{house.agent.loan}</p>
             <div className="w-full flex justify-center mt-2">
-              <Link to="/Deposit_doc">
+              <Link to="/Deposit_doc" state={{house}}>
                 <Buttons
                   text="มัดจำ"
                   color="bg-blue-500"
@@ -89,11 +92,7 @@ const Deposit = () => {
                 <div className="bg-[#3D4C63] h-15 w-100 rounded-t-3xl flex justify-center items-center">
                   <label className="text-white font-bold text-xl cursor-pointer" onClick={() => navigate("/profile/seller")}>{house.agent.name}</label>
                 </div>
-                <div>
-                  <img
-                    src=""
-                  />
-                </div>
+            
               </div>
             </div>
             <div className="flex flex-col items-center pl-10 h-[130px] space-x-10 gap-4 lg:flex-row">

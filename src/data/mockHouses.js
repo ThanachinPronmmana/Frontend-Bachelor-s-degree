@@ -23,7 +23,8 @@ const mockHouses = [
         loan:"20%"
       }
     },
-     { id: "2", 
+     { 
+      id: "2", 
       name: "ติดทะเลแหลมพรหมเทพ", 
       discription:"แหลมพรหมเทพ,ภูเก็ต",
       src: "https://i.pinimg.com/736x/9d/a7/f7/9da7f72034e52e4cbd185b062162bb86.jpg",
@@ -47,7 +48,8 @@ const mockHouses = [
         loan:"30%"
       }
     },
-    { id: "3", 
+    { 
+      id: "3", 
       name: "โครงการใหม่ ถนนเจ้าฟ้า", 
       discription:"ถนนเจ้าฟ้าตะวันออก,วิชิต,ภูเก็ต",
       src: "https://i.pinimg.com/736x/bd/a5/6e/bda56e412149db260399fce56f84abf4.jpg",
