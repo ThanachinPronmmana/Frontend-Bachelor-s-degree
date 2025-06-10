@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";  // แก้ไขตรงนี้
 
 const Cards = ({ data, onImageClick }) => {
+  console.log("Cards data:", data);
   return (
+    
     <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 item">
       {data.map((item) => (
         <Link to={`/Deposit/${item.id}`} key={item.id}> {/* เพิ่ม / หน้า Deposit */}

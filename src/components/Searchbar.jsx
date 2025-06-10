@@ -1,11 +1,12 @@
 import { Input } from "./ui/input"
 
-const Searchbar = () => {
+const Searchbar = ({text,onChange}) => {
   return (
     <Input
     type="text"
-    placeholder="Search..."
+    placeholder={text}
     className="max-w-md items-center"
+    onChange = {onChange}
     />
   )
 }
