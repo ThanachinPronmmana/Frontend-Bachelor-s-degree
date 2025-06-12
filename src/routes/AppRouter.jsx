@@ -28,6 +28,8 @@ import Register_buyer3 from "@/pages/Login/Register_buyer3";
 import Deposit_doc from "@/pages/Deposit_doc";
 import Payment from "@/pages/Payment";
 import Forgotpassword from "@/pages/Login/Forgotpassword";
+import BuyerInfo from "@/pages/Profile/BuyerInfo";
+import BuyerNoti from "@/pages/Profile/BuyerNoti";
 
 const AppRouter = () => {
     return (
@@ -48,7 +50,8 @@ const AppRouter = () => {
                     <Route path="/post-for-sale/inform" element={<PostInform />} />
                     <Route path="/post-for-sale/upload" element={<PostUpload />} />
                     <Route path="/post-for-sale/confirm" element={<PostConfirm />} />
-                    
+                    <Route path="/Noti" element={<BuyerNoti/>}/>
+
                     <Route path="/Support" element={<Support />} />
                     <Route path="/Deposit/:id" element={<Deposit/>}/>
                     <Route path="/Login" element={<Login/>}/>
@@ -60,7 +63,7 @@ const AppRouter = () => {
                     <Route path="/Deposit_doc" element={<Deposit_doc/>}/>
                     <Route path="/payment" element={<Payment/>}/>
                     <Route path="/forgot" element={<Forgotpassword/>}/>
-                </Route>s
+                </Route>
 
 
 

@@ -4,6 +4,7 @@ import Profile from "./Profile"
 import Post_for_sale from "./Post_for_sale"
 import Support from "./Support"
 import { Link } from "react-router"
+import Noti from "./Noti"
 const Navbar = () => {
   return (
     <nav className="py-4 px-5 shadow-md border-b border-gray-200 bg-white">
@@ -21,6 +22,7 @@ const Navbar = () => {
           <h1><Home /></h1>
           <h1><Profile /></h1>
           <h1><Post_for_sale /></h1>
+          <h1><Noti/></h1>
           <h1><Support /></h1>
         </div>
       </div>

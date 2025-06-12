@@ -7,7 +7,7 @@ const Forgotpassword = () => {
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    // สมมุติว่าเราส่งคำขอไปยัง backend แล้ว
+    
     console.log("ส่งรีเซ็ตรหัสผ่านไปที่:", email);
     setSent(true);
   };

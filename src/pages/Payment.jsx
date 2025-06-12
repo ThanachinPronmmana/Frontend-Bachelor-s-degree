@@ -57,23 +57,42 @@ const Payment = () => {
               </div>
             </>
           ) : (
-            <div className="flex flex-col items-center justify-center w-full h-full space-y-4">
-              <h1 className="text-md text-gray-500">Scan QR Code to Pay</h1>
+            <div className="grid grid-cols-3 w-full h-full  gap-5">
+
               <div className="col-span-2">
-                <img
-                  src="https://apiportal.kasikornbank.com/bucket/SiteCollectionDocuments/assets/page/apiproducts/qrpayment/introduction/img/ci-qrpayment-img-08.png"
-                  alt="QR Code"
-                  className="w-full h-[400px] object-cover"
-                />
+                <div className="flex flex-col items-center ">
+                  <h1 className="flex text-md text-gray-500">Scan QR Code to Pay</h1>
+                  <img
+                    src="https://apiportal.kasikornbank.com/bucket/SiteCollectionDocuments/assets/page/apiproducts/qrpayment/introduction/img/ci-qrpayment-img-08.png"
+                    alt="QR Code"
+                    className="w-full h-[400px] object-cover"
+                  />
+                </div>
               </div>
+
+              
+
+                <div className="col-span-1 ">
+                  <div className="flex justify-end">
+                  
+                  <div className="mt-100">
+                    <Buttons
+                    text="Upload"
+                  />
+                  </div>
+                   
+                  </div>
+                </div>
+              
             </div>
+            
           )}
         </div>
 
         {/* Form + Pay Button */}
-        
-          {method === "credit" && (
-            <>
+
+        {method === "credit" && (
+          <>
             <div className="flex flex-col items-start space-y-7">
               <div className="flex justify-start">
                 <h1 className="text-md text-gray-500">Pay using credit cards</h1>
@@ -114,15 +133,15 @@ const Payment = () => {
                   <Searchbar text="cvv" />
                 </div>
               </div>
-            
-          <div className="flex justify-between w-full">
-            <div></div>
-            <Buttons text="Pay" />
-          </div>
-          </div>
+
+              <div className="flex justify-between w-full">
+                <div></div>
+                <Buttons text="Pay" />
+              </div>
+            </div>
           </>
-          )}
-        
+        )}
+
 
         {/* Summary */}
         <div className="flex">
