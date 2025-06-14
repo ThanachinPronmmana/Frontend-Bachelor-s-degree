@@ -52,6 +52,7 @@ const AppRouter = () => {
                     <Route path="/post-for-sale/confirm" element={<PostConfirm />} />
                     <Route path="/Noti" element={<BuyerNoti/>}/>
 
+                    
                     <Route path="/Support" element={<Support />} />
                     <Route path="/Deposit/:id" element={<Deposit/>}/>
                     <Route path="/Login" element={<Login/>}/>

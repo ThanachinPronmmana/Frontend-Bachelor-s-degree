@@ -48,8 +48,9 @@ const Home = () => {
         <div className="relative bg-white bg-opacity-80 p-6 rounded-2xl shadow-lg w-150 max-w-4xl mx-4 sm:mx-8 lg:mx-16">
           <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start space-y-3 sm:space-y-0 sm:space-x-3">
             <Iconselect />
-            <Buttons text="Advanced Search" color="bg-blue-600" />
+            <div className="flex justify-end w-full h-full">
             <Buttons text="Ai Search" color="bg-blue-600" />
+            </div>
           </div>
           <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-4">
             <Searchbar 
