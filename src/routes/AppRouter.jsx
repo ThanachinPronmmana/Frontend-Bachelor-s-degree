@@ -1,5 +1,4 @@
-
-import { BrowserRouter, Routes, Route,Outlet } from "react-router";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import Home from "../pages/Home";
 import Support from "../pages/Support";
 import Dashboard from "../pages/admin/dashboard";
@@ -28,8 +27,8 @@ import Register_buyer3 from "@/pages/Login/Register_buyer3";
 import Deposit_doc from "@/pages/Deposit_doc";
 import Payment from "@/pages/Payment";
 import Forgotpassword from "@/pages/Login/Forgotpassword";
-import BuyerInfo from "@/pages/Profile/BuyerInfo";
 import BuyerNoti from "@/pages/Profile/BuyerNoti";
+import Compare from "@/pages/Compare";
 
 const AppRouter = () => {
     return (
@@ -40,6 +39,7 @@ const AppRouter = () => {
                     <Layout/>
                 }>
                     <Route path="/" element={<Home />} />
+                    <Route path="/compare" element={<Compare />} />
                     <Route path="/ProfileTypeSelector" element={<ProfileTypeSelector />} />
                     <Route path="/profile/seller" element={<ProfileSeller />} />
                     <Route path="/profile/buyer" element={<ProfileBuyer />} />
