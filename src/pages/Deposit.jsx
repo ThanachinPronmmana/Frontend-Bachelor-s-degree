@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import mockHouses from "@/data/mockHouses";
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router";
-import { BedSingle, Bath, Grid2x2 } from 'lucide-react';
+import { BedSingle, Bath, Grid2x2 } from "lucide-react";
 import { useCompare } from "@/context/CompareContext";
 
 const Deposit = () => {
@@ -80,11 +80,7 @@ const Deposit = () => {
             {/* ปุ่ม */}
             <div className="w-full flex justify-center mt-2 space-x-4">
               <Link to="/Deposit_doc" state={{ house }}>
-                <Buttons
-                  text="มัดจำ"
-                  color="bg-blue-500"
-                  lenghbutton="w-40"
-                />
+                <Buttons text="มัดจำ" color="bg-blue-500" lenghbutton="w-40" />
               </Link>
 
               {isAlreadyCompared ? (
