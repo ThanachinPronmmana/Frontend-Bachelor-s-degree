@@ -4,7 +4,11 @@ import { StickyNote } from 'lucide-react';
 const Post_for_sale = () => {
   return (
     <BreadcrumbLink href="/post-for-sale/title">
-      <StickyNote/>
+      <div className="flex justify-center items-center space-x-2">
+        <StickyNote />
+        <p className="text-gray-500 hover:text-black opacity-100">Post for sale</p>
+      </div>
+
     </BreadcrumbLink>
   )
 }

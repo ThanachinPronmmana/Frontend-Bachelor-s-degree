@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { AlignJustify } from 'lucide-react';
-const Navbar = () => {
+const Navbar_Buyer = () => {
   return (
     <nav className="py-4 px-5 shadow-md border-b border-gray-200 bg-white">
       <div className="flex justify-center sm:justify-end mr-70">
@@ -30,7 +30,7 @@ const Navbar = () => {
         <div className="flex space-x-30 py-2">
           <DropdownMenu >
             <DropdownMenuTrigger>
-              <AlignJustify className="cursor-pointer hover:text-blue-300"/>
+              <AlignJustify className="cursor-pointer hover:text-blue-300" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>
@@ -38,7 +38,19 @@ const Navbar = () => {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="cursor-pointer">
-                <Support/>
+                <Profile />
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
+                <Post_for_sale/>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
+                <Noti />
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
+                <Support />
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
+                <p className="text-black font-medium">Logout</p>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -49,4 +61,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default Navbar_Buyer

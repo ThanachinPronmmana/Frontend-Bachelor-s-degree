@@ -1,7 +1,26 @@
 import { Link, useNavigate } from "react-router";
-
+import { useForm } from "react-hook-form";
+import { login } from "@/api/auth";
+import { useState } from "react";
 const Login = () => {
   const navigate = useNavigate()
+  const { 
+    register,
+    handleSubmit,
+    formState:{errors},
+  } = useForm()
+  const [serverError,setServerError] = useState("")
+  const onSubmit = async(data)=>{
+    try{
+      const res = await login(data)
+      const {token,user} = res.data
+      localStorage.setItem("token",token)
+      localStorage.setItem("user",JSON.stringify(user))
+    }
+    catch(err){
+      setServerError(err.response?.data?.message || "Login failed")
+    }
+  }
   return (
     <div className="bg-[#2C3E50] min-h-screen flex items-center justify-center">
       <div className="bg-white w-[900px] h-[550px] rounded-xl shadow-xl flex overflow-hidden">
@@ -22,15 +41,17 @@ const Login = () => {
             <h1 className="text-xl font-semibold text-[#2C3E50]">Yuu Yenn Property</h1>
           </div>
 
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-4">
               <label htmlFor="email" className="block text-sm mb-1 text-gray-600">Email</label>
               <input
+              {...register("Email",{required:"Email is required"})}
                 type="email"
                 id="email"
                 placeholder="Email"
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2C3E50]"
               />
+              {errors.Email && <p className="text-red-500 text-sm">{errors.Email.message}</p>}
             </div>
 
             <div className="mb-4">

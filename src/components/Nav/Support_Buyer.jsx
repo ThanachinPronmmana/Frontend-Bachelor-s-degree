@@ -1,10 +1,10 @@
 import { Breadcrumb, BreadcrumbLink } from "../ui/breadcrumb"
 import { Link } from "react-router"
 import { HeartPlus } from 'lucide-react'
-const Support = () => {
+const Support_Buyer = () => {
   return (
 
-    <BreadcrumbLink href="/Support">
+    <BreadcrumbLink href="/buyer/support">
       <div className="flex justify-center items-center space-x-2">
         <HeartPlus />
         <p className="text-gray-500 hover:text-black opacity-100">Support</p>
@@ -13,4 +13,4 @@ const Support = () => {
     </BreadcrumbLink>
   )
 }
-export default Support
+export default Support_Buyer

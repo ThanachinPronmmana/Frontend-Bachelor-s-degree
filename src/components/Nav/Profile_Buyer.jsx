@@ -1,9 +1,9 @@
 import { Breadcrumb, BreadcrumbLink } from "../ui/breadcrumb"
 import { Link } from "react-router"
 import { UserPen } from 'lucide-react';
-const Profile = () => {
+const Profile_Buyer = () => {
   return (
-    <BreadcrumbLink href="/ProfileTypeSelector">
+    <BreadcrumbLink href="/buyer/profile">
       <div className="flex space-x-2 justify-center items-center">
         <UserPen/>
         <p className="text-gray-500 hover:text-black opacity-100">Profile</p>
@@ -11,4 +11,4 @@ const Profile = () => {
       </BreadcrumbLink>
   )
 }
-export default Profile
+export default Profile_Buyer
