@@ -57,12 +57,18 @@ const Login = () => {
             <div className="mb-4">
               <label htmlFor="password" className="block text-sm mb-1 text-gray-600">Password</label>
               <input
+                {...register("Password", { required: "Password is required" })}
                 type="password"
                 id="password"
                 placeholder="Password"
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2C3E50]"
               />
+              {errors.Password && <p className="text-red-500 text-sm">{errors.Password.message}</p>}
             </div>
+
+            {serverError && (
+              <p className="text-red-600 text-sm mt-2">{serverError}</p>
+            )}
 
             <button
               type="submit"
@@ -72,13 +78,15 @@ const Login = () => {
             </button>
 
             <div className="text-right mt-2">
-              <a href="#" className="text-sm text-gray-500 hover:text-[#2C3E50]" onClick={()=>navigate("/forgot")}>Forgot password?</a>
+              <span className="text-sm text-gray-500 hover:text-[#2C3E50] cursor-pointer" onClick={() => navigate("/forgot")}>Forgot password?</span>
             </div>
-            <Link to="/register">
+
             <div className="text-center mt-4 text-sm">
-              Don’t have an account? <a href="#" className="text-[#2C3E50] font-medium">Sign up now</a>
+              Don't have an account?{" "}
+              <span className="text-[#2C3E50] font-medium cursor-pointer" onClick={() => navigate("/register")}>
+                Sign up now
+              </span>
             </div>
-            </Link>
           </form>
         </div>
       </div>
