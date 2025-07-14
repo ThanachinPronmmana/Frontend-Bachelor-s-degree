@@ -39,29 +39,44 @@ import Deposit_doc from "@/pages/Deposit_doc";
 import Payment from "@/pages/Payment";
 
 // 🛠️ Admin Pages
-import Dashboard from "@/pages/admin/dashboard";
+import Dashboard from "@/pages/admin/Dashboard";
 import Manage from "@/pages/admin/Manage";
 import Notfound from "@/pages/admin/Notfound";
+
+// 🆕 Admin Sub Pages (You should create these later)
+import Approval from "@/pages/admin/Posts of Seller/Approval";
+import AcceptPost from "@/pages/admin/Posts of Seller/AcceptPost";
+import RejectPost from "@/pages/admin/Posts of Seller/RejectPost";
+
+import BuyerId from "@/pages/admin/User account/BuyerId";
+import VerificationSeller from "@/pages/admin/User account/VerificationSeller";
+import VerifiedSeller from "@/pages/admin/User account/VerifiedSeller";
+import RejectSeller from "@/pages/admin/User account/RejectSeller";
+
+import PayDeposit from "@/pages/admin/Payment/PayDeposit";
+import PayBank from "@/pages/admin/Payment/PayBank";
+
+const DescriptionReport = () => <div>Description Report Page</div>;
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/*  Public Routes */}
+        {/* 🌐 Public Routes */}
         <Route element={<Layout />}>
-          {/*  General */}
+          {/* 🏠 General */}
           <Route path="/" element={<Home />} />
           <Route path="/compare" element={<Compare />} />
           <Route path="/support" element={<Support />} />
 
-          {/*  Profile */}
+          {/* 👤 Profile */}
           <Route path="/profileTypeSelector" element={<ProfileTypeSelector />} />
           <Route path="/profile/seller" element={<ProfileSeller />} />
           <Route path="/profile/buyer" element={<ProfileBuyer />} />
           <Route path="/noti" element={<BuyerNoti />} />
 
-          {/*  Post for Sale */}
+          {/* 📝 Post for Sale */}
           <Route path="/post-for-sale/title" element={<PostTitle />} />
           <Route path="/post-for-sale/location" element={<PostLocation />} />
           <Route path="/post-for-sale/detail" element={<PostDetail />} />
@@ -70,7 +85,7 @@ const AppRouter = () => {
           <Route path="/post-for-sale/upload" element={<PostUpload />} />
           <Route path="/post-for-sale/confirm" element={<PostConfirm />} />
 
-          {/*  Auth */}
+          {/* 🔐 Auth */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/register_buyer" element={<Register_buyer />} />
@@ -79,19 +94,38 @@ const AppRouter = () => {
           <Route path="/register_seller" element={<Register_seller />} />
           <Route path="/forgot" element={<Forgotpassword />} />
 
-          {/*  Deposit / Payment */}
+          {/* 💸 Deposit / Payment */}
           <Route path="/deposit/:id" element={<Deposit />} />
           <Route path="/deposit_doc" element={<Deposit_doc />} />
           <Route path="/payment" element={<Payment />} />
         </Route>
 
-        {/*  Admin Routes */}
+        {/* 🔐 Admin Routes */}
         <Route path="/admin" element={<LayoutAdmin />}>
           <Route index element={<Dashboard />} />
           <Route path="manage" element={<Manage />} />
+
+          {/* ✅ Posts of Seller */}
+          <Route path="approval" element={<Approval />} />
+          <Route path="accept-post" element={<AcceptPost />} />
+          <Route path="reject-post" element={<RejectPost />} />
+
+          {/* ✅ User account */}
+          <Route path="buyer-id" element={<BuyerId />} />
+          <Route path="seller-id/verify" element={<VerificationSeller />} />
+          <Route path="seller-id/verified" element={<VerifiedSeller />} />
+          <Route path="seller-id/reject" element={<RejectSeller />} />
+
+
+          {/* ✅ Payment */}
+          <Route path="pay-deposit" element={<PayDeposit />} />
+          <Route path="pay-bank" element={<PayBank />} />
+
+          {/* ✅ Reports */}
+          <Route path="description-report" element={<DescriptionReport />} />
         </Route>
 
-        {/*  Not Found */}
+        {/* ❌ Not Found */}
         <Route path="*" element={<Notfound />} />
 
       </Routes>
