@@ -2,13 +2,22 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import DepositDialog from "@/components/Dialog/DepositDialog";
 
 const PayDeposit = () => {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState("");
 
-  const data = [
+  const [data, setData] = useState([
     {
       id: "TX001",
       buyer: "สมชาย ใจดี",
@@ -27,31 +36,74 @@ const PayDeposit = () => {
       date: "2025-07-12",
       status: "รอตรวจสอบ",
     },
-  ];
+  ]);
 
-  const filtered = data.filter(
-    (item) =>
+  const handleStatusUpdate = (id, newStatus) => {
+    setData((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, status: newStatus } : item
+      )
+    );
+    setSelected(null);
+  };
+
+  const filtered = data.filter((item) => {
+    const matchText =
       item.buyer.includes(search) ||
       item.seller.includes(search) ||
-      item.property.includes(search)
-  );
+      item.property.includes(search);
+    const matchStatus =
+      statusFilter !== "all" ? item.status === statusFilter : true;
+    const matchDate = dateFilter ? item.date === dateFilter : true;
+    return matchText && matchStatus && matchDate;
+  });
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">รายการชำระเงินมัดจำ</h1>
 
-      {/* Search bar */}
-      <div className="flex items-center gap-2 mb-4">
+      {/* Filters */}
+      <div className="flex flex-wrap items-center gap-2 mb-4">
         <Search className="text-gray-500" />
         <Input
           placeholder="ค้นหา Buyer / Seller / Property"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-80"
+          className="w-72"
         />
+        <Select onValueChange={setStatusFilter} value={statusFilter}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="กรองตามสถานะ" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">ทั้งหมด</SelectItem>
+            <SelectItem value="รอตรวจสอบ">รอตรวจสอบ</SelectItem>
+            <SelectItem value="อนุมัติ">อนุมัติ</SelectItem>
+            <SelectItem value="ปฏิเสธ">ปฏิเสธ</SelectItem>
+          </SelectContent>
+        </Select>
+        <Input
+          type="date"
+          className="w-48"
+          value={dateFilter}
+          onChange={(e) => setDateFilter(e.target.value)}
+        />
+        <Button
+          variant="outline"
+          onClick={() => {
+            setSearch("");
+            setStatusFilter("all");
+            setDateFilter("");
+          }}
+        >
+          รีเซ็ต
+        </Button>
       </div>
 
-      {/* Table */}
+      <p className="text-sm text-gray-500 mb-2">
+        จำนวนรายการทั้งหมด: {filtered.length}
+      </p>
+
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border rounded-md">
           <thead>
@@ -87,30 +139,14 @@ const PayDeposit = () => {
         </table>
       </div>
 
-      {/* Popup */}
-      <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>รายละเอียดการชำระ</DialogTitle>
-          </DialogHeader>
-          {selected && (
-            <div className="space-y-2 text-sm">
-              <p><strong>รหัสรายการ:</strong> {selected.id}</p>
-              <p><strong>ผู้ซื้อ:</strong> {selected.buyer}</p>
-              <p><strong>ผู้ขาย:</strong> {selected.seller}</p>
-              <p><strong>อสังหา:</strong> {selected.property}</p>
-              <p><strong>จำนวนเงิน:</strong> {selected.amount}</p>
-              <p><strong>วันที่:</strong> {selected.date}</p>
-              <p><strong>สถานะ:</strong> {selected.status}</p>
-              {/* ปุ่มอนุมัติหรือปฏิเสธ */}
-              <div className="flex gap-2 pt-4">
-                <Button className="bg-green-500 hover:bg-green-600">อนุมัติ</Button>
-                <Button className="bg-red-500 hover:bg-red-600">ปฏิเสธ</Button>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      {/* Dialog */}
+      <DepositDialog
+        open={!!selected}
+        onClose={() => setSelected(null)}
+        data={selected}
+        onConfirm={() => handleStatusUpdate(selected.id, "อนุมัติ")}
+        onReject={() => handleStatusUpdate(selected.id, "ปฏิเสธ")}
+      />
     </div>
   );
 };

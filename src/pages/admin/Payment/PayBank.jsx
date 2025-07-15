@@ -1,121 +1,153 @@
-// src/pages/admin/Payment/PayBank.jsx
+// PayBank.jsx
 import { useState } from "react";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+import BankDialog from "@/components/Dialog/BankDialog";
 
 const PayBank = () => {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState("");
 
-  const payments = [
+  const [data, setData] = useState([
     {
-      id: "TX001",
-      buyer: "นายวีรวัฒน์ ศิริ",
-      seller: "บจก. บ้านดี จำกัด",
-      property: "บ้านเดี่ยว โครงการ A สวนหลวง",
-      amount: "1,000,000",
-      bank: "ธนาคารกรุงเทพ",
-      accountName: "บจก. บ้านดี จำกัด",
-      date: "2025-07-14 14:30",
-      slip: "https://via.placeholder.com/400x300.png?text=Slip+Preview",
+      id: "BANK001",
+      buyer: "ธนพล ใจดี",
+      seller: "คุณปิติชัย",
+      property: "บ้านแฝด ลาดกระบัง",
+      amount: "฿80,000",
+      date: "2025-07-13",
+      status: "รอตรวจสอบ",
+      slip: "https://via.placeholder.com/300x200?text=Bank+Slip+1",
     },
-    // เพิ่มรายการอื่นตามต้องการ
-  ];
+    {
+      id: "BANK002",
+      buyer: "สุดารัตน์ ทองคำ",
+      seller: "บริษัท บีบีโฮม",
+      property: "คอนโด MRT สุทธิสาร",
+      amount: "฿120,000",
+      date: "2025-07-14",
+      status: "รอตรวจสอบ",
+      slip: "https://via.placeholder.com/300x200?text=Bank+Slip+2",
+    },
+  ]);
 
-  const filtered = payments.filter(
-    (item) =>
-      item.buyer.toLowerCase().includes(search.toLowerCase()) ||
-      item.seller.toLowerCase().includes(search.toLowerCase()) ||
-      item.property.toLowerCase().includes(search.toLowerCase())
-  );
+  const handleStatusUpdate = (id, newStatus) => {
+    setData((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, status: newStatus } : item))
+    );
+    setSelected(null);
+  };
+
+  const filtered = data.filter((item) => {
+    const matchText =
+      item.buyer.includes(search) ||
+      item.seller.includes(search) ||
+      item.property.includes(search);
+    const matchStatus = statusFilter !== "all" ? item.status === statusFilter : true;
+    const matchDate = dateFilter ? item.date === dateFilter : true;
+    return matchText && matchStatus && matchDate;
+  });
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">รายการโอนเงินผ่านธนาคาร</h1>
+      <h1 className="text-2xl font-bold mb-4">รายการโอนเงินผ่านบัญชีธนาคาร</h1>
 
-      <Input
-        placeholder="🔍 ค้นหาจาก Buyer / Seller / Property"
-        className="max-w-md mb-4"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
+      {/* Filters */}
+      <div className="flex flex-wrap items-center gap-2 mb-4">
+        <Search className="text-gray-500" />
+        <Input
+          placeholder="ค้นหา Buyer / Seller / Property"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-72"
+        />
+        <Select onValueChange={setStatusFilter} value={statusFilter}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="กรองตามสถานะ" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">ทั้งหมด</SelectItem>
+            <SelectItem value="รอตรวจสอบ">รอตรวจสอบ</SelectItem>
+            <SelectItem value="อนุมัติ">อนุมัติ</SelectItem>
+            <SelectItem value="ปฏิเสธ">ปฏิเสธ</SelectItem>
+          </SelectContent>
+        </Select>
+        <Input
+          type="date"
+          className="w-48"
+          value={dateFilter}
+          onChange={(e) => setDateFilter(e.target.value)}
+        />
+        <Button
+          variant="outline"
+          onClick={() => {
+            setSearch("");
+            setStatusFilter("all");
+            setDateFilter("");
+          }}
+        >
+          รีเซ็ต
+        </Button>
+      </div>
 
-      <div className="overflow-auto">
-        <table className="min-w-full border text-sm">
-          <thead className="bg-gray-100">
-            <tr className="text-left">
-              <th className="border px-4 py-2">Transaction ID</th>
-              <th className="border px-4 py-2">Buyer</th>
-              <th className="border px-4 py-2">Seller</th>
-              <th className="border px-4 py-2">Property</th>
-              <th className="border px-4 py-2">Amount</th>
-              <th className="border px-4 py-2">Date</th>
-              <th className="border px-4 py-2">Action</th>
+      <p className="text-sm text-gray-500 mb-2">
+        จำนวนรายการทั้งหมด: {filtered.length}
+      </p>
+
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border rounded-md">
+          <thead>
+            <tr className="bg-gray-100 text-sm font-medium text-gray-600 text-left">
+              <th className="py-2 px-4 border">ID</th>
+              <th className="py-2 px-4 border">Buyer</th>
+              <th className="py-2 px-4 border">Property</th>
+              <th className="py-2 px-4 border">Seller</th>
+              <th className="py-2 px-4 border">Amount</th>
+              <th className="py-2 px-4 border">Date</th>
+              <th className="py-2 px-4 border">Status</th>
+              <th className="py-2 px-4 border">Action</th>
             </tr>
           </thead>
           <tbody>
             {filtered.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50">
-                <td className="border px-4 py-2">{item.id}</td>
-                <td className="border px-4 py-2">{item.buyer}</td>
-                <td className="border px-4 py-2">{item.seller}</td>
-                <td className="border px-4 py-2">{item.property}</td>
-                <td className="border px-4 py-2">฿{item.amount}</td>
-                <td className="border px-4 py-2">{item.date}</td>
-                <td className="border px-4 py-2 text-right">
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" size="sm" onClick={() => setSelected(item)}>
-                        View
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-xl">
-                      <DialogHeader>
-                        <DialogTitle>รายละเอียดการโอน</DialogTitle>
-                      </DialogHeader>
-                      <div className="space-y-2 text-sm">
-                        <div><strong>Transaction ID:</strong> {item.id}</div>
-                        <div><strong>ผู้ซื้อ:</strong> {item.buyer}</div>
-                        <div><strong>ผู้ขาย:</strong> {item.seller}</div>
-                        <div><strong>ทรัพย์สิน:</strong> {item.property}</div>
-                        <div><strong>จำนวนเงิน:</strong> ฿{item.amount}</div>
-                        <div><strong>ธนาคาร:</strong> {item.bank}</div>
-                        <div><strong>ชื่อบัญชีผู้รับ:</strong> {item.accountName}</div>
-                        <div><strong>วันเวลาที่โอน:</strong> {item.date}</div>
-                        <div className="mt-4">
-                          <img
-                            src={item.slip}
-                            alt="Slip"
-                            className="w-full rounded shadow border"
-                          />
-                        </div>
-                        <div className="flex gap-2 justify-end mt-4">
-                          <Button variant="destructive">Reject</Button>
-                          <Button>Approve</Button>
-                        </div>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
+              <tr key={item.id} className="text-sm text-gray-700">
+                <td className="py-2 px-4 border">{item.id}</td>
+                <td className="py-2 px-4 border">{item.buyer}</td>
+                <td className="py-2 px-4 border">{item.property}</td>
+                <td className="py-2 px-4 border">{item.seller}</td>
+                <td className="py-2 px-4 border">{item.amount}</td>
+                <td className="py-2 px-4 border">{item.date}</td>
+                <td className="py-2 px-4 border">{item.status}</td>
+                <td className="py-2 px-4 border">
+                  <Button size="sm" onClick={() => setSelected(item)}>
+                    View
+                  </Button>
                 </td>
               </tr>
             ))}
-            {filtered.length === 0 && (
-              <tr>
-                <td colSpan={7} className="text-center py-4 text-gray-500">
-                  ไม่พบข้อมูลที่ตรงกับคำค้นหา
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>
+
+      {/* Dialog */}
+      <BankDialog
+        open={!!selected}
+        onClose={() => setSelected(null)}
+        data={selected}
+        onConfirm={() => handleStatusUpdate(selected.id, "อนุมัติ")}
+        onReject={() => handleStatusUpdate(selected.id, "ปฏิเสธ")}
+      />
     </div>
   );
 };

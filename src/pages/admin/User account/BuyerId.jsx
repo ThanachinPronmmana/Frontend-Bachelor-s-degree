@@ -1,8 +1,36 @@
 // pages/admin/UserAccount/BuyerId.jsx
 import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 const BuyerId = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedBuyer, setSelectedBuyer] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    readiness: "",
+    income: "",
+    province: "",
+    propertyType: "",
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const buyersPerPage = 5;
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+
   const [buyers, setBuyers] = useState([
     {
       id: "B001",
@@ -11,7 +39,7 @@ const BuyerId = () => {
       phone: "081-234-5678",
       age: 35,
       occupation: "Engineer",
-      income: "50,000",
+      income: "50000",
       familySize: 4,
       readiness: "High",
       province: "Bangkok",
@@ -25,67 +53,134 @@ const BuyerId = () => {
       phone: "089-876-5432",
       age: 29,
       occupation: "Teacher",
-      income: "30,000",
+      income: "30000",
       familySize: 2,
       readiness: "Medium",
       province: "Chiang Mai",
       propertyType: "คอนโด",
       dateRegistered: "2025-07-10",
     },
-    // เพิ่มข้อมูล mock ได้ตามต้องการ
   ]);
 
-  const filteredBuyers = buyers.filter(
-    (b) =>
+  const handleDelete = () => {
+    if (selectedBuyer) {
+      setBuyers((prev) => prev.filter((b) => b.id !== selectedBuyer.id));
+      setSelectedBuyer(null);
+      setConfirmDelete(false);
+    }
+  };
+
+  const filteredBuyers = buyers.filter((b) => {
+    const matchSearch =
       b.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       b.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      b.province.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+      b.province.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchReadiness = filters.readiness
+      ? b.readiness === filters.readiness
+      : true;
+    const matchIncome = filters.income
+      ? Number(b.income) >= Number(filters.income)
+      : true;
+    const matchProvince = filters.province
+      ? b.province === filters.province
+      : true;
+    const matchType = filters.propertyType
+      ? b.propertyType === filters.propertyType
+      : true;
+
+    return matchSearch && matchReadiness && matchIncome && matchProvince && matchType;
+  });
+
+  const sortedBuyers = [...filteredBuyers].sort((a, b) => {
+    if (!sortConfig.key) return 0;
+    const aVal = a[sortConfig.key];
+    const bVal = b[sortConfig.key];
+    if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
+    if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
+    return 0;
+  });
+
+  const indexOfLast = currentPage * buyersPerPage;
+  const indexOfFirst = indexOfLast - buyersPerPage;
+  const currentBuyers = sortedBuyers.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(sortedBuyers.length / buyersPerPage);
+
+  const handleSort = (key) => {
+    setSortConfig((prev) => {
+      if (prev.key === key) {
+        return {
+          key,
+          direction: prev.direction === "asc" ? "desc" : "asc",
+        };
+      } else {
+        return { key, direction: "asc" };
+      }
+    });
+  };
 
   return (
     <div className="p-6">
       <div className="text-2xl font-bold mb-4">Buyer ID Table</div>
+      <div className="mb-4 flex gap-2">
+        <Input
+          type="text"
+          placeholder="Search by name, email or province..."
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1);
+          }}
+          className="max-w-sm"
+        />
+        <Button variant="outline" onClick={() => {
+          setSearchTerm("");
+          setFilters({ readiness: "", income: "", province: "", propertyType: "" });
+          setCurrentPage(1);
+        }}>Reset Filter</Button>
+      </div>
 
-      <input
-        type="text"
-        placeholder="Search by name, email or province..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="border border-gray-300 px-3 py-2 rounded w-full max-w-sm mb-4"
-      />
+      <Collapsible open={filterOpen} onOpenChange={setFilterOpen} className="mb-4">
+        <CollapsibleTrigger asChild>
+          <Button variant="ghost" className="flex items-center gap-1">
+            {filterOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />} Advanced Filters
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+          <Input placeholder="Minimum Income" type="number" value={filters.income} onChange={(e) => setFilters({ ...filters, income: e.target.value })} />
+          <Input placeholder="Province" value={filters.province} onChange={(e) => setFilters({ ...filters, province: e.target.value })} />
+          <Input placeholder="Readiness" value={filters.readiness} onChange={(e) => setFilters({ ...filters, readiness: e.target.value })} />
+          <Input placeholder="Property Type" value={filters.propertyType} onChange={(e) => setFilters({ ...filters, propertyType: e.target.value })} />
+        </CollapsibleContent>
+      </Collapsible>
+
+      <p className="text-sm text-gray-500 mb-2">จำนวนผู้ซื้อทั้งหมด: {filteredBuyers.length}</p>
 
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-300 bg-white">
           <thead className="bg-gray-100">
             <tr className="text-left text-sm text-gray-600">
-              <th className="p-2">Buyer ID</th>
-              <th className="p-2">Full Name</th>
-              <th className="p-2">Email</th>
-              <th className="p-2">Phone</th>
-              <th className="p-2">Age</th>
-              <th className="p-2">Occupation</th>
-              <th className="p-2">Income</th>
-              <th className="p-2">Family Size</th>
-              <th className="p-2">Readiness</th>
-              <th className="p-2">Province</th>
-              <th className="p-2">Property Type</th>
-              <th className="p-2">Date Registered</th>
+              {["id", "fullName", "email", "phone", "age", "occupation", "income", "familySize", "readiness", "province", "propertyType", "dateRegistered"].map((key) => (
+                <th
+                  key={key}
+                  className="p-2 cursor-pointer hover:underline"
+                  onClick={() => handleSort(key)}
+                >
+                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                  {sortConfig.key === key ? (sortConfig.direction === "asc" ? " ▲" : " ▼") : null}
+                </th>
+              ))}
               <th className="p-2 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredBuyers.length === 0 ? (
+            {currentBuyers.length === 0 ? (
               <tr>
-                <td colSpan="13" className="p-4 text-center text-gray-500">
-                  No buyers found.
-                </td>
+                <td colSpan="13" className="p-4 text-center text-gray-500">No buyers found.</td>
               </tr>
             ) : (
-              filteredBuyers.map((buyer) => (
-                <tr
-                  key={buyer.id}
-                  className="border-t border-gray-200 text-sm hover:bg-gray-50"
-                >
+              currentBuyers.map((buyer) => (
+                <tr key={buyer.id} className="border-t border-gray-200 text-sm hover:bg-gray-50">
                   <td className="p-2">{buyer.id}</td>
                   <td className="p-2">{buyer.fullName}</td>
                   <td className="p-2">{buyer.email}</td>
@@ -99,9 +194,9 @@ const BuyerId = () => {
                   <td className="p-2">{buyer.propertyType}</td>
                   <td className="p-2">{buyer.dateRegistered}</td>
                   <td className="p-2 text-center">
-                    <button className="text-blue-600 hover:underline text-sm">
+                    <Button size="sm" variant="outline" onClick={() => setSelectedBuyer(buyer)}>
                       View
-                    </button>
+                    </Button>
                   </td>
                 </tr>
               ))
@@ -109,6 +204,69 @@ const BuyerId = () => {
           </tbody>
         </table>
       </div>
+
+      <div className="flex justify-between items-center mt-4">
+        <p className="text-sm text-gray-600">
+          Showing {indexOfFirst + 1}–{Math.min(indexOfLast, sortedBuyers.length)} of {sortedBuyers.length}
+        </p>
+        <div className="space-x-2">
+          <Button disabled={currentPage === 1} onClick={() => setCurrentPage((prev) => prev - 1)}>
+            Prev
+          </Button>
+          <span className="text-sm font-medium">
+            Page {currentPage} of {totalPages}
+          </span>
+          <Button disabled={currentPage === totalPages} onClick={() => setCurrentPage((prev) => prev + 1)}>
+            Next
+          </Button>
+        </div>
+      </div>
+
+      <Dialog open={!!selectedBuyer} onOpenChange={() => setSelectedBuyer(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>รายละเอียด Buyer</DialogTitle>
+          </DialogHeader>
+          {selectedBuyer && (
+            <div className="space-y-1 text-sm text-gray-700">
+              <p><strong>ID:</strong> {selectedBuyer.id}</p>
+              <p><strong>Full Name:</strong> {selectedBuyer.fullName}</p>
+              <p><strong>Email:</strong> {selectedBuyer.email}</p>
+              <p><strong>Phone:</strong> {selectedBuyer.phone}</p>
+              <p><strong>Age:</strong> {selectedBuyer.age}</p>
+              <p><strong>Occupation:</strong> {selectedBuyer.occupation}</p>
+              <p><strong>Income:</strong> {selectedBuyer.income}</p>
+              <p><strong>Family Size:</strong> {selectedBuyer.familySize}</p>
+              <p><strong>Readiness:</strong> {selectedBuyer.readiness}</p>
+              <p><strong>Province:</strong> {selectedBuyer.province}</p>
+              <p><strong>Property Type:</strong> {selectedBuyer.propertyType}</p>
+              <p><strong>Date Registered:</strong> {selectedBuyer.dateRegistered}</p>
+            </div>
+          )}
+          <DialogFooter className="mt-4 flex justify-end gap-2">
+            <Button variant="destructive" onClick={() => setConfirmDelete(true)}>
+              Delete Buyer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={confirmDelete} onOpenChange={setConfirmDelete}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>ยืนยันการลบผู้ซื้อ</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm">คุณแน่ใจหรือไม่ว่าต้องการลบผู้ซื้อรายนี้?</p>
+          <DialogFooter className="mt-4 flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setConfirmDelete(false)}>
+              ยกเลิก
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              ยืนยันลบ
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

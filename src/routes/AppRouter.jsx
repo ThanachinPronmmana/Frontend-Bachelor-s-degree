@@ -56,7 +56,7 @@ import RejectSeller from "@/pages/admin/User account/RejectSeller";
 import PayDeposit from "@/pages/admin/Payment/PayDeposit";
 import PayBank from "@/pages/admin/Payment/PayBank";
 
-const DescriptionReport = () => <div>Description Report Page</div>;
+import DescriptionReport from "@/pages/admin/DescriptionReport";
 
 const AppRouter = () => {
   return (
