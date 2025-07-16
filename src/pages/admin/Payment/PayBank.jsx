@@ -1,4 +1,3 @@
-// PayBank.jsx
 import { useState } from "react";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,6 +16,8 @@ const PayBank = () => {
   const [selected, setSelected] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const [data, setData] = useState([
     {
@@ -39,11 +40,14 @@ const PayBank = () => {
       status: "รอตรวจสอบ",
       slip: "https://via.placeholder.com/300x200?text=Bank+Slip+2",
     },
+    // เพิ่มข้อมูลอื่นๆ ได้ตามต้องการ
   ]);
 
   const handleStatusUpdate = (id, newStatus) => {
     setData((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, status: newStatus } : item))
+      prev.map((item) =>
+        item.id === id ? { ...item, status: newStatus } : item
+      )
     );
     setSelected(null);
   };
@@ -58,6 +62,11 @@ const PayBank = () => {
     return matchText && matchStatus && matchDate;
   });
 
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
+  const currentItems = filtered.slice(indexOfFirst, indexOfLast);
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">รายการโอนเงินผ่านบัญชีธนาคาร</h1>
@@ -68,10 +77,16 @@ const PayBank = () => {
         <Input
           placeholder="ค้นหา Buyer / Seller / Property"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setCurrentPage(1);
+          }}
           className="w-72"
         />
-        <Select onValueChange={setStatusFilter} value={statusFilter}>
+        <Select onValueChange={(v) => {
+          setStatusFilter(v);
+          setCurrentPage(1);
+        }} value={statusFilter}>
           <SelectTrigger className="w-48">
             <SelectValue placeholder="กรองตามสถานะ" />
           </SelectTrigger>
@@ -86,7 +101,10 @@ const PayBank = () => {
           type="date"
           className="w-48"
           value={dateFilter}
-          onChange={(e) => setDateFilter(e.target.value)}
+          onChange={(e) => {
+            setDateFilter(e.target.value);
+            setCurrentPage(1);
+          }}
         />
         <Button
           variant="outline"
@@ -94,6 +112,7 @@ const PayBank = () => {
             setSearch("");
             setStatusFilter("all");
             setDateFilter("");
+            setCurrentPage(1);
           }}
         >
           รีเซ็ต
@@ -120,24 +139,61 @@ const PayBank = () => {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((item) => (
-              <tr key={item.id} className="text-sm text-gray-700">
-                <td className="py-2 px-4 border">{item.id}</td>
-                <td className="py-2 px-4 border">{item.buyer}</td>
-                <td className="py-2 px-4 border">{item.property}</td>
-                <td className="py-2 px-4 border">{item.seller}</td>
-                <td className="py-2 px-4 border">{item.amount}</td>
-                <td className="py-2 px-4 border">{item.date}</td>
-                <td className="py-2 px-4 border">{item.status}</td>
-                <td className="py-2 px-4 border">
-                  <Button size="sm" onClick={() => setSelected(item)}>
-                    View
-                  </Button>
+            {currentItems.length === 0 ? (
+              <tr>
+                <td colSpan="8" className="text-center py-4 text-gray-400">
+                  ไม่พบรายการที่ตรงกับเงื่อนไข
                 </td>
               </tr>
-            ))}
+            ) : (
+              currentItems.map((item) => (
+                <tr key={item.id} className="text-sm text-gray-700">
+                  <td className="py-2 px-4 border">{item.id}</td>
+                  <td className="py-2 px-4 border">{item.buyer}</td>
+                  <td className="py-2 px-4 border">{item.property}</td>
+                  <td className="py-2 px-4 border">{item.seller}</td>
+                  <td className="py-2 px-4 border">{item.amount}</td>
+                  <td className="py-2 px-4 border">{item.date}</td>
+                  <td className="py-2 px-4 border">{item.status}</td>
+                  <td className="py-2 px-4 border">
+                    <Button size="sm" onClick={() => setSelected(item)}>
+                      View
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-between items-center mt-4">
+        <p className="text-sm text-gray-600">
+          Showing {filtered.length === 0 ? 0 : indexOfFirst + 1}–
+          {Math.min(indexOfLast, filtered.length)} of {filtered.length}
+        </p>
+        <div className="space-x-2">
+          <Button
+            variant="outline"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+            className="hover:bg-gray-200"
+          >
+            Prev
+          </Button>
+          <span className="text-sm font-medium">
+            Page {currentPage} of {totalPages || 1}
+          </span>
+          <Button
+            variant="outline"
+            disabled={currentPage === totalPages || totalPages === 0}
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+            className="hover:bg-gray-200"
+          >
+            Next
+          </Button>
+        </div>
       </div>
 
       {/* Dialog */}

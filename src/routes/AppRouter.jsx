@@ -102,8 +102,7 @@ const AppRouter = () => {
 
         {/* 🔐 Admin Routes */}
         <Route path="/admin" element={<LayoutAdmin />}>
-          <Route index element={<Dashboard />} />
-          <Route path="manage" element={<Manage />} />
+          <Route index element={<Approval />} />
 
           {/* ✅ Posts of Seller */}
           <Route path="approval" element={<Approval />} />
@@ -124,9 +123,6 @@ const AppRouter = () => {
           {/* ✅ Reports */}
           <Route path="description-report" element={<DescriptionReport />} />
         </Route>
-
-        {/* ❌ Not Found */}
-        <Route path="*" element={<Notfound />} />
 
       </Routes>
     </BrowserRouter>

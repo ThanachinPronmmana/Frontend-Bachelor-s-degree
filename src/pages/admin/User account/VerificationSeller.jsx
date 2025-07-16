@@ -19,8 +19,8 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { format, isWithinInterval, parseISO, isAfter, isBefore } from "date-fns";
+import { ChevronDown, ChevronUp,Search } from "lucide-react";
+import { format, parseISO } from "date-fns";
 
 const VerificationSeller = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -29,8 +29,7 @@ const VerificationSeller = () => {
   const [filters, setFilters] = useState({
     company: "",
     license: "",
-    startDate: "",
-    endDate: "",
+    date: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -78,19 +77,9 @@ const VerificationSeller = () => {
 
       const matchCompany = filters.company ? s.company === filters.company : true;
       const matchLicense = filters.license ? s.license.startsWith(filters.license) : true;
-
-      let matchDate = true;
-      const date = parseISO(s.registeredDate);
-      if (filters.startDate && filters.endDate) {
-        matchDate = isWithinInterval(date, {
-          start: parseISO(filters.startDate),
-          end: parseISO(filters.endDate),
-        });
-      } else if (filters.startDate) {
-        matchDate = isAfter(date, parseISO(filters.startDate)) || format(date, "yyyy-MM-dd") === filters.startDate;
-      } else if (filters.endDate) {
-        matchDate = isBefore(date, parseISO(filters.endDate)) || format(date, "yyyy-MM-dd") === filters.endDate;
-      }
+      const matchDate = filters.date
+        ? format(parseISO(s.registeredDate), "yyyy-MM-dd") === filters.date
+        : true;
 
       return matchSearch && matchCompany && matchLicense && matchDate;
     });
@@ -98,7 +87,7 @@ const VerificationSeller = () => {
 
   const sortedSellers = useMemo(() => {
     if (!sortConfig.key) return filteredSellers;
-    
+
     return [...filteredSellers].sort((a, b) => {
       const aVal = a[sortConfig.key];
       const bVal = b[sortConfig.key];
@@ -127,39 +116,36 @@ const VerificationSeller = () => {
   };
 
   useEffect(() => {
-    if (currentPage > totalPages) setCurrentPage(1);
-  }, [currentPage, totalPages]);
+    if (currentPage > totalPages) {
+      setCurrentPage(1);
+    }
+  }, [totalPages]);
 
   const resetFilters = () => {
     setSearchTerm("");
-    setFilters({
-      company: "",
-      license: "",
-      startDate: "",
-      endDate: "",
-    });
+    setFilters({ company: "", license: "", date: "" });
     setCurrentPage(1);
   };
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Pending Seller Verification</h2>
+      <h2 className="text-2xl font-bold mb-4">ตรวจสอบการยืนยันผู้ขาย</h2>
 
-      <div className="mb-4 flex gap-2">
-        <Input
-          type="text"
-          placeholder="🔍 Search by name, email, phone, company..."
-          value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="max-w-sm"
-        />
-        <Button variant="outline" onClick={resetFilters}>
-          Reset Filter
-        </Button>
-      </div>
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+  <Search className="text-gray-500" />
+  <Input
+    placeholder="ค้นหา ชื่อ / อีเมล / โทรศัพท์ / บริษัท"
+    value={searchTerm}
+    onChange={(e) => {
+      setSearchTerm(e.target.value);
+      setCurrentPage(1);
+    }}
+    className="w-72"
+  />
+  <Button variant="outline" onClick={resetFilters}>
+    รีเซ็ต
+  </Button>
+</div>
 
       <Collapsible open={filterOpen} onOpenChange={setFilterOpen} className="mb-4">
         <CollapsibleTrigger asChild>
@@ -168,9 +154,9 @@ const VerificationSeller = () => {
           </Button>
         </CollapsibleTrigger>
         <CollapsibleContent className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-2">
-          <Select 
-            value={filters.company} 
-            onValueChange={(value) => setFilters({...filters, company: value})}
+          <Select
+            value={filters.company}
+            onValueChange={(value) => setFilters({ ...filters, company: value })}
           >
             <SelectTrigger>
               <SelectValue placeholder="All companies" />
@@ -181,9 +167,9 @@ const VerificationSeller = () => {
             </SelectContent>
           </Select>
 
-          <Select 
-            value={filters.license} 
-            onValueChange={(value) => setFilters({...filters, license: value})}
+          <Select
+            value={filters.license}
+            onValueChange={(value) => setFilters({ ...filters, license: value })}
           >
             <SelectTrigger>
               <SelectValue placeholder="All licenses" />
@@ -194,18 +180,11 @@ const VerificationSeller = () => {
             </SelectContent>
           </Select>
 
-          <Input 
-            type="date" 
-            placeholder="Start date"
-            value={filters.startDate}
-            onChange={(e) => setFilters({...filters, startDate: e.target.value})}
-          />
-
-          <Input 
-            type="date" 
-            placeholder="End date"
-            value={filters.endDate}
-            onChange={(e) => setFilters({...filters, endDate: e.target.value})}
+          <Input
+            type="date"
+            placeholder="Registered Date"
+            value={filters.date}
+            onChange={(e) => setFilters({ ...filters, date: e.target.value })}
           />
         </CollapsibleContent>
       </Collapsible>
@@ -232,33 +211,34 @@ const VerificationSeller = () => {
             </tr>
           </thead>
           <tbody className="text-sm text-gray-800">
-            {paginatedSellers.map((seller) => (
-              <tr key={seller.id} className="border-b">
-                <td className="px-4 py-2">{seller.id}</td>
-                <td className="px-4 py-2">{seller.name}</td>
-                <td className="px-4 py-2">{seller.email}</td>
-                <td className="px-4 py-2">{seller.phone}</td>
-                <td className="px-4 py-2">{seller.citizenId}</td>
-                <td className="px-4 py-2">{seller.company}</td>
-                <td className="px-4 py-2">{seller.license}</td>
-                <td className="px-4 py-2">{format(parseISO(seller.registeredDate), "yyyy-MM-dd")}</td>
-                <td
-                  className="px-4 py-2 underline text-blue-600 hover:text-blue-800 cursor-pointer"
-                  onClick={() => handleDocumentClick(seller.document)}
-                >
-                  {seller.document}
-                </td>
-                <td className="px-4 py-2 space-x-2 whitespace-nowrap">
-                  <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
-                    ✅ Approve
-                  </button>
-                  <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
-                    ❌ Reject
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {filteredSellers.length === 0 && (
+            {paginatedSellers.length > 0 ? (
+              paginatedSellers.map((seller) => (
+                <tr key={seller.id} className="border-b">
+                  <td className="px-4 py-2">{seller.id}</td>
+                  <td className="px-4 py-2">{seller.name}</td>
+                  <td className="px-4 py-2">{seller.email}</td>
+                  <td className="px-4 py-2">{seller.phone}</td>
+                  <td className="px-4 py-2">{seller.citizenId}</td>
+                  <td className="px-4 py-2">{seller.company}</td>
+                  <td className="px-4 py-2">{seller.license}</td>
+                  <td className="px-4 py-2">{format(parseISO(seller.registeredDate), "yyyy-MM-dd")}</td>
+                  <td
+                    className="px-4 py-2 underline text-blue-600 hover:text-blue-800 cursor-pointer"
+                    onClick={() => handleDocumentClick(seller.document)}
+                  >
+                    {seller.document}
+                  </td>
+                  <td className="px-4 py-2 space-x-2 whitespace-nowrap">
+                    <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                      ✅ Approve
+                    </button>
+                    <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+                      ❌ Reject
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
               <tr>
                 <td colSpan={10} className="text-center text-gray-400 py-4">
                   No matching data found.
@@ -269,30 +249,32 @@ const VerificationSeller = () => {
         </table>
       </div>
 
-      <div className="flex justify-between items-center mt-4">
-        <p className="text-sm text-gray-600">
-          Showing {indexOfFirst + 1}–{Math.min(indexOfLast, sortedSellers.length)} of {sortedSellers.length}
-        </p>
-        <div className="space-x-2">
-          <Button 
-            variant="outline" 
-            disabled={currentPage === 1} 
-            onClick={() => setCurrentPage((prev) => prev - 1)}
-          >
-            Prev
-          </Button>
-          <span className="text-sm font-medium">
-            Page {currentPage} of {totalPages}
-          </span>
-          <Button 
-            variant="outline" 
-            disabled={currentPage === totalPages} 
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+<div className="flex justify-between items-center mt-4">
+  <p className="text-sm text-gray-600">
+    Showing {indexOfFirst + 1}–{Math.min(indexOfLast, sortedSellers.length)} of {sortedSellers.length}
+  </p>
+
+  <div className="flex items-center space-x-2">
+    <Button variant="outline" size="sm"
+      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+      disabled={currentPage === 1}
+      className="transition-colors hover:bg-gray-200"
+    >
+      Prev
+    </Button>
+
+    <span className="text-sm font-medium">Page {currentPage} of {totalPages}</span>
+
+    <Button variant="outline" size="sm"
+      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+      disabled={currentPage === totalPages}
+      className="transition-colors hover:bg-gray-200"
+    >
+      Next
+    </Button>
+  </div>
+</div>
+
 
       {previewImage && (
         <Dialog open={!!previewImage} onOpenChange={() => setPreviewImage(null)}>

@@ -15,6 +15,8 @@ const DescriptionReport = () => {
   const [selected, setSelected] = useState(null);
   const [statusFilter, setStatusFilter] = useState("");
   const [dateFilter, setDateFilter] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const [reports, setReports] = useState([
     {
@@ -35,6 +37,7 @@ const DescriptionReport = () => {
       date: "2025-07-12",
       status: "กำลังตรวจสอบ",
     },
+    // เพิ่มข้อมูลเพิ่มเติมได้
   ]);
 
   const handleView = (report) => {
@@ -65,6 +68,11 @@ const DescriptionReport = () => {
     return matchText && matchStatus && matchDate;
   });
 
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
+  const currentItems = filtered.slice(indexOfFirst, indexOfLast);
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">รายการรายงานปัญหา</h1>
@@ -76,14 +84,20 @@ const DescriptionReport = () => {
           <Input
             placeholder="ค้นหา Reporter / Type / Target"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setCurrentPage(1);
+            }}
             className="w-80"
           />
         </div>
 
         <select
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
+          onChange={(e) => {
+            setStatusFilter(e.target.value);
+            setCurrentPage(1);
+          }}
           className="border border-gray-300 rounded px-2 py-1"
         >
           <option value="">ทั้งหมด</option>
@@ -96,7 +110,10 @@ const DescriptionReport = () => {
         <Input
           type="date"
           value={dateFilter}
-          onChange={(e) => setDateFilter(e.target.value)}
+          onChange={(e) => {
+            setDateFilter(e.target.value);
+            setCurrentPage(1);
+          }}
           className="w-fit"
         />
         <Button
@@ -105,15 +122,16 @@ const DescriptionReport = () => {
             setSearch("");
             setStatusFilter("");
             setDateFilter("");
+            setCurrentPage(1);
           }}
         >
           รีเซ็ต
         </Button>
       </div>
-      {/* จำนวนรายการ */}
-        <p className="text-sm text-gray-500 mb-2">
-            จำนวนรายการทั้งหมด: {filtered.length}
-        </p>
+
+      <p className="text-sm text-gray-500 mb-2">
+        จำนวนรายการทั้งหมด: {filtered.length}
+      </p>
 
       {/* Table */}
       <div className="overflow-x-auto">
@@ -130,23 +148,60 @@ const DescriptionReport = () => {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((item) => (
-              <tr key={item.id} className="text-sm text-gray-700">
-                <td className="py-2 px-4 border">{item.id}</td>
-                <td className="py-2 px-4 border">{item.reporter}</td>
-                <td className="py-2 px-4 border">{item.type}</td>
-                <td className="py-2 px-4 border">{item.target}</td>
-                <td className="py-2 px-4 border">{item.date}</td>
-                <td className="py-2 px-4 border">{item.status}</td>
-                <td className="py-2 px-4 border">
-                  <Button size="sm" onClick={() => handleView(item)}>
-                    View
-                  </Button>
+            {currentItems.length === 0 ? (
+              <tr>
+                <td colSpan="7" className="text-center py-4 text-gray-400">
+                  ไม่พบรายการที่ตรงกับเงื่อนไข
                 </td>
               </tr>
-            ))}
+            ) : (
+              currentItems.map((item) => (
+                <tr key={item.id} className="text-sm text-gray-700">
+                  <td className="py-2 px-4 border">{item.id}</td>
+                  <td className="py-2 px-4 border">{item.reporter}</td>
+                  <td className="py-2 px-4 border">{item.type}</td>
+                  <td className="py-2 px-4 border">{item.target}</td>
+                  <td className="py-2 px-4 border">{item.date}</td>
+                  <td className="py-2 px-4 border">{item.status}</td>
+                  <td className="py-2 px-4 border">
+                    <Button size="sm" onClick={() => handleView(item)}>
+                      View
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-between items-center mt-4">
+        <p className="text-sm text-gray-600">
+          Showing {filtered.length === 0 ? 0 : indexOfFirst + 1}–
+          {Math.min(indexOfLast, filtered.length)} of {filtered.length}
+        </p>
+        <div className="space-x-2">
+          <Button
+            variant="outline"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+            className="hover:bg-gray-200"
+          >
+            Prev
+          </Button>
+          <span className="text-sm font-medium">
+            Page {currentPage} of {totalPages || 1}
+          </span>
+          <Button
+            variant="outline"
+            disabled={currentPage === totalPages || totalPages === 0}
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+            className="hover:bg-gray-200"
+          >
+            Next
+          </Button>
+        </div>
       </div>
 
       {/* Dialog */}

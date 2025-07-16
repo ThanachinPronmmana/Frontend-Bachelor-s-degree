@@ -14,7 +14,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp,Search } from "lucide-react";
 
 const BuyerId = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -121,24 +121,35 @@ const BuyerId = () => {
 
   return (
     <div className="p-6">
-      <div className="text-2xl font-bold mb-4">Buyer ID Table</div>
-      <div className="mb-4 flex gap-2">
-        <Input
-          type="text"
-          placeholder="Search by name, email or province..."
-          value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="max-w-sm"
-        />
-        <Button variant="outline" onClick={() => {
-          setSearchTerm("");
-          setFilters({ readiness: "", income: "", province: "", propertyType: "" });
-          setCurrentPage(1);
-        }}>Reset Filter</Button>
-      </div>
+      <div className="text-2xl font-bold mb-4">ข้อมูลของผู้ซื้อ</div>
+<div className="mb-4 flex flex-wrap items-center gap-2">
+  <Search className="text-gray-500" />
+  <Input
+    placeholder="ค้นหา ชื่อ / อีเมล / จังหวัด"
+    value={searchTerm}
+    onChange={(e) => {
+      setSearchTerm(e.target.value);
+      setCurrentPage(1);
+    }}
+    className="w-72"
+  />
+  <Button
+    variant="outline"
+    onClick={() => {
+      setSearchTerm("");
+      setFilters({
+        readiness: "",
+        income: "",
+        province: "",
+        propertyType: "",
+      });
+      setCurrentPage(1);
+    }}
+  >
+    รีเซ็ต
+  </Button>
+</div>
+
 
       <Collapsible open={filterOpen} onOpenChange={setFilterOpen} className="mb-4">
         <CollapsibleTrigger asChild>
@@ -205,22 +216,37 @@ const BuyerId = () => {
         </table>
       </div>
 
-      <div className="flex justify-between items-center mt-4">
-        <p className="text-sm text-gray-600">
-          Showing {indexOfFirst + 1}–{Math.min(indexOfLast, sortedBuyers.length)} of {sortedBuyers.length}
-        </p>
-        <div className="space-x-2">
-          <Button disabled={currentPage === 1} onClick={() => setCurrentPage((prev) => prev - 1)}>
-            Prev
-          </Button>
-          <span className="text-sm font-medium">
-            Page {currentPage} of {totalPages}
-          </span>
-          <Button disabled={currentPage === totalPages} onClick={() => setCurrentPage((prev) => prev + 1)}>
-            Next
-          </Button>
-        </div>
-      </div>
+ <div className="flex justify-between items-center mt-4">
+  <p className="text-sm text-gray-600">
+    Showing {indexOfFirst + 1}–{Math.min(indexOfLast, sortedBuyers.length)} of {sortedBuyers.length}
+  </p>
+  <div className="flex items-center space-x-2">
+    <Button
+      variant="outline"
+      size="sm"
+      disabled={currentPage === 1}
+      onClick={() => setCurrentPage((prev) => prev - 1)}
+      className="transition-colors hover:bg-gray-200"
+    >
+      Prev
+    </Button>
+
+    <span className="text-sm font-medium">
+      Page {currentPage} of {totalPages}
+    </span>
+
+    <Button
+      variant="outline"
+      size="sm"
+      disabled={currentPage === totalPages}
+      onClick={() => setCurrentPage((prev) => prev + 1)}
+      className="transition-colors hover:bg-gray-200"
+    >
+      Next
+    </Button>
+  </div>
+</div>
+
 
       <Dialog open={!!selectedBuyer} onOpenChange={() => setSelectedBuyer(null)}>
         <DialogContent>
