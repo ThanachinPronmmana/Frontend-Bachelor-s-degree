@@ -77,13 +77,13 @@ const VerifyEmail = () => {
             <label className="block mb-1">Date of Birth</label>
             <input
               type="date"
-              {...register("DatofBirth", { required: true })}
+              {...register("DateofBirth", { required: true })}
               className="input w-full border p-2 rounded mb-2"
             />
             {errors.DateOfBirth && <p className="text-red-500">Date of birth is required</p>}
 
             <input
-              {...register("Occaapation", { required: true })}
+              {...register("Occaaption", { required: true })}
               placeholder="Occupation"
               className="input w-full border p-2 rounded mb-2"
             />

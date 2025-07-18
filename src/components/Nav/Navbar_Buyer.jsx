@@ -3,7 +3,7 @@ import Home from "./Home"
 import Profile from "./Profile"
 import Post_for_sale from "./Post_for_sale"
 import Support from "./Support"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import Noti from "./Noti"
 import {
   DropdownMenu,
@@ -16,7 +16,26 @@ import {
 import { AlignJustify } from 'lucide-react';
 import Profile_Buyer from "./Profile_Buyer"
 import Support_Buyer from "./Support_Buyer"
+import { useState,useEffect } from "react"
 const Navbar_Buyer = () => {
+  const [user,setUser] = useState(null)
+  const navigate = useNavigate()
+  useEffect (()=>{
+    const storedUser = localStorage.getItem("user")
+    if(storedUser){
+      try{
+        setUser(JSON.parse(storedUser))
+      }catch(err){
+        console.error("Error parsing user data",err)
+      }
+    }
+  },[])
+  const handleLogout = ()=>{
+    localStorage.removeItem("user")
+    localStorage.removeItem("token")
+    navigate("/")
+  }
+
   return (
     <nav className="py-4 px-5 shadow-md border-b border-gray-200 bg-white">
       
@@ -29,7 +48,7 @@ const Navbar_Buyer = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>
-                Name
+                {user ? `${user.First_name} ${user.Last_name}` : "Guest"}
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="cursor-pointer">
@@ -39,9 +58,11 @@ const Navbar_Buyer = () => {
                 <Noti />
               </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer">
-                <Support_Buyer />
+                <Support />
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">
+              <DropdownMenuItem className="cursor-pointer" 
+              onClick ={handleLogout}
+              >
                 <p className="text-black font-medium">Logout</p>
               </DropdownMenuItem>
             </DropdownMenuContent>

@@ -1,8 +1,31 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
+import { useEffect, useState } from "react";
+
+const formatDateThai = (dateString) => {
+  if (!dateString) return "-";
+  const date = new Date(dateString);
+  if (isNaN(date)) return "-";
+  return date.toLocaleDateString("th-TH", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
 
 const BuyerInfo = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      console.log("Loaded user from localStorage:", parsedUser);
+      setUser(parsedUser);
+    }
+  }, []);
+
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold">โปรไฟล์ผู้ซื้อ</h2>
@@ -18,8 +41,10 @@ const BuyerInfo = () => {
                 className="w-20 h-20 rounded-full object-cover border"
               />
               <div>
-                <p className="text-xl font-bold">สมหญิง ใจดี</p>
-                <p className="text-sm text-gray-600">somying@example.com</p>
+                <p className="text-xl font-bold">
+                  {user?.First_name} {user?.Last_name}
+                </p>
+                <p className="text-sm text-gray-600">{user?.Email}</p>
               </div>
             </div>
 
@@ -33,24 +58,32 @@ const BuyerInfo = () => {
           {/* รายละเอียด */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-sm">
             <p>
-              <span className="font-semibold">เบอร์โทร:</span> 089-876-5432
+              <span className="font-semibold">เบอร์โทร:</span> {user?.Phone || "-"}
             </p>
             <p>
-              <span className="font-semibold">อายุ:</span> 35 ปี
+              <span className="font-semibold">วันเกิด:</span> {formatDateThai(user?.Buyer?.DateofBirth)}
             </p>
             <p>
-              <span className="font-semibold">อาชีพ:</span> พนักงานบริษัท
+              <span className="font-semibold">อาชีพ:</span> {user?.Buyer?.Occaaption || "-"}
             </p>
             <p>
-              <span className="font-semibold">ที่อยู่:</span> 123/4 ถนนสุขุมวิท กทม.
+              <span className="font-semibold">รายได้:</span> {user?.Buyer?.Monthly_Income || "-"}
             </p>
             <p>
-              <span className="font-semibold">สถานะบัญชี:</span>{" "}
-              <span className="inline-block px-2 py-1 text-xs font-semibold text-white bg-green-500 rounded-full">
-                ยืนยันแล้ว
-              </span>
+              <span className="font-semibold">ขนาดครอบครัว:</span> {user?.Buyer?.Family_Size || "-"}
+            </p>
+            <p>
+              <span className="font-semibold">จังหวัดที่สนใจ:</span> {user?.Buyer?.Preferred_Province || "-"}
+            </p>
+            <p>
+              <span className="font-semibold">เขตที่สนใจ:</span> {user?.Buyer?.Preferred_District || "-"}
             </p>
           </div>
+
+          {/* Debug raw date (ลบออกได้เมื่อมั่นใจแล้ว) */}
+          <p className="mt-4 text-xs text-gray-400">
+            Raw DateofBirth: {user?.Buyer?.DateofBirth || "ไม่มีข้อมูล"}
+          </p>
         </CardContent>
       </Card>
     </div>

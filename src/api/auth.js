@@ -9,8 +9,8 @@ export const verifyandregister = async(payload)=>{
     const res = await axios.post(`${API_URL}/api/verifyandregister`,payload)
     return res.data
 }
-export const login = async(data)=>{
-    const res = await axios.post(`${API_URL}/api/login`,data)
+export const login = async(formData)=>{
+    const res = await axios.post(`${API_URL}/api/login`,formData)
     return res.data
 }
 export const forgotpassword = async(data)=>{

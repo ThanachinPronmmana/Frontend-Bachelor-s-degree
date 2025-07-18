@@ -13,7 +13,7 @@ const Register = () => {
         ...data,
         userType,
       };
-
+      console.log(payload)
       const res = await preregister(payload);
 
       console.log("API Response:", res);
