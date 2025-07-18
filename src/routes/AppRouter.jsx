@@ -39,9 +39,6 @@ import Deposit_doc from "@/pages/Deposit_doc";
 import Payment from "@/pages/Payment";
 
 // 🛠️ Admin Pages
-import Dashboard from "@/pages/admin/Dashboard";
-import Manage from "@/pages/admin/Manage";
-import Notfound from "@/pages/admin/Notfound";
 
 // 🆕 Admin Sub Pages (You should create these later)
 import Approval from "@/pages/admin/Posts of Seller/Approval";
