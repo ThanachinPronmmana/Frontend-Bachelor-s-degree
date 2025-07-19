@@ -3,8 +3,8 @@ import Credit from "@/components/Credit";
 import { Button } from "@/components/ui/button";
 import mockHouses from "@/data/mockHouses";
 import { useState, useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router";
-import { BedSingle, Bath, Grid2x2 } from "lucide-react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { BedSingle, Bath, Grid2x2 } from 'lucide-react';
 import { useCompare } from "@/context/CompareContext";
 
 const Deposit = () => {
@@ -13,6 +13,7 @@ const Deposit = () => {
   const navigate = useNavigate();
   const { addToCompare, compareList } = useCompare();
 
+
   useEffect(() => {
     const foundHouse = mockHouses.find((h) => h.id === id);
     setHouse(foundHouse);
@@ -20,8 +21,8 @@ const Deposit = () => {
   }, [id]);
 
   if (!house) return <div>Loading...</div>;
-
   const isAlreadyCompared = compareList.some((item) => item.id === house.id);
+
 
   return (
     <div className="flex-row">
@@ -79,6 +80,21 @@ const Deposit = () => {
 
             {/* ปุ่ม */}
             <div className="w-full flex justify-center mt-2 space-x-4">
+              
+                <Buttons
+                  onClick={() => {
+                    const user = JSON.parse(localStorage.getItem("user"));
+                    if (!user || user.userType !== "Buyer") {
+                      navigate("/login");
+                    } else {
+                      navigate("/Deposit_doc", { state: { house } });
+                    }
+                  }}
+                  text="มัดจำ"
+                  color="bg-blue-500"
+                  lenghbutton="w-40"
+                />
+              
               <Link to="/Deposit_doc" state={{ house }}>
                 <Buttons text="มัดจำ" color="bg-blue-500" lenghbutton="w-40" />
               </Link>
@@ -100,6 +116,8 @@ const Deposit = () => {
                       src: house.images?.[0],
                       price: house.price,
                       size: house.size,
+                      badroom: house.badroom,
+                      bathroom: house.bathroom
                     };
                     addToCompare(compareHouse);
                   }}

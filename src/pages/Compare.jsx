@@ -59,7 +59,7 @@ const Compare = () => {
               <td className="border p-2">จำนวนห้อง</td>
               {compareList.map((house) => (
                 <td key={house.id} className="border p-2">
-                  {house.bedrooms || 0} นอน / {house.bathrooms || 0} น้ำ
+                  {house.badroom || 0} นอน / {house.bathroom || 0} น้ำ
                 </td>
               ))}
             </tr>
