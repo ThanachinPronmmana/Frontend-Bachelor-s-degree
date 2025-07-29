@@ -1,12 +1,13 @@
-import { Input } from "./ui/input"
+import { Input } from "../ui/input"
 
-const Searchbar = ({text,onChange}) => {
+const Searchbar = ({text,onChange,type = "text",...props}) => {
   return (
     <Input
-    type="text"
+    type={type}
     placeholder={text}
     className="max-w-md items-center"
     onChange = {onChange}
+    {...props}
     />
   )
 }

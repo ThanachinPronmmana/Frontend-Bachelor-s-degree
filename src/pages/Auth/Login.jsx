@@ -15,17 +15,18 @@ const Login = () => {
   const onSubmit = async (formData) => {
     try {
       const response = await login(formData); // ✅ login() ต้อง return res.data แล้ว
-      console.log(response.user.Buyer.DateofBirth);
+      
       const { token, user, message } = response;
-
+      console.log(response)
       if (!token || !user) {
         throw new Error("Login response missing data");
       }
 
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("id",user.id)
-       
+      localStorage.setItem("id", user.id)
+     
+
       if (user.userType === "Buyer") {
         navigate("/buyer");
       } else if (user.userType === "Seller") {
@@ -35,7 +36,9 @@ const Login = () => {
       }
     } catch (err) {
       console.error("Login error:", err);
-      setServerError(err.message || "Login failed");
+      // setServerError(err.message || "Login failed");
+      console.error("Login failed:", err.response?.data); // 👈
+      setServerError(err.response?.data?.message || "Unknown error");
     }
   };
 

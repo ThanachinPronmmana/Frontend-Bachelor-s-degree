@@ -34,6 +34,8 @@ import Resetpassword from "@/pages/Auth/Resetpassword";
 import Layout_Buyer from "@/layouts/Layout_Buyer";
 import Layout_Seller from "@/layouts/Layout_Seller";
 import Profile_Buyer from "@/components/Nav/Profile_Buyer";
+import RequireBuyerAuth from "@/components/Auth/RequireBuyerAuth";
+import RequireSeller from "@/components/Auth/RequireSeller";
 
 
 const AppRouter = () => {
@@ -74,23 +76,25 @@ const AppRouter = () => {
                     <Route path="/forgot" element={<Forgotpassword/>}/>
                 </Route>
                 {/* Buyer */}
-                <Route path="/buyer" element={
-                    <Layout_Buyer/>
-                }>
+                <Route path="/buyer" element={<RequireBuyerAuth/>}>
+                <Route element={<Layout_Buyer/>}>
                    <Route index element={<Home />} />
                    <Route path="profile" element={<ProfileBuyer/>} />
                    <Route path="support" element={<Support/>}/>
                    <Route path="payment" element={<Payment/>}/> 
                    <Route path="deposit/:id" element={<Deposit/>}/>
                 </Route>
+                </Route>
+               
                 {/* Seller */}
-                <Route path="/seller" element={
-                    <Layout_Seller/>
-                }>
+                <Route path="/seller" element={<RequireSeller/>}>
+                <Route element={<Layout_Seller/>}>
                     <Route index element={<Home />} />
+                    <Route path="profile" element={<ProfileSeller/>}/>
+                    <Route path="support" element={<Support/>}/>
 
                 </Route>
-
+                </Route>
                 {/* Private */}
                 <Route path="admin" element={
                     <LayoutAdmin/>

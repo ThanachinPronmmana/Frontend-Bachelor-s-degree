@@ -43,7 +43,7 @@ const ProfileBuyer = () => {
           {/* User Info */}
           <div className="mb-10 flex items-center space-x-4">
             <img
-              src={`https://ui-avatars.com/api/?name=${user?.First_name}&background=34495e&color=fff`}
+              src={user.image}
               alt="avatar"
               className="w-12 h-12 rounded-full"
             />
@@ -103,7 +103,7 @@ const ProfileBuyer = () => {
           </h1>
 
           {/* Content */}
-          {selectedTab === "info" && <BuyerInfo user={user} />}
+          {selectedTab === "info" && <BuyerInfo user={user} setUser={setUser} />}
           {selectedTab === "favorite" && <BuyerFavorite />}
           {selectedTab === "noti" && <BuyerNoti />}
           {selectedTab === "doc" && <BuyerDoc />}
