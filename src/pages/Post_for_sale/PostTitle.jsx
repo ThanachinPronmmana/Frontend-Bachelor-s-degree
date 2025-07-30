@@ -8,7 +8,7 @@ const PostTitle = () => {
   const navigate = useNavigate();
 
   const handleNext = () => {
-    navigate("/post-for-sale/location");
+    navigate("/seller/post-for-sale/location");
   };
 
   return (
