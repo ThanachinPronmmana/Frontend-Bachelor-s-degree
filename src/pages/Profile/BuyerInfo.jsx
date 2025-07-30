@@ -20,9 +20,10 @@ const formatDateThai = (dateString) => {
   });
 };
 //*
-const BuyerInfo = ({user,setUser}) => {
+const BuyerInfo = ({ user, setUser }) => {
   // const [user, setUser] = useState(null);
   const [showModal, setshowModal] = useState(false)
+  const [showmodalimage, setshowModalimage] = useState(false)
   const {
     register,
     handleSubmit,
@@ -71,12 +72,13 @@ const BuyerInfo = ({user,setUser}) => {
         <CardContent className="p-6">
           <div className="flex justify-between items-start mb-6">
             {/* Avatar + ชื่อ */}
-            <div className="flex items-center space-x-4">
+            < div className="flex items-center space-x-4">
               <img
                 src={user?.image}
                 alt="Profile"
                 className="w-20 h-20 rounded-full object-cover border"
               />
+
 
 
               <div>
@@ -85,18 +87,55 @@ const BuyerInfo = ({user,setUser}) => {
                 </p>
                 <p className="text-sm text-gray-600">{user?.Email}</p>
               </div>
+
+              <Formuploadimage
+                userId={user.id}
+                onUploadSuccess={async (imageData) => {
+                  if (!imageData?.url) return alert("ไม่พบ URL รูปภาพ");
+
+                  try {
+                    const response = await updateprofile(user.id, { image: imageData.url });
+
+                    // ✅ รวมข้อมูลเดิมกับใหม่ เพื่อไม่ให้ field อื่นหาย
+                    const mergedUser = {
+                      ...user,              // เก็บของเดิมไว้
+                      ...response.user,     // ทับเฉพาะ field ที่ backend ส่งมา (image, Buyer)
+                      Buyer: {
+                        ...user.Buyer,
+                        ...response.user.Buyer  // รวมข้อมูลใน Buyer เช่นกัน
+                      }
+                    };
+
+                    setUser(mergedUser);
+                    localStorage.setItem("user", JSON.stringify(mergedUser));
+                    alert("อัปโหลดและบันทึกรูปภาพสำเร็จ");
+                  } catch (err) {
+                    console.error("อัปเดตรูปภาพล้มเหลว:", err);
+                    alert("ไม่สามารถอัปเดตรูปได้");
+                  }
+                }}
+
+              />
             </div>
 
             {/* ปุ่มแก้ไข */}
-
-            <Button variant="outline" size="sm"
-              onClick={() => {
-                setshowModal(true)
-              }}
-              className="cursor-pointer">
-              <Pencil className="w-4 h-4 mr-2" />
-              แก้ไขข้อมูล
-            </Button>
+            <div>
+              <Button
+                className="cursor-pointer"
+                variant="outline"
+                size="sm"
+              >
+                แก้ไขรูป
+              </Button>
+              <Button variant="outline" size="sm"
+                onClick={() => {
+                  setshowModal(true)
+                }}
+                className="cursor-pointer">
+                <Pencil className="w-4 h-4 mr-2" />
+                แก้ไขข้อมูล
+              </Button>
+            </div>
           </div>
           {showModal && (
 
@@ -108,58 +147,81 @@ const BuyerInfo = ({user,setUser}) => {
                 />
                 <h1 className="font-bold text-xl text-center mb-2">แก้ไขข้อมูล</h1>
 
-                <div className="flex items-center">
+                {/* <div className="flex items-center">
                   <Formuploadimage
                     userId={user.id}
                     onUploadSuccess={async (imageData) => {
-                      console.log("image url:", imageData.url);
                       try {
                         const url = imageData?.url;
                         if (!url) {
                           console.error("No image URL found in response");
                           return;
                         }
+
+                        // ส่ง URL ที่อัปโหลดแล้ว ไปบันทึกในฐานข้อมูล
+                        const response = await fetch(`/api/users/${user.id}/image`, {
+                          method: "PUT",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({ image: url }),
+                        });
+
+                        if (!response.ok) throw new Error("Failed to update image");
+
+                        const result = await response.json();
+
                         const updatedUser = {
                           ...user,
-                          image: url,
+                          image: result.image.url, // หรือ url
                         };
-                        setUser(updatedUser)
-                        localStorage.setItem("user",JSON.stringify(updatedUser))
-                        alert("อัปโหลดสำเร็จ")
+
+                        setUser(updatedUser);
+                        localStorage.setItem("user", JSON.stringify(updatedUser));
+                        alert("อัปโหลดและบันทึกรูปสำเร็จ");
+
                       } catch (err) {
-                        console.error("อัปเดตรูปภาพล้มเหลว:", err);
-                        alert("ไม่สามารถอัปโหลดรูปได้")
+                        console.error("อัปโหลดรูปหรืออัปเดตฐานข้อมูลล้มเหลว:", err);
+                        alert("ไม่สามารถอัปโหลดหรือบันทึกรูปได้");
                       }
                     }}
                   />
-                </div>
-                {/* <div className="flex items-center">
-
-                  <Formuploadimage
-
-                    userId={user.id}
-
-                    onUploadSuccess={(res) => {
-
-                      console.log("image url:", res.url);
-
-                      const updatedUser = {
-
-                        ...user,
-
-                        image: res.url,
-
-                      };
-
-                      setUser(updatedUser);
-
-                      localStorage.setItem("user", JSON.stringify(updatedUser));
-
-                    }}
-
-                  />
 
                 </div> */}
+                {/* <div className="flex items-center">
+
+                    <Formuploadimage
+                      userId={user.id}
+                      onUploadSuccess={async (imageData) => {
+                        console.log("image url:", imageData.url);
+                        try {
+                          const url = imageData?.url;
+
+                          if (!url) {
+                            console.error("No image URL found in response");
+                            return;
+                          }
+
+                          
+                          const updatedUser = {
+                            ...user,
+                            image: url,
+                          };
+
+                          
+                          setUser(updatedUser);
+                          localStorage.setItem("user", JSON.stringify(updatedUser));
+
+                          alert("อัปโหลดสำเร็จ");
+                        } catch (err) {
+                          console.error("อัปเดตรูปภาพล้มเหลว:", err);
+                          alert("ไม่สามารถอัปโหลดรูปได้");
+                        }
+                      }}
+                    />
+
+
+                  </div> */}
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="flex justify-first mb-4">
                     <input

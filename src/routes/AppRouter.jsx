@@ -51,14 +51,8 @@ const AppRouter = () => {
                     
                     {/* <Route path="/profile/seller" element={<ProfileSeller />} /> */}
                     
-                    {/* <Route path="/post-for-sale/title" element={<PostTitle />} />
-                    <Route path="/post-for-sale/location" element={<PostLocation />} />
-                    <Route path="/post-for-sale/detail" element={<PostDetail />} />
-                    <Route path="/post-for-sale/price" element={<PostPrice />} />
-                    <Route path="/post-for-sale/inform" element={<PostInform />} />
-                    <Route path="/post-for-sale/upload" element={<PostUpload />} />
-                    <Route path="/post-for-sale/confirm" element={<PostConfirm />} />
-                    <Route path="/Noti" element={<BuyerNoti/>}/> */}
+                    
+                    <Route path="/Noti" element={<BuyerNoti/>}/>
 
                     
                     <Route path="/support" element={<Support />} />
@@ -92,6 +86,13 @@ const AppRouter = () => {
                     <Route index element={<Home />} />
                     <Route path="profile" element={<ProfileSeller/>}/>
                     <Route path="support" element={<Support/>}/>
+                    <Route path="post-for-sale/title" element={<PostTitle />} />
+                    <Route path="post-for-sale/location" element={<PostLocation />} />
+                    <Route path="post-for-sale/detail" element={<PostDetail />} />
+                    <Route path="post-for-sale/price" element={<PostPrice />} />
+                    <Route path="post-for-sale/inform" element={<PostInform />} />
+                    <Route path="post-for-sale/upload" element={<PostUpload />} />
+                    <Route path="post-for-sale/confirm" element={<PostConfirm />} />
 
                 </Route>
                 </Route>
