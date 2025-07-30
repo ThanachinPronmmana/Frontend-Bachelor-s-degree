@@ -2,12 +2,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FormInput, Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
-import { CircleX } from "lucide-react"
+import { CircleX } from "lucide-react";
 import Frominput from "@/components/form/Frominput";
 import { updateprofile } from "@/api/user";
 import { useForm } from "react-hook-form";
 import Formuploadimage from "@/components/form/Formuploadimage";
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodResolver } from "@hookform/resolvers/zod";
 import { buyerSchema } from "@/components/schemas/buyerinfo";
 const formatDateThai = (dateString) => {
   if (!dateString) return "-";
@@ -22,8 +22,8 @@ const formatDateThai = (dateString) => {
 //*
 const BuyerInfo = ({ user, setUser }) => {
   // const [user, setUser] = useState(null);
-  const [showModal, setshowModal] = useState(false)
-  const [showmodalimage, setshowModalimage] = useState(false)
+  const [showModal, setshowModal] = useState(false);
+  const [showmodalimage, setshowModalimage] = useState(false);
   const {
     register,
     handleSubmit,
@@ -33,9 +33,9 @@ const BuyerInfo = ({ user, setUser }) => {
   } = useForm({
     resolver: zodResolver(buyerSchema),
     defaultValues: {
-      DateofBirth: user?.Buyer?.DateofBirth?.split("T")[0] || ""
-    }
-  })
+      DateofBirth: user?.Buyer?.DateofBirth?.split("T")[0] || "",
+    },
+  });
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -43,26 +43,27 @@ const BuyerInfo = ({ user, setUser }) => {
       console.log("Loaded user from localStorage:", parsedUser);
       setUser(parsedUser);
       reset({
-        DateofBirth: parsedUser?.Buyer?.DateofBirth?.split("T")[0] || ""
-      })
-
+        DateofBirth: parsedUser?.Buyer?.DateofBirth?.split("T")[0] || "",
+      });
     }
   }, []);
   const onSubmit = async (data) => {
     try {
       const filteredData = Object.fromEntries(
-        Object.entries(data).filter(([_, value]) => value !== undefined && value !== "")
-      )
-      const updateUser = await updateprofile(user.id, filteredData)
-      alert("Update Success")
-      setUser(updateUser.user)
-      localStorage.setItem("user", JSON.stringify(updateUser.user))
-      setshowModal(false)
+        Object.entries(data).filter(
+          ([_, value]) => value !== undefined && value !== "",
+        ),
+      );
+      const updateUser = await updateprofile(user.id, filteredData);
+      alert("Update Success");
+      setUser(updateUser.user);
+      localStorage.setItem("user", JSON.stringify(updateUser.user));
+      setshowModal(false);
     } catch (err) {
-      console.error("Error update user:", err)
-      alert("Server Error")
+      console.error("Error update user:", err);
+      alert("Server Error");
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -72,14 +73,12 @@ const BuyerInfo = ({ user, setUser }) => {
         <CardContent className="p-6">
           <div className="flex justify-between items-start mb-6">
             {/* Avatar + ชื่อ */}
-            < div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4">
               <img
                 src={user?.image}
                 alt="Profile"
                 className="w-20 h-20 rounded-full object-cover border"
               />
-
-
 
               <div>
                 <p className="text-xl font-bold">
@@ -94,16 +93,18 @@ const BuyerInfo = ({ user, setUser }) => {
                   if (!imageData?.url) return alert("ไม่พบ URL รูปภาพ");
 
                   try {
-                    const response = await updateprofile(user.id, { image: imageData.url });
+                    const response = await updateprofile(user.id, {
+                      image: imageData.url,
+                    });
 
                     // ✅ รวมข้อมูลเดิมกับใหม่ เพื่อไม่ให้ field อื่นหาย
                     const mergedUser = {
-                      ...user,              // เก็บของเดิมไว้
-                      ...response.user,     // ทับเฉพาะ field ที่ backend ส่งมา (image, Buyer)
+                      ...user, // เก็บของเดิมไว้
+                      ...response.user, // ทับเฉพาะ field ที่ backend ส่งมา (image, Buyer)
                       Buyer: {
                         ...user.Buyer,
-                        ...response.user.Buyer  // รวมข้อมูลใน Buyer เช่นกัน
-                      }
+                        ...response.user.Buyer, // รวมข้อมูลใน Buyer เช่นกัน
+                      },
                     };
 
                     setUser(mergedUser);
@@ -114,38 +115,37 @@ const BuyerInfo = ({ user, setUser }) => {
                     alert("ไม่สามารถอัปเดตรูปได้");
                   }
                 }}
-
               />
             </div>
 
             {/* ปุ่มแก้ไข */}
             <div>
-              <Button
-                className="cursor-pointer"
-                variant="outline"
-                size="sm"
-              >
+              <Button className="cursor-pointer" variant="outline" size="sm">
                 แก้ไขรูป
               </Button>
-              <Button variant="outline" size="sm"
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => {
-                  setshowModal(true)
+                  setshowModal(true);
                 }}
-                className="cursor-pointer">
+                className="cursor-pointer"
+              >
                 <Pencil className="w-4 h-4 mr-2" />
                 แก้ไขข้อมูล
               </Button>
             </div>
           </div>
           {showModal && (
-
             <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
               <div className="flex flex-col bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-lg relative">
                 <CircleX
                   className="absolute top-4 right-4 cursor-pointer hover:text-black text-gray-500"
                   onClick={() => setshowModal(false)}
                 />
-                <h1 className="font-bold text-xl text-center mb-2">แก้ไขข้อมูล</h1>
+                <h1 className="font-bold text-xl text-center mb-2">
+                  แก้ไขข้อมูล
+                </h1>
 
                 {/* <div className="flex items-center">
                   <Formuploadimage
@@ -226,12 +226,18 @@ const BuyerInfo = ({ user, setUser }) => {
                   <div className="flex justify-first mb-4">
                     <input
                       type="date"
-                      value={watch("DateofBirth") || user?.Buyer?.DateofBirth?.split("T")[0] || ""}
+                      value={
+                        watch("DateofBirth") ||
+                        user?.Buyer?.DateofBirth?.split("T")[0] ||
+                        ""
+                      }
                       {...register("DateofBirth")}
                       className="input w-full h-10 border p-2 rounded-xl"
                     />
                     {errors.DateofBirth && (
-                      <p className="text-red-500 text-sm">{errors.DateofBirth.message}</p>
+                      <p className="text-red-500 text-sm">
+                        {errors.DateofBirth.message}
+                      </p>
                     )}
                   </div>
                   <div className="grid grid-cols-2 gap-4 mb-4">
@@ -292,17 +298,16 @@ const BuyerInfo = ({ user, setUser }) => {
                         className="input w-full h-10 border p-2 rounded-xl"
                         {...register("Parking_Needs")}
                       >
-
                         <option value="">Select Parking Needs</option>
                         <option value="oneCar">1 Car</option>
                         <option value="twoCars">2 Car</option>
                         <option value="Not_required">Not Required</option>
                       </select>
-                      {
-                        errors.Parking_Needs && (
-                          <p className="text-red-500 text-sm">{errors.Parking_Needs?.message}</p>
-                        )
-                      }
+                      {errors.Parking_Needs && (
+                        <p className="text-red-500 text-sm">
+                          {errors.Parking_Needs?.message}
+                        </p>
+                      )}
                     </div>
                     <div className="flex felx-col mt-5">
                       <select
@@ -319,7 +324,8 @@ const BuyerInfo = ({ user, setUser }) => {
                     <div className="flex felx-col mt-5">
                       <select
                         {...register("Lifestyle_Preferences")}
-                        className="input w-full h-10 border p-2 rounded-xl">
+                        className="input w-full h-10 border p-2 rounded-xl"
+                      >
                         <option value="">Lifestyle Preferences</option>
                         <option value="Work_from_Home">Work from Home</option>
                         <option value="Have_Pets">Have Pets</option>
@@ -327,7 +333,6 @@ const BuyerInfo = ({ user, setUser }) => {
                         <option value="Like_Gardening">Like Gardening</option>
                       </select>
                     </div>
-
                   </div>
                   <textarea
                     {...register("Special_Requirements")}
@@ -344,41 +349,43 @@ const BuyerInfo = ({ user, setUser }) => {
                   </div>
                 </form>
               </div>
-
             </div>
-
           )}
 
           {/* รายละเอียด */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-sm">
             <p>
-              <span className="font-semibold">เบอร์โทร:</span> {user?.Phone || "-"}
+              <span className="font-semibold">เบอร์โทร:</span>{" "}
+              {user?.Phone || "-"}
             </p>
             <p>
-              <span className="font-semibold">วันเกิด:</span> {formatDateThai(user?.Buyer?.DateofBirth)}
+              <span className="font-semibold">วันเกิด:</span>{" "}
+              {formatDateThai(user?.Buyer?.DateofBirth)}
             </p>
             <p>
-              <span className="font-semibold">อาชีพ:</span> {user?.Buyer?.Occupation || "-"}
+              <span className="font-semibold">อาชีพ:</span>{" "}
+              {user?.Buyer?.Occupation || "-"}
             </p>
             <p>
-              <span className="font-semibold">รายได้:</span> {user?.Buyer?.Monthly_Income || "-"}
+              <span className="font-semibold">รายได้:</span>{" "}
+              {user?.Buyer?.Monthly_Income || "-"}
             </p>
             <p>
-              <span className="font-semibold">ขนาดครอบครัว:</span> {user?.Buyer?.Family_Size || "-"}
+              <span className="font-semibold">ขนาดครอบครัว:</span>{" "}
+              {user?.Buyer?.Family_Size || "-"}
             </p>
             <p>
-              <span className="font-semibold">จังหวัดที่สนใจ:</span> {user?.Buyer?.Preferred_Province || "-"}
+              <span className="font-semibold">จังหวัดที่สนใจ:</span>{" "}
+              {user?.Buyer?.Preferred_Province || "-"}
             </p>
             <p>
-              <span className="font-semibold">เขตที่สนใจ:</span> {user?.Buyer?.Preferred_District || "-"}
+              <span className="font-semibold">เขตที่สนใจ:</span>{" "}
+              {user?.Buyer?.Preferred_District || "-"}
             </p>
           </div>
-
         </CardContent>
       </Card>
-
     </div>
-
   );
 };
 

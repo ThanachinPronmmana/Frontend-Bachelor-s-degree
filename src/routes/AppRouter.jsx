@@ -72,7 +72,10 @@ const AppRouter = () => {
           <Route path="/support" element={<Support />} />
 
           {/* Profile Selection & Display */}
-          <Route path="/profileTypeSelector" element={<ProfileTypeSelector />} />
+          <Route
+            path="/profileTypeSelector"
+            element={<ProfileTypeSelector />}
+          />
           <Route path="/profile/seller" element={<ProfileSeller />} />
           <Route path="/profile/buyer" element={<ProfileBuyer />} />
           <Route path="/noti" element={<BuyerNoti />} />
@@ -131,24 +134,20 @@ const AppRouter = () => {
         */}
         <Route path="/admin" element={<LayoutAdmin />}>
           <Route index element={<Approval />} /> {/* Admin's default view */}
-
           {/* Posts of Seller Management */}
           <Route path="approval" element={<Approval />} />
           <Route path="accept-post" element={<AcceptPost />} />
           <Route path="reject-post" element={<RejectPost />} />
-
           {/* User Account Management */}
           <Route path="buyer-id" element={<BuyerId />} />
           <Route path="seller-id/verify" element={<VerificationSeller />} />
           <Route path="seller-id/verified" element={<VerifiedSeller />} />
           <Route path="seller-id/reject" element={<RejectSeller />} />
-
           {/* Payment Management */}
           <Route path="pay-deposit" element={<PayDeposit />} />
           <Route path="pay-bank" element={<PayBank />} />
           <Route path="description-report" element={<DescriptionReport />} />
         </Route>
-
       </Routes>
     </BrowserRouter>
   );

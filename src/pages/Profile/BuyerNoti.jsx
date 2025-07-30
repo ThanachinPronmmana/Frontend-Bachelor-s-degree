@@ -1,4 +1,10 @@
-import { Bell, CheckCircle, AlertTriangle, MessageSquare, Info } from "lucide-react";
+import {
+  Bell,
+  CheckCircle,
+  AlertTriangle,
+  MessageSquare,
+  Info,
+} from "lucide-react";
 
 const mockNotifications = [
   {

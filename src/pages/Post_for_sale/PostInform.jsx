@@ -24,9 +24,18 @@ const PostInform = () => {
       <div className="bg-white mt-10 px-10 py-6 rounded-lg shadow-md w-[700px]">
         {/* Step Indicator */}
         <div className="flex justify-between mb-8">
-          {["Title", "Details", "Price & Terms", "Seller Information", "Upload Photos", "Confirmation"].map((label, index) => (
+          {[
+            "Title",
+            "Details",
+            "Price & Terms",
+            "Seller Information",
+            "Upload Photos",
+            "Confirmation",
+          ].map((label, index) => (
             <div key={index} className="flex flex-col items-center w-1/6">
-              <div className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${index === 3 ? "bg-gray-800" : "bg-gray-300"}`}>
+              <div
+                className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${index === 3 ? "bg-gray-800" : "bg-gray-300"}`}
+              >
                 {index + 1}
               </div>
               <span className="text-xs mt-1 text-center">{label}</span>
@@ -46,7 +55,9 @@ const PostInform = () => {
             />
           </div>
           <div>
-            <label className="block text-sm mb-1 text-black">Phone number</label>
+            <label className="block text-sm mb-1 text-black">
+              Phone number
+            </label>
             <input
               type="text"
               value={formData.phone}
@@ -100,7 +111,9 @@ const PostInform = () => {
               <input
                 type="checkbox"
                 checked={formData.useFacebook}
-                onChange={() => handleChange("useFacebook", !formData.useFacebook)}
+                onChange={() =>
+                  handleChange("useFacebook", !formData.useFacebook)
+                }
                 className="mr-2"
               />
               <FaFacebook className="text-blue-600 mr-2" />

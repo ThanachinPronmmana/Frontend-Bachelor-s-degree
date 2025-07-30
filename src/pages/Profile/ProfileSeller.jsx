@@ -1,5 +1,11 @@
 import { useState } from "react";
-import {FaUser,FaHome,FaBell,FaFileAlt,FaTachometerAlt} from "react-icons/fa";
+import {
+  FaUser,
+  FaHome,
+  FaBell,
+  FaFileAlt,
+  FaTachometerAlt,
+} from "react-icons/fa";
 import SellerInfo from "./SellerInfo";
 import SellerPost from "./SellerPost";
 import SellerDashboard from "./SellerDashboard";
@@ -12,7 +18,11 @@ const ProfileSeller = () => {
   const tabs = [
     { label: "Info", key: "info", icon: <FaUser className="mr-2" /> },
     { label: "Post", key: "post", icon: <FaHome className="mr-2" /> },
-    { label: "Dashboard", key: "dashboard" , icon: <FaTachometerAlt className="mr-2" />},
+    {
+      label: "Dashboard",
+      key: "dashboard",
+      icon: <FaTachometerAlt className="mr-2" />,
+    },
     { label: "Notification", key: "noti", icon: <FaBell className="mr-2" /> },
     { label: "Document", key: "doc", icon: <FaFileAlt className="mr-2" /> },
   ];
@@ -63,7 +73,8 @@ const ProfileSeller = () => {
         <div className="w-3/4 p-10 overflow-y-auto">
           {/* Breadcrumb */}
           <nav className="text-sm text-gray-500 mb-4">
-            Home / Profile / <span className="text-gray-800 capitalize">{selectedTab}</span>
+            Home / Profile /{" "}
+            <span className="text-gray-800 capitalize">{selectedTab}</span>
           </nav>
 
           {/* Page Title */}

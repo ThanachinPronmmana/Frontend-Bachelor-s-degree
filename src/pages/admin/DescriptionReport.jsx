@@ -44,8 +44,8 @@ const DescriptionReport = () => {
     if (report.status === "ยังไม่อ่าน") {
       setReports((prev) =>
         prev.map((r) =>
-          r.id === report.id ? { ...r, status: "อ่านแล้ว" } : r
-        )
+          r.id === report.id ? { ...r, status: "อ่านแล้ว" } : r,
+        ),
       );
     }
     setSelected(report);
@@ -53,7 +53,7 @@ const DescriptionReport = () => {
 
   const handleUpdateStatus = (id, newStatus) => {
     setReports((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, status: newStatus } : r))
+      prev.map((r) => (r.id === id ? { ...r, status: newStatus } : r)),
     );
     setSelected((prev) => ({ ...prev, status: newStatus }));
   };
@@ -212,18 +212,34 @@ const DescriptionReport = () => {
           </DialogHeader>
           {selected && (
             <div className="space-y-2 text-sm text-gray-700">
-              <p><strong>รหัสรายงาน:</strong> {selected.id}</p>
-              <p><strong>ผู้แจ้ง:</strong> {selected.reporter}</p>
-              <p><strong>ประเภท:</strong> {selected.type}</p>
-              <p><strong>เป้าหมาย:</strong> {selected.target}</p>
-              <p><strong>วันที่:</strong> {selected.date}</p>
-              <p><strong>รายละเอียด:</strong> {selected.description}</p>
-              <p><strong>สถานะ:</strong> {selected.status}</p>
+              <p>
+                <strong>รหัสรายงาน:</strong> {selected.id}
+              </p>
+              <p>
+                <strong>ผู้แจ้ง:</strong> {selected.reporter}
+              </p>
+              <p>
+                <strong>ประเภท:</strong> {selected.type}
+              </p>
+              <p>
+                <strong>เป้าหมาย:</strong> {selected.target}
+              </p>
+              <p>
+                <strong>วันที่:</strong> {selected.date}
+              </p>
+              <p>
+                <strong>รายละเอียด:</strong> {selected.description}
+              </p>
+              <p>
+                <strong>สถานะ:</strong> {selected.status}
+              </p>
 
               <DialogFooter className="flex justify-end gap-2 pt-4">
                 <Button
                   className="bg-yellow-500 hover:bg-yellow-600 text-white"
-                  onClick={() => handleUpdateStatus(selected.id, "กำลังตรวจสอบ")}
+                  onClick={() =>
+                    handleUpdateStatus(selected.id, "กำลังตรวจสอบ")
+                  }
                 >
                   กำลังตรวจสอบ
                 </Button>

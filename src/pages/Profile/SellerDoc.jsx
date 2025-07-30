@@ -29,12 +29,11 @@ const SellerDoc = () => {
   ];
 
   const filteredDocs = mockDocuments.filter((doc) =>
-    doc.name.toLowerCase().includes(searchTerm.toLowerCase())
+    doc.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
-
       {/* Top bar */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-3">
         {/* Left - Add button */}

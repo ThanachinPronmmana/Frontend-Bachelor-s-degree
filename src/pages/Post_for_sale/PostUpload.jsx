@@ -34,9 +34,18 @@ const PostUpload = () => {
       <div className="bg-white mt-10 px-10 py-6 rounded-lg shadow-md w-[700px]">
         {/* Step Indicator */}
         <div className="flex justify-between mb-8">
-          {["Title", "Details", "Price & Terms", "Seller Information", "Upload Photos", "Confirmation"].map((label, index) => (
+          {[
+            "Title",
+            "Details",
+            "Price & Terms",
+            "Seller Information",
+            "Upload Photos",
+            "Confirmation",
+          ].map((label, index) => (
             <div key={index} className="flex flex-col items-center w-1/6">
-              <div className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${index === 4 ? "bg-gray-800" : "bg-gray-300"}`}>
+              <div
+                className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${index === 4 ? "bg-gray-800" : "bg-gray-300"}`}
+              >
                 {index + 1}
               </div>
               <span className="text-xs mt-1 text-center">{label}</span>
@@ -46,7 +55,10 @@ const PostUpload = () => {
 
         {/* Upload house photos */}
         <div className="mb-6 text-center text-black">
-          <p className="mb-2 font-medium">Upload house photos <br />(minimum 5 photos)</p>
+          <p className="mb-2 font-medium">
+            Upload house photos <br />
+            (minimum 5 photos)
+          </p>
           <label className="cursor-pointer bg-gray-300 text-black py-2 px-6 rounded-md inline-flex items-center gap-2">
             <FaUpload />
             Upload
@@ -65,7 +77,9 @@ const PostUpload = () => {
 
         {/* Upload documents */}
         <div className="mb-6 text-center text-black">
-          <p className="mb-2 font-medium">Upload homeowner verification documents</p>
+          <p className="mb-2 font-medium">
+            Upload homeowner verification documents
+          </p>
           <label className="cursor-pointer bg-gray-300 text-black py-2 px-6 rounded-md inline-flex items-center gap-2">
             <FaUpload />
             Upload

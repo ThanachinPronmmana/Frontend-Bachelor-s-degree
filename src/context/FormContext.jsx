@@ -43,7 +43,6 @@ export const FormProvider = ({ children }) => {
     useLine: false,
     useFacebook: false,
 
-
     // PostUpload
     housePhotos: [],
     documents: [],

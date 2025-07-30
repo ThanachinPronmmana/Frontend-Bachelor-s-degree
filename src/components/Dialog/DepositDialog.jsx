@@ -19,13 +19,27 @@ const DepositDialog = ({ open, onClose, data, onConfirm, onReject }) => {
         </DialogHeader>
 
         <div className="space-y-2 text-sm text-gray-700">
-          <p><strong>ID:</strong> {data.id}</p>
-          <p><strong>ผู้ซื้อ:</strong> {data.buyer}</p>
-          <p><strong>ผู้ขาย:</strong> {data.seller}</p>
-          <p><strong>อสังหาริมทรัพย์:</strong> {data.property}</p>
-          <p><strong>จำนวนเงิน:</strong> {data.amount}</p>
-          <p><strong>วันที่โอน:</strong> {data.date}</p>
-          <p><strong>สถานะปัจจุบัน:</strong> {data.status}</p>
+          <p>
+            <strong>ID:</strong> {data.id}
+          </p>
+          <p>
+            <strong>ผู้ซื้อ:</strong> {data.buyer}
+          </p>
+          <p>
+            <strong>ผู้ขาย:</strong> {data.seller}
+          </p>
+          <p>
+            <strong>อสังหาริมทรัพย์:</strong> {data.property}
+          </p>
+          <p>
+            <strong>จำนวนเงิน:</strong> {data.amount}
+          </p>
+          <p>
+            <strong>วันที่โอน:</strong> {data.date}
+          </p>
+          <p>
+            <strong>สถานะปัจจุบัน:</strong> {data.status}
+          </p>
         </div>
 
         <DialogFooter className="flex justify-end gap-2 pt-4">

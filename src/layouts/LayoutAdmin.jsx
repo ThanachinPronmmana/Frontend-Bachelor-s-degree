@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import SidebarAdmin from "../components/NavAdmin/SidebarAdmin"; 
+import SidebarAdmin from "../components/NavAdmin/SidebarAdmin";
 
 const LayoutAdmin = () => {
   return (

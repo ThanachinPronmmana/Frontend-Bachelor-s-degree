@@ -36,7 +36,8 @@ const Register_buyer = () => {
       <div
         className="absolute inset-0 bg-cover bg-center opacity-30"
         style={{
-          backgroundImage: "url('https://i.pinimg.com/736x/5b/b4/5d/5bb45dd8bf2c2ecba1bbda8c656a2018.jpg')", // ใส่ลิงก์ภาพของคุณเอง
+          backgroundImage:
+            "url('https://i.pinimg.com/736x/5b/b4/5d/5bb45dd8bf2c2ecba1bbda8c656a2018.jpg')", // ใส่ลิงก์ภาพของคุณเอง
         }}
       ></div>
       <div className="absolute inset-0 bg-white/60 backdrop-blur-sm"></div>
@@ -142,12 +143,12 @@ const Register_buyer = () => {
             </div>
           </div>
           <Link to="/Register_buyer2">
-          <button
-            type="submit"
-            className="w-full bg-[#2C3E50] text-white py-2 rounded-md hover:bg-[#1a252f] transition"
-          >
-            Next
-          </button>
+            <button
+              type="submit"
+              className="w-full bg-[#2C3E50] text-white py-2 rounded-md hover:bg-[#1a252f] transition"
+            >
+              Next
+            </button>
           </Link>
         </form>
       </div>

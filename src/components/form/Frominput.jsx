@@ -1,6 +1,12 @@
-
-
-const Frominput = ({ label, type = "text", register, name, defaultValue = "",error, ...rest }) => {
+const Frominput = ({
+  label,
+  type = "text",
+  register,
+  name,
+  defaultValue = "",
+  error,
+  ...rest
+}) => {
   return (
     <div>
       <label className="text-base mb-1 block">{label}</label>

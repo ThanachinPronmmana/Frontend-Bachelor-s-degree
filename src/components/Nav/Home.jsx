@@ -1,13 +1,13 @@
-import { Breadcrumb } from "../ui/breadcrumb"
-import { Link } from "react-router"
-import { HousePlus } from 'lucide-react';
+import { Breadcrumb } from "../ui/breadcrumb";
+import { Link } from "react-router";
+import { HousePlus } from "lucide-react";
 const Home = () => {
   return (
-    <Breadcrumb >
-        <Link to="/">
+    <Breadcrumb>
+      <Link to="/">
         <HousePlus />
-        </Link>
+      </Link>
     </Breadcrumb>
-  )
-}
-export default Home
+  );
+};
+export default Home;

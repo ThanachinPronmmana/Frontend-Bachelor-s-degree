@@ -1,9 +1,9 @@
-import { Link } from "react-router"
-import Logo from "./Logo"
-import Profile from "./Profile"
-import Noti from "./Noti"
-import Support from "./Support"
-import Home from "./Home"
+import { Link } from "react-router";
+import Logo from "./Logo";
+import Profile from "./Profile";
+import Noti from "./Noti";
+import Support from "./Support";
+import Home from "./Home";
 
 const Navbarforbuyer = () => {
   return (
@@ -18,13 +18,21 @@ const Navbarforbuyer = () => {
       <div className="flex flex-col sm:flex-row sm:justify-between items-center ml-70 mr-70">
         <Logo />
         <div className="flex space-x-30 py-2">
-          <h1><Home/></h1>
-          <h1><Profile/></h1>
-          <h1><Noti /></h1>
-          <h1><Support /></h1>
+          <h1>
+            <Home />
+          </h1>
+          <h1>
+            <Profile />
+          </h1>
+          <h1>
+            <Noti />
+          </h1>
+          <h1>
+            <Support />
+          </h1>
         </div>
       </div>
     </nav>
-  )
-}
-export default Navbarforbuyer
+  );
+};
+export default Navbarforbuyer;

@@ -43,8 +43,8 @@ const RejectSeller = () => {
 
   const filteredSellers = rejectedSellers.filter((seller) =>
     Object.values(seller).some((val) =>
-      val.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+      val.toLowerCase().includes(searchTerm.toLowerCase()),
+    ),
   );
 
   // Pagination Logic
@@ -138,7 +138,8 @@ const RejectSeller = () => {
       <div className="flex justify-between items-center mt-4">
         <p className="text-sm text-gray-600">
           Showing {filteredSellers.length === 0 ? 0 : indexOfFirst + 1}–
-          {Math.min(indexOfLast, filteredSellers.length)} of {filteredSellers.length}
+          {Math.min(indexOfLast, filteredSellers.length)} of{" "}
+          {filteredSellers.length}
         </p>
         <div className="space-x-2">
           <Button
@@ -164,7 +165,10 @@ const RejectSeller = () => {
       </div>
 
       {/* Document Preview Dialog */}
-      <Dialog open={!!previewDocUrl} onOpenChange={() => setPreviewDocUrl(null)}>
+      <Dialog
+        open={!!previewDocUrl}
+        onOpenChange={() => setPreviewDocUrl(null)}
+      >
         <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>ดูเอกสาร</DialogTitle>

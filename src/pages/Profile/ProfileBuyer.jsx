@@ -15,7 +15,7 @@ const ProfileBuyer = () => {
   const fetchUser = async () => {
     try {
       const id = localStorage.getItem("id");
-      
+
       const data = await getbuyer(id);
       setUser(data);
       setLoading(false);
@@ -49,23 +49,43 @@ const ProfileBuyer = () => {
             />
             <div>
               <p className="text-sm text-gray-300">Welcome</p>
-              <p className="font-bold text-white">{user?.First_name} {user?.Last_name}</p>
+              <p className="font-bold text-white">
+                {user?.First_name} {user?.Last_name}
+              </p>
             </div>
           </div>
 
           {/* Tab Menu */}
           <ul className="space-y-2 text-lg">
-            {[ 
-              { label: "My Info", key: "info", icon: <FaUser className="mr-2" /> },
-              { label: "Saved", key: "favorite", icon: <FaHeart className="mr-2" /> },
-              { label: "Notification", key: "noti", icon: <FaBell className="mr-2" /> },
-              { label: "Document", key: "doc", icon: <FaFileAlt className="mr-2" /> },
+            {[
+              {
+                label: "My Info",
+                key: "info",
+                icon: <FaUser className="mr-2" />,
+              },
+              {
+                label: "Saved",
+                key: "favorite",
+                icon: <FaHeart className="mr-2" />,
+              },
+              {
+                label: "Notification",
+                key: "noti",
+                icon: <FaBell className="mr-2" />,
+              },
+              {
+                label: "Document",
+                key: "doc",
+                icon: <FaFileAlt className="mr-2" />,
+              },
             ].map((tab) => (
               <li key={tab.key} className="relative">
                 <button
                   onClick={() => setSelectedTab(tab.key)}
                   className={`w-full flex items-center px-4 py-3 rounded-md transition duration-150 ${
-                    selectedTab === tab.key ? "bg-[#34495e]" : "hover:bg-[#3e5870]"
+                    selectedTab === tab.key
+                      ? "bg-[#34495e]"
+                      : "hover:bg-[#3e5870]"
                   }`}
                 >
                   {selectedTab === tab.key && (
@@ -83,27 +103,66 @@ const ProfileBuyer = () => {
         <div className="w-3/4 p-10 overflow-y-auto">
           {/* Breadcrumb */}
           <nav className="text-sm text-gray-500 mb-4">
-            Home / Profile / <span className="text-gray-800 capitalize">{selectedTab}</span>
+            Home / Profile /{" "}
+            <span className="text-gray-800 capitalize">{selectedTab}</span>
           </nav>
 
           {/* Page Title */}
           <h1 className="text-3xl font-bold flex items-center mb-8">
-            {[
-              { label: "My Info", key: "info", icon: <FaUser className="mr-2" /> },
-              { label: "Saved", key: "favorite", icon: <FaHeart className="mr-2" /> },
-              { label: "Notification", key: "noti", icon: <FaBell className="mr-2" /> },
-              { label: "Document", key: "doc", icon: <FaFileAlt className="mr-2" /> },
-            ].find((tab) => tab.key === selectedTab)?.icon}
-            {[
-              { label: "My Info", key: "info", icon: <FaUser className="mr-2" /> },
-              { label: "Saved", key: "favorite", icon: <FaHeart className="mr-2" /> },
-              { label: "Notification", key: "noti", icon: <FaBell className="mr-2" /> },
-              { label: "Document", key: "doc", icon: <FaFileAlt className="mr-2" /> },
-            ].find((tab) => tab.key === selectedTab)?.label}
+            {
+              [
+                {
+                  label: "My Info",
+                  key: "info",
+                  icon: <FaUser className="mr-2" />,
+                },
+                {
+                  label: "Saved",
+                  key: "favorite",
+                  icon: <FaHeart className="mr-2" />,
+                },
+                {
+                  label: "Notification",
+                  key: "noti",
+                  icon: <FaBell className="mr-2" />,
+                },
+                {
+                  label: "Document",
+                  key: "doc",
+                  icon: <FaFileAlt className="mr-2" />,
+                },
+              ].find((tab) => tab.key === selectedTab)?.icon
+            }
+            {
+              [
+                {
+                  label: "My Info",
+                  key: "info",
+                  icon: <FaUser className="mr-2" />,
+                },
+                {
+                  label: "Saved",
+                  key: "favorite",
+                  icon: <FaHeart className="mr-2" />,
+                },
+                {
+                  label: "Notification",
+                  key: "noti",
+                  icon: <FaBell className="mr-2" />,
+                },
+                {
+                  label: "Document",
+                  key: "doc",
+                  icon: <FaFileAlt className="mr-2" />,
+                },
+              ].find((tab) => tab.key === selectedTab)?.label
+            }
           </h1>
 
           {/* Content */}
-          {selectedTab === "info" && <BuyerInfo user={user} setUser={setUser} />}
+          {selectedTab === "info" && (
+            <BuyerInfo user={user} setUser={setUser} />
+          )}
           {selectedTab === "favorite" && <BuyerFavorite />}
           {selectedTab === "noti" && <BuyerNoti />}
           {selectedTab === "doc" && <BuyerDoc />}

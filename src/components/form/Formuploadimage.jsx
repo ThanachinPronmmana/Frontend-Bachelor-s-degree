@@ -10,9 +10,7 @@ const Formuploadimage = ({ userId, onUploadSuccess }) => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm(
-    
-  );
+  } = useForm();
 
   const [uploading, setUploading] = useState(false);
 
@@ -28,12 +26,16 @@ const Formuploadimage = ({ userId, onUploadSuccess }) => {
 
     try {
       setUploading(true);
-      const result = await axios.post(`http://localhost:8200/api/image/${userId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const result = await axios.post(
+        `http://localhost:8200/api/image/${userId}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        },
+      );
 
       if (onUploadSuccess) {
-        onUploadSuccess(result.data.image); 
+        onUploadSuccess(result.data.image);
       }
     } catch (err) {
       console.error("Upload failed:", err);
@@ -47,7 +49,7 @@ const Formuploadimage = ({ userId, onUploadSuccess }) => {
     const file = e.target.files[0];
     if (file) {
       setValue("image", [file]); // ตั้งค่าใน react-hook-form
-      handleSubmit(onSubmit)();  // เรียก submit ทันที
+      handleSubmit(onSubmit)(); // เรียก submit ทันที
     }
   };
 
@@ -63,7 +65,6 @@ const Formuploadimage = ({ userId, onUploadSuccess }) => {
         className="cursor-pointer"
       />
       {uploading && <p className="text-sm text-gray-500">กำลังอัปโหลด...</p>}
-
     </form>
   );
 };

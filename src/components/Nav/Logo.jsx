@@ -1,27 +1,25 @@
-import { useEffect, useState } from "react"
-import { Button } from "../ui/button"
-import { Link, useNavigate } from "react-router"
+import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
+import { Link, useNavigate } from "react-router";
 const Logo = () => {
-  const navigate = useNavigate()
-  const [userType, setUserType] = useState(null)
+  const navigate = useNavigate();
+  const [userType, setUserType] = useState(null);
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"))
+    const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
-      setUserType(user.userType)
+      setUserType(user.userType);
     }
-  }, [])
+  }, []);
   const handleClick = () => {
     if (userType === "Buyer") {
-      navigate("/buyer")
+      navigate("/buyer");
     } else if (userType === "Seller") {
-      navigate("/seller")
+      navigate("/seller");
     } else {
-      navigate("/")
+      navigate("/");
     }
-  }
+  };
   return (
-
-
     <div
       onClick={handleClick}
       className="cursor-pointer flex items-center justify-center p-2 rounded-md hover:bg-gray-100 transition duration-200"
@@ -32,8 +30,6 @@ const Logo = () => {
         className="w-12 h-12 object-cover rounded-full shadow-md"
       />
     </div>
-
-
-  )
-}
-export default Logo
+  );
+};
+export default Logo;

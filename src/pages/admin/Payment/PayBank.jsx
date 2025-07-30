@@ -7,7 +7,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "@/components/ui/select";
 import BankDialog from "@/components/Dialog/BankDialog";
 
@@ -46,8 +46,8 @@ const PayBank = () => {
   const handleStatusUpdate = (id, newStatus) => {
     setData((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, status: newStatus } : item
-      )
+        item.id === id ? { ...item, status: newStatus } : item,
+      ),
     );
     setSelected(null);
   };
@@ -57,7 +57,8 @@ const PayBank = () => {
       item.buyer.includes(search) ||
       item.seller.includes(search) ||
       item.property.includes(search);
-    const matchStatus = statusFilter !== "all" ? item.status === statusFilter : true;
+    const matchStatus =
+      statusFilter !== "all" ? item.status === statusFilter : true;
     const matchDate = dateFilter ? item.date === dateFilter : true;
     return matchText && matchStatus && matchDate;
   });
@@ -83,10 +84,13 @@ const PayBank = () => {
           }}
           className="w-72"
         />
-        <Select onValueChange={(v) => {
-          setStatusFilter(v);
-          setCurrentPage(1);
-        }} value={statusFilter}>
+        <Select
+          onValueChange={(v) => {
+            setStatusFilter(v);
+            setCurrentPage(1);
+          }}
+          value={statusFilter}
+        >
           <SelectTrigger className="w-48">
             <SelectValue placeholder="กรองตามสถานะ" />
           </SelectTrigger>

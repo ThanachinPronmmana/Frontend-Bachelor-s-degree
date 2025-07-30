@@ -36,13 +36,16 @@ const SellerInfo = () => {
               <span className="font-semibold">เบอร์โทร:</span> 081-234-5678
             </p>
             <p>
-              <span className="font-semibold">เลขบัตรประชาชน:</span> 1-2345-67890-12-3
+              <span className="font-semibold">เลขบัตรประชาชน:</span>{" "}
+              1-2345-67890-12-3
             </p>
             <p>
-              <span className="font-semibold">บริษัท:</span> บริษัทบ้านดีดี จำกัด
+              <span className="font-semibold">บริษัท:</span> บริษัทบ้านดีดี
+              จำกัด
             </p>
             <p>
-              <span className="font-semibold">ใบตัวแทนนายหน้า:</span> xxxx-xxx-xxx
+              <span className="font-semibold">ใบตัวแทนนายหน้า:</span>{" "}
+              xxxx-xxx-xxx
             </p>
             <p>
               <span className="font-semibold">สถานะบัญชี:</span>{" "}

@@ -39,7 +39,7 @@ const Approval = () => {
 
   const handleSave = (updatedPost) => {
     setPosts((prev) =>
-      prev.map((p) => (p.id === updatedPost.id ? updatedPost : p))
+      prev.map((p) => (p.id === updatedPost.id ? updatedPost : p)),
     );
     setEditingPost(null);
   };
@@ -58,7 +58,11 @@ const Approval = () => {
       ))}
 
       {editingPost && (
-        <EditPopup post={editingPost} onClose={() => setEditingPost(null)} onSave={handleSave} />
+        <EditPopup
+          post={editingPost}
+          onClose={() => setEditingPost(null)}
+          onSave={handleSave}
+        />
       )}
     </div>
   );

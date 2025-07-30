@@ -20,7 +20,9 @@ const acceptedPosts = [
 const AcceptPost = () => {
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-6">รายการโพสต์ที่ได้รับการอนุมัติ</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        รายการโพสต์ที่ได้รับการอนุมัติ
+      </h2>
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-200 bg-white rounded-xl shadow-md">
           <thead className="bg-gray-100 text-gray-700 text-left">

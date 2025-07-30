@@ -20,18 +20,19 @@ const SidebarAdmin = () => {
 
   const toggleMenu = (key) => {
     setActiveMenus((prev) =>
-      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
     );
   };
 
   const toggleSubMenu = (key) => {
     setActiveSubMenus((prev) =>
-      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
     );
   };
 
   const isActiveRoute = (path) =>
-    location.pathname === `/${path}` || location.pathname.startsWith(`/${path}`);
+    location.pathname === `/${path}` ||
+    location.pathname.startsWith(`/${path}`);
 
   const confirmLogout = () => {
     const confirm = window.confirm("คุณต้องการออกจากระบบใช่หรือไม่?");

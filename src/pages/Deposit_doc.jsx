@@ -12,9 +12,8 @@ const Deposit_doc = () => {
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
-  
+
   return (
-    
     <div className="flex flex-col items-center justify-center h-screen bg-white space-y-6">
       <div className="flex items-center">
         <img

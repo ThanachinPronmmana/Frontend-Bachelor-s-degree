@@ -44,8 +44,8 @@ const PayDeposit = () => {
   const handleStatusUpdate = (id, newStatus) => {
     setData((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, status: newStatus } : item
-      )
+        item.id === id ? { ...item, status: newStatus } : item,
+      ),
     );
     setSelected(null);
   };
@@ -82,10 +82,13 @@ const PayDeposit = () => {
           }}
           className="w-72"
         />
-        <Select onValueChange={(v) => {
-          setStatusFilter(v);
-          setCurrentPage(1);
-        }} value={statusFilter}>
+        <Select
+          onValueChange={(v) => {
+            setStatusFilter(v);
+            setCurrentPage(1);
+          }}
+          value={statusFilter}
+        >
           <SelectTrigger className="w-48">
             <SelectValue placeholder="กรองตามสถานะ" />
           </SelectTrigger>

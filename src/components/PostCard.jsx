@@ -14,7 +14,9 @@ const PostCard = ({ post, onAccept, onReject, onEdit }) => {
           <div>
             <div className="font-semibold text-lg">{post.name}</div>
             {post.status && (
-              <div className="text-sm text-red-600 font-medium">{post.status}</div>
+              <div className="text-sm text-red-600 font-medium">
+                {post.status}
+              </div>
             )}
           </div>
         </div>
@@ -23,7 +25,8 @@ const PostCard = ({ post, onAccept, onReject, onEdit }) => {
         {post.description && (
           <div className="mt-3 space-y-1 text-sm text-gray-700">
             <div>
-              <span className="font-semibold">Description:</span> {post.description}
+              <span className="font-semibold">Description:</span>{" "}
+              {post.description}
             </div>
             <div>
               <span className="font-semibold">Price:</span> {post.price}
@@ -38,7 +41,8 @@ const PostCard = ({ post, onAccept, onReject, onEdit }) => {
               <span className="font-semibold">Phone:</span> {post.phone}
             </div>
             <div>
-              <span className="font-semibold">🛏 {post.bedrooms} ห้องนอน</span> | 🛁 {post.bathrooms} ห้องน้ำ | 📐 {post.area}
+              <span className="font-semibold">🛏 {post.bedrooms} ห้องนอน</span>{" "}
+              | 🛁 {post.bathrooms} ห้องน้ำ | 📐 {post.area}
             </div>
           </div>
         )}

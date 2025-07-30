@@ -80,15 +80,21 @@ const SellerDashboard = () => {
         {/* รีวิวล่าสุด */}
         <Card className="col-span-1 md:col-span-2 xl:col-span-3">
           <CardContent className="p-6">
-            <h3 className="text-lg font-semibold mb-4">รีวิวล่าสุดจากผู้ซื้อ</h3>
+            <h3 className="text-lg font-semibold mb-4">
+              รีวิวล่าสุดจากผู้ซื้อ
+            </h3>
             <div className="space-y-4">
               <div className="p-4 bg-gray-100 rounded-md">
                 <p className="font-medium">คุณกอล์ฟ</p>
-                <p className="text-sm text-gray-600">บริการดี ตอบไว เอกสารครบ!</p>
+                <p className="text-sm text-gray-600">
+                  บริการดี ตอบไว เอกสารครบ!
+                </p>
               </div>
               <div className="p-4 bg-gray-100 rounded-md">
                 <p className="font-medium">คุณน้ำ</p>
-                <p className="text-sm text-gray-600">ช่วยแนะนำบ้านเหมาะกับครอบครัวได้ดีมาก</p>
+                <p className="text-sm text-gray-600">
+                  ช่วยแนะนำบ้านเหมาะกับครอบครัวได้ดีมาก
+                </p>
               </div>
             </div>
           </CardContent>

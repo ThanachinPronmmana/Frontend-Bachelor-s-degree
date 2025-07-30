@@ -1,4 +1,9 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
 const BankDialog = ({ open, onClose, data, onConfirm, onReject }) => {
@@ -12,13 +17,27 @@ const BankDialog = ({ open, onClose, data, onConfirm, onReject }) => {
         </DialogHeader>
 
         <div className="space-y-2 text-sm">
-          <p><strong>รหัสรายการ:</strong> {data.id}</p>
-          <p><strong>ผู้ซื้อ:</strong> {data.buyer}</p>
-          <p><strong>ผู้ขาย:</strong> {data.seller}</p>
-          <p><strong>อสังหา:</strong> {data.property}</p>
-          <p><strong>จำนวนเงิน:</strong> {data.amount}</p>
-          <p><strong>วันที่โอน:</strong> {data.date}</p>
-          <p><strong>สถานะ:</strong> {data.status}</p>
+          <p>
+            <strong>รหัสรายการ:</strong> {data.id}
+          </p>
+          <p>
+            <strong>ผู้ซื้อ:</strong> {data.buyer}
+          </p>
+          <p>
+            <strong>ผู้ขาย:</strong> {data.seller}
+          </p>
+          <p>
+            <strong>อสังหา:</strong> {data.property}
+          </p>
+          <p>
+            <strong>จำนวนเงิน:</strong> {data.amount}
+          </p>
+          <p>
+            <strong>วันที่โอน:</strong> {data.date}
+          </p>
+          <p>
+            <strong>สถานะ:</strong> {data.status}
+          </p>
 
           <div className="mt-4">
             <p className="font-semibold mb-1">หลักฐานการโอน:</p>

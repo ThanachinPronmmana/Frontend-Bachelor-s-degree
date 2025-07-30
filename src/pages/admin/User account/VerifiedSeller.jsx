@@ -41,8 +41,8 @@ const VerifiedSeller = () => {
 
   const filteredSellers = verifiedSellers.filter((s) =>
     Object.values(s).some((val) =>
-      val.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+      val.toLowerCase().includes(searchTerm.toLowerCase()),
+    ),
   );
 
   const indexOfLast = currentPage * itemsPerPage;
@@ -115,7 +115,6 @@ const VerifiedSeller = () => {
                       {seller.document.split("/").pop()}
                     </button>
                   </td>
-
                 </tr>
               ))
             ) : (
@@ -132,7 +131,9 @@ const VerifiedSeller = () => {
       {/* Pagination */}
       <div className="flex justify-between items-center mt-4">
         <p className="text-sm text-gray-600">
-          Showing {indexOfFirst + 1}–{Math.min(indexOfLast, filteredSellers.length)} of {filteredSellers.length}
+          Showing {indexOfFirst + 1}–
+          {Math.min(indexOfLast, filteredSellers.length)} of{" "}
+          {filteredSellers.length}
         </p>
         <div className="space-x-2">
           <Button
@@ -158,7 +159,10 @@ const VerifiedSeller = () => {
       </div>
 
       {/* Document Preview Dialog */}
-      <Dialog open={!!previewDocUrl} onOpenChange={() => setPreviewDocUrl(null)}>
+      <Dialog
+        open={!!previewDocUrl}
+        onOpenChange={() => setPreviewDocUrl(null)}
+      >
         <DialogContent className="max-w-4xl h-[85vh]">
           <DialogHeader>
             <DialogTitle>ดูเอกสาร PDF</DialogTitle>

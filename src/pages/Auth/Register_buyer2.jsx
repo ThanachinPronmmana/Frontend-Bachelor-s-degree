@@ -16,7 +16,7 @@ const Register_buyer2 = () => {
   useEffect(() => {
     // Fetch provinces
     fetch(
-      "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json"
+      "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json",
     )
       .then((res) => res.json())
       .then((data) => setProvinces(data));
@@ -32,15 +32,15 @@ const Register_buyer2 = () => {
 
     // Fetch districts
     fetch(
-      "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json"
+      "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json",
     )
       .then((res) => res.json())
       .then((data) => {
         const selectedProvinceId = provinces.find(
-          (p) => p.name_th === selectedProvince
+          (p) => p.name_th === selectedProvince,
         )?.id;
         const filteredDistricts = data.filter(
-          (d) => d.province_id === selectedProvinceId
+          (d) => d.province_id === selectedProvinceId,
         );
         setDistricts(filteredDistricts);
       });
@@ -62,7 +62,9 @@ const Register_buyer2 = () => {
     <div className="min-h-screen bg-[#2C3E50] flex items-center justify-center">
       <div className="relative bg-white w-[700px] rounded-md shadow-lg flex flex-col items-center py-10 px-8">
         <img src="/hand-icon.svg" alt="icon" className="w-10 h-10 mb-2" />
-        <h2 className="text-2xl font-semibold mb-6 text-gray-800">Yuu Yenn Property</h2>
+        <h2 className="text-2xl font-semibold mb-6 text-gray-800">
+          Yuu Yenn Property
+        </h2>
 
         <form className="grid grid-cols-2 gap-6 w-full">
           {/* Province */}
@@ -108,25 +110,33 @@ const Register_buyer2 = () => {
 
           {/* Must-Haves */}
           <div>
-            <label className="block mb-2 font-medium text-sm">Nearby Must-Haves</label>
-            {["BTS / MRT", "School", "Hospital", "Mall / Market", "Park / Nature"].map(
-              (item) => (
-                <label key={item} className="block text-sm">
-                  <input
-                    type="checkbox"
-                    onChange={() => handleCheckboxChange("mustHaves", item)}
-                    checked={formData.mustHaves.includes(item)}
-                    className="mr-2"
-                  />
-                  {item}
-                </label>
-              )
-            )}
+            <label className="block mb-2 font-medium text-sm">
+              Nearby Must-Haves
+            </label>
+            {[
+              "BTS / MRT",
+              "School",
+              "Hospital",
+              "Mall / Market",
+              "Park / Nature",
+            ].map((item) => (
+              <label key={item} className="block text-sm">
+                <input
+                  type="checkbox"
+                  onChange={() => handleCheckboxChange("mustHaves", item)}
+                  checked={formData.mustHaves.includes(item)}
+                  className="mr-2"
+                />
+                {item}
+              </label>
+            ))}
           </div>
 
           {/* Parking */}
           <div>
-            <label className="block mb-2 font-medium text-sm">Parking Requirement</label>
+            <label className="block mb-2 font-medium text-sm">
+              Parking Requirement
+            </label>
             {["1 Car", "2 Cars", "Not required"].map((option) => (
               <label key={option} className="block text-sm">
                 <input
@@ -134,7 +144,10 @@ const Register_buyer2 = () => {
                   name="parking"
                   value={option}
                   onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, parking: e.target.value }))
+                    setFormData((prev) => ({
+                      ...prev,
+                      parking: e.target.value,
+                    }))
                   }
                   checked={formData.parking === option}
                   className="mr-2"
@@ -146,20 +159,25 @@ const Register_buyer2 = () => {
 
           {/* Facilities */}
           <div>
-            <label className="block mb-2 font-medium text-sm">Desired Facilities</label>
-            {["Swimming Pool", "Fitness Center", "Co-working Space", "Pet Friendly"].map(
-              (item) => (
-                <label key={item} className="block text-sm">
-                  <input
-                    type="checkbox"
-                    onChange={() => handleCheckboxChange("facilities", item)}
-                    checked={formData.facilities.includes(item)}
-                    className="mr-2"
-                  />
-                  {item}
-                </label>
-              )
-            )}
+            <label className="block mb-2 font-medium text-sm">
+              Desired Facilities
+            </label>
+            {[
+              "Swimming Pool",
+              "Fitness Center",
+              "Co-working Space",
+              "Pet Friendly",
+            ].map((item) => (
+              <label key={item} className="block text-sm">
+                <input
+                  type="checkbox"
+                  onChange={() => handleCheckboxChange("facilities", item)}
+                  checked={formData.facilities.includes(item)}
+                  className="mr-2"
+                />
+                {item}
+              </label>
+            ))}
           </div>
         </form>
 

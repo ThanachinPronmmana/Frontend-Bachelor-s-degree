@@ -26,9 +26,18 @@ const PostPrice = () => {
       <div className="bg-white mt-10 px-10 py-6 rounded-lg shadow-md w-[700px]">
         {/* Step Indicator */}
         <div className="flex justify-between mb-8">
-          {["Title", "Details", "Price & Terms", "Seller Information", "Upload Photos", "Confirmation"].map((label, index) => (
+          {[
+            "Title",
+            "Details",
+            "Price & Terms",
+            "Seller Information",
+            "Upload Photos",
+            "Confirmation",
+          ].map((label, index) => (
             <div key={index} className="flex flex-col items-center w-1/6">
-              <div className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${index === 2 ? "bg-gray-800" : "bg-gray-300"}`}>
+              <div
+                className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${index === 2 ? "bg-gray-800" : "bg-gray-300"}`}
+              >
                 {index + 1}
               </div>
               <span className="text-xs mt-1 text-center">{label}</span>
@@ -38,7 +47,9 @@ const PostPrice = () => {
 
         {/* Sale or Rent */}
         <div className="mb-6">
-          <label className="block mb-2 text-sm text-black">Do you want to sell or rent?</label>
+          <label className="block mb-2 text-sm text-black">
+            Do you want to sell or rent?
+          </label>
           <div className="flex gap-6">
             {["Sell", "Rent"].map((type) => (
               <label key={type} className="text-black">
@@ -64,7 +75,9 @@ const PostPrice = () => {
         {/* For Sell */}
         {formData.saleType === "Sell" && (
           <div className="mb-6">
-            <label className="block mb-2 text-sm text-black">Specify the amount (numbers only)</label>
+            <label className="block mb-2 text-sm text-black">
+              Specify the amount (numbers only)
+            </label>
             <input
               type="text"
               inputMode="numeric"
@@ -82,16 +95,23 @@ const PostPrice = () => {
         {/* For Rent */}
         {formData.saleType === "Rent" && (
           <div className="mb-6">
-            <label className="block mb-2 text-sm text-black">Select installment method</label>
+            <label className="block mb-2 text-sm text-black">
+              Select installment method
+            </label>
             <div className="flex flex-col gap-2 text-black">
-              {["Installment directly to the owner", "Installment via bank"].map((option) => (
+              {[
+                "Installment directly to the owner",
+                "Installment via bank",
+              ].map((option) => (
                 <label key={option}>
                   <input
                     type="radio"
                     name="installment"
                     value={option}
                     checked={formData.installmentType === option}
-                    onChange={(e) => updateFormData("installmentType", e.target.value)}
+                    onChange={(e) =>
+                      updateFormData("installmentType", e.target.value)
+                    }
                     className="mr-2"
                   />
                   {option}
@@ -100,10 +120,13 @@ const PostPrice = () => {
             </div>
 
             {/* If Directly to Owner */}
-            {formData.installmentType === "Installment directly to the owner" && (
+            {formData.installmentType ===
+              "Installment directly to the owner" && (
               <div className="mt-4 space-y-4">
                 <div>
-                  <label className="block mb-1 text-sm text-black">Specify the repayment period (months)</label>
+                  <label className="block mb-1 text-sm text-black">
+                    Specify the repayment period (months)
+                  </label>
                   <input
                     type="text"
                     inputMode="numeric"
@@ -111,13 +134,16 @@ const PostPrice = () => {
                     value={formData.repaymentPeriod || ""}
                     onChange={(e) => {
                       const val = e.target.value;
-                      if (/^\d*$/.test(val)) updateFormData("repaymentPeriod", val);
+                      if (/^\d*$/.test(val))
+                        updateFormData("repaymentPeriod", val);
                     }}
                     className="w-full p-2 border rounded shadow-sm"
                   />
                 </div>
                 <div>
-                  <label className="block mb-1 text-sm text-black">Interest rate (%)</label>
+                  <label className="block mb-1 text-sm text-black">
+                    Interest rate (%)
+                  </label>
                   <input
                     type="text"
                     inputMode="decimal"
@@ -125,7 +151,8 @@ const PostPrice = () => {
                     value={formData.interest || ""}
                     onChange={(e) => {
                       const val = e.target.value;
-                      if (/^\d*\.?\d*$/.test(val)) updateFormData("interest", val);
+                      if (/^\d*\.?\d*$/.test(val))
+                        updateFormData("interest", val);
                     }}
                     className="w-full p-2 border rounded shadow-sm"
                   />
@@ -137,7 +164,9 @@ const PostPrice = () => {
 
         {/* Other expenses */}
         <div className="mb-8">
-          <label className="block mb-2 text-sm text-black">Other related expenses</label>
+          <label className="block mb-2 text-sm text-black">
+            Other related expenses
+          </label>
           <div className="flex flex-col gap-2 text-black">
             <label>
               <input

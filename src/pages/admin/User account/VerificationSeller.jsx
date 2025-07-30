@@ -19,7 +19,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronUp,Search } from "lucide-react";
+import { ChevronDown, ChevronUp, Search } from "lucide-react";
 import { format, parseISO } from "date-fns";
 
 const VerificationSeller = () => {
@@ -72,11 +72,15 @@ const VerificationSeller = () => {
   const filteredSellers = useMemo(() => {
     return sellers.filter((s) => {
       const matchSearch = Object.values(s).some((val) =>
-        String(val).toLowerCase().includes(searchTerm.toLowerCase())
+        String(val).toLowerCase().includes(searchTerm.toLowerCase()),
       );
 
-      const matchCompany = filters.company ? s.company === filters.company : true;
-      const matchLicense = filters.license ? s.license.startsWith(filters.license) : true;
+      const matchCompany = filters.company
+        ? s.company === filters.company
+        : true;
+      const matchLicense = filters.license
+        ? s.license.startsWith(filters.license)
+        : true;
       const matchDate = filters.date
         ? format(parseISO(s.registeredDate), "yyyy-MM-dd") === filters.date
         : true;
@@ -97,7 +101,10 @@ const VerificationSeller = () => {
     });
   }, [filteredSellers, sortConfig]);
 
-  const totalPages = Math.max(1, Math.ceil(sortedSellers.length / itemsPerPage));
+  const totalPages = Math.max(
+    1,
+    Math.ceil(sortedSellers.length / itemsPerPage),
+  );
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const paginatedSellers = sortedSellers.slice(indexOfFirst, indexOfLast);
@@ -132,31 +139,38 @@ const VerificationSeller = () => {
       <h2 className="text-2xl font-bold mb-4">ตรวจสอบการยืนยันผู้ขาย</h2>
 
       <div className="mb-4 flex flex-wrap items-center gap-2">
-  <Search className="text-gray-500" />
-  <Input
-    placeholder="ค้นหา ชื่อ / อีเมล / โทรศัพท์ / บริษัท"
-    value={searchTerm}
-    onChange={(e) => {
-      setSearchTerm(e.target.value);
-      setCurrentPage(1);
-    }}
-    className="w-72"
-  />
-  <Button variant="outline" onClick={resetFilters}>
-    รีเซ็ต
-  </Button>
-</div>
+        <Search className="text-gray-500" />
+        <Input
+          placeholder="ค้นหา ชื่อ / อีเมล / โทรศัพท์ / บริษัท"
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1);
+          }}
+          className="w-72"
+        />
+        <Button variant="outline" onClick={resetFilters}>
+          รีเซ็ต
+        </Button>
+      </div>
 
-      <Collapsible open={filterOpen} onOpenChange={setFilterOpen} className="mb-4">
+      <Collapsible
+        open={filterOpen}
+        onOpenChange={setFilterOpen}
+        className="mb-4"
+      >
         <CollapsibleTrigger asChild>
           <Button variant="ghost" className="flex items-center gap-1">
-            {filterOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />} Advanced Filters
+            {filterOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}{" "}
+            Advanced Filters
           </Button>
         </CollapsibleTrigger>
         <CollapsibleContent className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-2">
           <Select
             value={filters.company}
-            onValueChange={(value) => setFilters({ ...filters, company: value })}
+            onValueChange={(value) =>
+              setFilters({ ...filters, company: value })
+            }
           >
             <SelectTrigger>
               <SelectValue placeholder="All companies" />
@@ -169,7 +183,9 @@ const VerificationSeller = () => {
 
           <Select
             value={filters.license}
-            onValueChange={(value) => setFilters({ ...filters, license: value })}
+            onValueChange={(value) =>
+              setFilters({ ...filters, license: value })
+            }
           >
             <SelectTrigger>
               <SelectValue placeholder="All licenses" />
@@ -189,22 +205,33 @@ const VerificationSeller = () => {
         </CollapsibleContent>
       </Collapsible>
 
-      <p className="text-sm text-gray-500 mb-2">จำนวนผู้ขายทั้งหมด: {filteredSellers.length}</p>
+      <p className="text-sm text-gray-500 mb-2">
+        จำนวนผู้ขายทั้งหมด: {filteredSellers.length}
+      </p>
 
       <div className="overflow-auto">
         <table className="min-w-full bg-white rounded shadow-md">
           <thead className="bg-gray-100 text-gray-700 text-sm">
             <tr>
-              {["id", "name", "email", "phone", "citizenId", "company", "license", "registeredDate", "document"].map((key) => (
+              {[
+                "id",
+                "name",
+                "email",
+                "phone",
+                "citizenId",
+                "company",
+                "license",
+                "registeredDate",
+                "document",
+              ].map((key) => (
                 <th
                   key={key}
                   className="px-4 py-2 text-left cursor-pointer hover:underline"
                   onClick={() => handleSort(key)}
                 >
                   {key.charAt(0).toUpperCase() + key.slice(1)}
-                  {sortConfig.key === key && (
-                    sortConfig.direction === "asc" ? " ▲" : " ▼"
-                  )}
+                  {sortConfig.key === key &&
+                    (sortConfig.direction === "asc" ? " ▲" : " ▼")}
                 </th>
               ))}
               <th className="px-4 py-2 text-left">Actions</th>
@@ -221,7 +248,9 @@ const VerificationSeller = () => {
                   <td className="px-4 py-2">{seller.citizenId}</td>
                   <td className="px-4 py-2">{seller.company}</td>
                   <td className="px-4 py-2">{seller.license}</td>
-                  <td className="px-4 py-2">{format(parseISO(seller.registeredDate), "yyyy-MM-dd")}</td>
+                  <td className="px-4 py-2">
+                    {format(parseISO(seller.registeredDate), "yyyy-MM-dd")}
+                  </td>
                   <td
                     className="px-4 py-2 underline text-blue-600 hover:text-blue-800 cursor-pointer"
                     onClick={() => handleDocumentClick(seller.document)}
@@ -249,35 +278,47 @@ const VerificationSeller = () => {
         </table>
       </div>
 
-<div className="flex justify-between items-center mt-4">
-  <p className="text-sm text-gray-600">
-    Showing {indexOfFirst + 1}–{Math.min(indexOfLast, sortedSellers.length)} of {sortedSellers.length}
-  </p>
+      <div className="flex justify-between items-center mt-4">
+        <p className="text-sm text-gray-600">
+          Showing {indexOfFirst + 1}–
+          {Math.min(indexOfLast, sortedSellers.length)} of{" "}
+          {sortedSellers.length}
+        </p>
 
-  <div className="flex items-center space-x-2">
-    <Button variant="outline" size="sm"
-      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-      disabled={currentPage === 1}
-      className="transition-colors hover:bg-gray-200"
-    >
-      Prev
-    </Button>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="transition-colors hover:bg-gray-200"
+          >
+            Prev
+          </Button>
 
-    <span className="text-sm font-medium">Page {currentPage} of {totalPages}</span>
+          <span className="text-sm font-medium">
+            Page {currentPage} of {totalPages}
+          </span>
 
-    <Button variant="outline" size="sm"
-      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-      disabled={currentPage === totalPages}
-      className="transition-colors hover:bg-gray-200"
-    >
-      Next
-    </Button>
-  </div>
-</div>
-
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="transition-colors hover:bg-gray-200"
+          >
+            Next
+          </Button>
+        </div>
+      </div>
 
       {previewImage && (
-        <Dialog open={!!previewImage} onOpenChange={() => setPreviewImage(null)}>
+        <Dialog
+          open={!!previewImage}
+          onOpenChange={() => setPreviewImage(null)}
+        >
           <DialogContent className="max-w-3xl">
             <DialogHeader>
               <DialogTitle>Document Preview</DialogTitle>
