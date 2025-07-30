@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Iconselect from "@/components/Iconselect";
-import Searchbar from "@/components/Searchbar";
+import Searchbar from "@/components/form/Searchbar";
 import { Button } from "@/components/ui/button";
 import Buttons from "@/components/Buttons";
 import Cards from "@/components/Cards";
@@ -8,7 +8,7 @@ import { Link } from "react-router";
 import Credit from "@/components/Credit";
 import mockHouses from "@/data/mockHouses";
 import { FaBalanceScale, FaMoneyBillWave } from "react-icons/fa";
-import LoanCalculator from "@/components/LoanCalculator";
+import LoanCalculator from "@/components/form/LoanCalculator";
 import { AnimatePresence, motion } from "framer-motion";
 
 

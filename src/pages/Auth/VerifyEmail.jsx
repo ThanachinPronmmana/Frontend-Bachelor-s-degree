@@ -83,7 +83,7 @@ const VerifyEmail = () => {
             {errors.DateOfBirth && <p className="text-red-500">Date of birth is required</p>}
 
             <input
-              {...register("Occaaption", { required: true })}
+              {...register("Occupation", { required: true })}
               placeholder="Occupation"
               className="input w-full border p-2 rounded mb-2"
             />
@@ -176,12 +176,12 @@ const VerifyEmail = () => {
               className="input w-full border p-2 rounded mb-2"
             />
             <input
-              {...register("Company_Name", { required: true })}
+              {...register("Company_Name")}
               placeholder="Company Name"
               className="input w-full border p-2 rounded mb-2"
             />
             <input
-              {...register("RealEstate_License", { required: true })}
+              {...register("RealEstate_License")}
               placeholder="Real Estate License"
               className="input w-full border p-2 rounded mb-2"
             />

@@ -33,6 +33,7 @@ const Navbar_Buyer = () => {
   const handleLogout = ()=>{
     localStorage.removeItem("user")
     localStorage.removeItem("token")
+    localStorage.removeItem("id")
     navigate("/")
   }
 

@@ -1,6 +1,6 @@
 import Buttons from "@/components/Buttons";
 import Credit from "@/components/Credit";
-import Searchbar from "@/components/Searchbar";
+import Searchbar from "@/components/form/Searchbar";
 import { useState } from "react";
 import { useLocation } from "react-router";
 
