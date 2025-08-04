@@ -46,7 +46,7 @@ export const buyerSchema = z
             })
             .optional(),
 
-        Occaaption: z
+        Occupation: z
             .string()
             .transform((val) => val.trim())
             .refine((val) => val === "" || val.length >= 2, {

@@ -1,8 +1,7 @@
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { imageUploadSchema } from "../schemas/image";
+
 
 const Formuploadimage = ({ userId, onUploadSuccess }) => {
   const {
@@ -10,9 +9,7 @@ const Formuploadimage = ({ userId, onUploadSuccess }) => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm(
-    
-  );
+  } = useForm();
 
   const [uploading, setUploading] = useState(false);
 
@@ -33,7 +30,7 @@ const Formuploadimage = ({ userId, onUploadSuccess }) => {
       });
 
       if (onUploadSuccess) {
-        onUploadSuccess(result.data.image); 
+        onUploadSuccess(result.data.image);
       }
     } catch (err) {
       console.error("Upload failed:", err);
@@ -43,27 +40,41 @@ const Formuploadimage = ({ userId, onUploadSuccess }) => {
     }
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setValue("image", [file]); // ตั้งค่าใน react-hook-form
-      handleSubmit(onSubmit)();  // เรียก submit ทันที
-    }
-  };
+  // const handleFileChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     setValue("image", [file]); // ตั้งค่าใน react-hook-form
+  //     handleSubmit(onSubmit)();  // เรียก submit ทันที
+  //   }
+  // };
 
   return (
-    <form className="space-y-4">
-      <label className="font-semibold block mb-1">Upload Image</label>
-      <input
-        type="file"
-        accept="image/*"
-        {...register("image")}
-        onChange={handleFileChange}
-        disabled={uploading}
-        className="cursor-pointer"
-      />
-      {uploading && <p className="text-sm text-gray-500">กำลังอัปโหลด...</p>}
+    <form
+      className="space-y-4"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <div className="flex flex-col justify-center space-y-3">
 
+        <label className="font-semibold block mb-1">Upload Image</label>
+        <input
+          type="file"
+          accept="image/*"
+          {...register("image")}
+          disabled={uploading}
+          className="cursor-pointer"
+        />
+
+        <button
+          type="submit"
+          disabled={uploading}
+          className="px-4 py-2 bg-[#2C3E50] text-white rounded hover:bg-[#1a252f] max-w-30"
+        >
+          Upload
+        </button>
+
+        {uploading && <p className="text-sm text-gray-500">กำลังอัปโหลด...</p>}
+
+      </div >
     </form>
   );
 };
