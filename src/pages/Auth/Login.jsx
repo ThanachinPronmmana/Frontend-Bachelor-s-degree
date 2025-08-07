@@ -25,8 +25,9 @@ const Login = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("id", user.id)
+      localStorage.setItem("usertype",user.userType)
      
-      console.log("user", user)
+      console.log("userType", user.userType)
       if (user.userType === "Buyer") {
         navigate("/buyer");
       } else if (user.userType === "Seller") {
