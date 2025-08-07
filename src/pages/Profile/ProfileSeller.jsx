@@ -65,16 +65,14 @@ const ProfileSeller = () => {
           {/* User Info */}
           <div className="mb-10 flex items-center space-x-4">
             <img
-              src={
-                user?.user?.image || "https://ui-avatars.com/api/?name=Seller"
-              }
+              src={user?.image || "https://ui-avatars.com/api/?name=Seller"}
               alt="avatar"
               className="w-12 h-12 rounded-full object-cover"
             />
             <div>
               <p className="text-sm text-gray-300">Welcome</p>
               <p className="font-bold text-white">
-                {user?.user?.name || "คุณผู้ขาย"}
+                {user?.First_name} {user?.Last_name}
               </p>
             </div>
           </div>
