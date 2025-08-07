@@ -7,16 +7,16 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { updateSeller } from "@/api/user";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { sellerSchema } from "@/components/schemas/sellerinfo"; // คุณอาจต้องสร้าง schema นี้
+import { sellerSchema } from "@/components/schemas/sellerinfo";
 
 const SellerInfo = ({ user, setUser }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
 
   const {
     register,
     handleSubmit,
     reset,
-    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(sellerSchema),
@@ -85,39 +85,14 @@ const SellerInfo = ({ user, setUser }) => {
                 </p>
                 <p className="text-sm text-gray-600">{user.Email}</p>
               </div>
-
-              <Formuploadimage
-                userId={user.id}
-                onUploadSuccess={async (imageData) => {
-                  if (!imageData?.url) return alert("ไม่พบ URL รูปภาพ");
-
-                  try {
-                    const updated = await updateSeller(user.id, {
-                      image: imageData.url,
-                    });
-
-                    const mergedUser = {
-                      ...user,
-                      ...updated.user,
-                      Seller: {
-                        ...user.Seller,
-                        ...updated.user.Seller,
-                      },
-                    };
-
-                    setUser(mergedUser);
-                    localStorage.setItem("user", JSON.stringify(mergedUser));
-                    alert("📸 รูปภาพอัปโหลดและบันทึกแล้ว");
-                  } catch (err) {
-                    console.error("รูปภาพอัปเดตล้มเหลว:", err);
-                    alert("ไม่สามารถบันทึกรูปได้");
-                  }
-                }}
-              />
             </div>
 
             <div className="flex gap-2">
-              <Button variant="outline" size="sm">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowImageModal(true)}
+              >
                 แก้ไขรูป
               </Button>
               <Button
@@ -131,6 +106,51 @@ const SellerInfo = ({ user, setUser }) => {
             </div>
           </div>
 
+          {/* Modal แก้ไขรูป */}
+          {showImageModal && (
+            <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-lg relative">
+                <CircleX
+                  className="absolute top-4 right-4 cursor-pointer hover:text-black text-gray-500"
+                  onClick={() => setShowImageModal(false)}
+                />
+                <h2 className="text-xl font-bold mb-4 text-center">
+                  อัปโหลดรูปใหม่
+                </h2>
+                <Formuploadimage
+                  userId={user.id}
+                  onUploadSuccess={async (imageData) => {
+                    if (!imageData?.url) return alert("ไม่พบ URL รูปภาพ");
+
+                    try {
+                      const updated = await updateSeller(user.id, {
+                        image: imageData.url,
+                      });
+
+                      const mergedUser = {
+                        ...user,
+                        ...updated.user,
+                        Seller: {
+                          ...user.Seller,
+                          ...updated.user.Seller,
+                        },
+                      };
+
+                      setUser(mergedUser);
+                      localStorage.setItem("user", JSON.stringify(mergedUser));
+                      alert("📸 รูปภาพอัปโหลดและบันทึกแล้ว");
+                      setShowImageModal(false);
+                    } catch (err) {
+                      console.error("รูปภาพอัปเดตล้มเหลว:", err);
+                      alert("ไม่สามารถบันทึกรูปได้");
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Modal แก้ไขข้อมูล */}
           {showModal && (
             <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
               <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-lg relative">

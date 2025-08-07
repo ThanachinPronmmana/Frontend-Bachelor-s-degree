@@ -51,8 +51,8 @@ const BuyerInfo = ({ user, setUser }) => {
     try {
       const filteredData = Object.fromEntries(
         Object.entries(data).filter(
-          ([_, value]) => value !== undefined && value !== "",
-        ),
+          ([_, value]) => value !== undefined && value !== ""
+        )
       );
       const updateUser = await updateprofile(user.id, filteredData);
       alert("Update Success");
@@ -86,41 +86,18 @@ const BuyerInfo = ({ user, setUser }) => {
                 </p>
                 <p className="text-sm text-gray-600">{user?.Email}</p>
               </div>
-
-              <Formuploadimage
-                userId={user.id}
-                onUploadSuccess={async (imageData) => {
-                  if (!imageData?.url) return alert("ไม่พบ URL รูปภาพ");
-
-                  try {
-                    const response = await updateprofile(user.id, {
-                      image: imageData.url,
-                    });
-
-                    // ✅ รวมข้อมูลเดิมกับใหม่ เพื่อไม่ให้ field อื่นหาย
-                    const mergedUser = {
-                      ...user, // เก็บของเดิมไว้
-                      ...response.user, // ทับเฉพาะ field ที่ backend ส่งมา (image, Buyer)
-                      Buyer: {
-                        ...user.Buyer,
-                        ...response.user.Buyer, // รวมข้อมูลใน Buyer เช่นกัน
-                      },
-                    };
-
-                    setUser(mergedUser);
-                    localStorage.setItem("user", JSON.stringify(mergedUser));
-                    alert("อัปโหลดและบันทึกรูปภาพสำเร็จ");
-                  } catch (err) {
-                    console.error("อัปเดตรูปภาพล้มเหลว:", err);
-                    alert("ไม่สามารถอัปเดตรูปได้");
-                  }
-                }}
-              />
             </div>
 
             {/* ปุ่มแก้ไข */}
-            <div>
-              <Button className="cursor-pointer" variant="outline" size="sm">
+            <div className="flex justify-center items-center space-x-2">
+              <Button
+                className="cursor-pointer"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setshowModalimage(true);
+                }}
+              >
                 แก้ไขรูป
               </Button>
               <Button
@@ -136,6 +113,44 @@ const BuyerInfo = ({ user, setUser }) => {
               </Button>
             </div>
           </div>
+          {showmodalimage && (
+            <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+              <div className="flex flex-col bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-lg relative">
+                <CircleX
+                  className="absolute top-4 right-4 cursor-pointer hover:text-black text-gray-500"
+                  onClick={() => setshowModalimage(false)}
+                />
+                <Formuploadimage
+                  userId={user.id}
+                  onUploadSuccess={async (imageData) => {
+                    if (!imageData?.url) return alert("ไม่พบ URL รูปภาพ");
+
+                    try {
+                      const response = await updateprofile(user.id, {
+                        image: imageData.url,
+                      });
+
+                      const mergedUser = {
+                        ...user,
+                        ...response.user,
+                        Buyer: {
+                          ...user.Buyer,
+                          ...response.user.Buyer,
+                        },
+                      };
+
+                      setUser(mergedUser);
+                      localStorage.setItem("user", JSON.stringify(mergedUser));
+                      alert("อัปโหลดและบันทึกรูปภาพสำเร็จ");
+                    } catch (err) {
+                      console.error("อัปเดตรูปภาพล้มเหลว:", err);
+                      alert("ไม่สามารถอัปเดตรูปได้");
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          )}
           {showModal && (
             <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
               <div className="flex flex-col bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-lg relative">
@@ -271,9 +286,9 @@ const BuyerInfo = ({ user, setUser }) => {
                       error={errors.Email?.message}
                     />
                     <Frominput
-                      label="Occupation"
+                      label="อาชีพ"
                       name="Occupation"
-                      defaultValue={user?.Occupation || ""}
+                      defaultValue={user?.Buyer?.Occupation || ""}
                       register={register}
                       error={errors.Occupation?.message}
                     />
@@ -281,7 +296,7 @@ const BuyerInfo = ({ user, setUser }) => {
                       type="number"
                       label="Monthly Income"
                       name="Monthly_Income"
-                      defaultValue={user?.Monthly_Income || ""}
+                      defaultValue={user?.Buyer?.Monthly_Income || ""}
                       register={register}
                       error={errors.Monthly_Income?.message}
                     />
@@ -289,7 +304,7 @@ const BuyerInfo = ({ user, setUser }) => {
                       type="number"
                       label="Family Size"
                       name="Family_Size"
-                      defaultValue={user?.Family_Size || ""}
+                      defaultValue={user?.Buyer?.Family_Size || ""}
                       register={register}
                       error={errors.Family_Size?.message}
                     />
