@@ -29,7 +29,7 @@ const Home = () => {
 
   const handleSearch = () => {
     const filtered = mockHouses.filter((house) =>
-      house.name.toLowerCase().includes(searchFilter.toLowerCase()),
+      house.name.toLowerCase().includes(searchFilter.toLowerCase())
     );
     console.log("Filtered results:", filtered);
     setImage(filtered);
@@ -41,7 +41,7 @@ const Home = () => {
       <div className="relative flex items-center justify-center h-150">
         <video
           className="absolute top-0 left-0 w-full h-full object-cover"
-          src=".\video\8302413-uhd_4096_2160_25fps.mp4"
+          src="/video/16919716-uhd_3840_2160_30fps.mp4"
           autoPlay
           loop
           muted
