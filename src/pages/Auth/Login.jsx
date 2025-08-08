@@ -17,7 +17,7 @@ const Login = () => {
       const response = await login(formData); // ✅ login() ต้อง return res.data แล้ว
       
       const { token, user, message } = response;
-      console.log(response)
+      // console.log(response)
       if (!token || !user) {
         throw new Error("Login response missing data");
       }
@@ -27,7 +27,7 @@ const Login = () => {
       localStorage.setItem("id", user.id)
       localStorage.setItem("usertype",user.userType)
      
-      console.log("userType", user.userType)
+      // console.log("userType", user.userType)
       if (user.userType === "Buyer") {
         navigate("/buyer");
       } else if (user.userType === "Seller") {
