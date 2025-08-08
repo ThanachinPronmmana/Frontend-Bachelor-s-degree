@@ -6,6 +6,10 @@ import LayoutAdmin from "../layouts/LayoutAdmin";
 import Layout_Buyer from "@/layouts/Layout_Buyer";
 import Layout_Seller from "@/layouts/Layout_Seller";
 
+// Guards
+import RequireBuyerAuth from "@/components/Auth/RequireBuyerAuth";
+import RequireSeller from "@/components/Auth/RequireSeller";
+
 // Public Pages
 import Home from "../pages/Home";
 import Support from "../pages/Support";
@@ -26,7 +30,7 @@ import PostInform from "@/pages/Post_for_sale/PostInform";
 import PostUpload from "@/pages/Post_for_sale/PostUpload";
 import PostConfirm from "@/pages/Post_for_sale/PostConfirm";
 
-// Authentication Pages
+// Auth Pages
 import Login from "@/pages/Auth/Login";
 import Register from "@/pages/Auth/Register";
 import Register_buyer from "@/pages/Auth/Register_buyer";
@@ -37,7 +41,7 @@ import ForgotPassword from "@/pages/Auth/Forgotpassword";
 import Resetpassword from "@/pages/Auth/Resetpassword";
 import VerifyEmail from "@/pages/Auth/VerifyEmail";
 
-// Deposit & Payment Pages
+// Deposit & Payment
 import Deposit from "@/pages/Deposit";
 import Deposit_doc from "@/pages/Deposit_doc";
 import Payment from "@/pages/Payment";
@@ -47,7 +51,7 @@ import Approval from "@/pages/admin/Posts of Seller/Approval";
 import AcceptPost from "@/pages/admin/Posts of Seller/AcceptPost";
 import RejectPost from "@/pages/admin/Posts of Seller/RejectPost";
 
-// Admin Pages - User Accounts
+// Admin Pages - User Account
 import BuyerId from "@/pages/admin/User account/BuyerId";
 import VerificationSeller from "@/pages/admin/User account/VerificationSeller";
 import VerifiedSeller from "@/pages/admin/User account/VerifiedSeller";
@@ -62,25 +66,20 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/*
-        --- 🌐 Public Routes ---
-        Routes accessible to all users. These routes use the default Layout.
-        */}
+        {/* 🌐 Public Routes */}
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/compare" element={<Compare />} />
           <Route path="/support" element={<Support />} />
+          <Route path="/noti" element={<BuyerNoti />} />
 
-          {/* Profile Selection & Display */}
+          {/* Profile Selection */}
           <Route
             path="/profileTypeSelector"
             element={<ProfileTypeSelector />}
           />
-          <Route path="/profile/seller" element={<ProfileSeller />} />
-          <Route path="/profile/buyer" element={<ProfileBuyer />} />
-          <Route path="/noti" element={<BuyerNoti />} />
 
-          {/* Post for Sale Flow */}
+          {/* Post For Sale (Accessible Publicly - or relocate under seller if restricted) */}
           <Route path="/post-for-sale/title" element={<PostTitle />} />
           <Route path="/post-for-sale/location" element={<PostLocation />} />
           <Route path="/post-for-sale/detail" element={<PostDetail />} />
@@ -89,7 +88,7 @@ const AppRouter = () => {
           <Route path="/post-for-sale/upload" element={<PostUpload />} />
           <Route path="/post-for-sale/confirm" element={<PostConfirm />} />
 
-          {/* Authentication & Account Management */}
+          {/* Auth */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/register_buyer" element={<Register_buyer />} />
@@ -106,43 +105,47 @@ const AppRouter = () => {
           <Route path="/payment" element={<Payment />} />
         </Route>
 
-        {/*
-        --- 👤 Buyer Routes ---
-        Routes specifically for buyers, using the Buyer Layout.
-        */}
-        <Route path="/buyer" element={<Layout_Buyer />}>
-          <Route index element={<Home />} /> {/* Buyer's home dashboard */}
-          <Route path="profile" element={<ProfileBuyer />} />
-          <Route path="support" element={<Support />} />
-          <Route path="payment" element={<Payment />} />
-          <Route path="deposit/:id" element={<Deposit />} />
+        {/* 👤 Buyer Routes (Protected) */}
+        <Route path="/buyer" element={<RequireBuyerAuth />}>
+          <Route element={<Layout_Buyer />}>
+            <Route index element={<Home />} />
+            <Route path="profile" element={<ProfileBuyer />} />
+            <Route path="support" element={<Support />} />
+            <Route path="payment" element={<Payment />} />
+            <Route path="deposit/:id" element={<Deposit />} />
+          </Route>
         </Route>
 
-        {/*
-        --- 👤 Seller Routes ---
-        Routes specifically for sellers, using the Seller Layout.
-        */}
-        <Route path="/seller" element={<Layout_Seller />}>
-          <Route index element={<Home />} /> {/* Seller's home dashboard */}
-          <Route path="profile" element={<ProfileSeller />} />
-          {/* Add more seller-specific routes here as needed */}
+        {/* 👤 Seller Routes (Protected) */}
+        <Route path="/seller" element={<RequireSeller />}>
+          <Route element={<Layout_Seller />}>
+            <Route index element={<Home />} />
+            <Route path="profile" element={<ProfileSeller />} />
+            <Route path="support" element={<Support />} />
+            <Route path="post-for-sale/title" element={<PostTitle />} />
+            <Route path="post-for-sale/location" element={<PostLocation />} />
+            <Route path="post-for-sale/detail" element={<PostDetail />} />
+            <Route path="post-for-sale/price" element={<PostPrice />} />
+            <Route path="post-for-sale/inform" element={<PostInform />} />
+            <Route path="post-for-sale/upload" element={<PostUpload />} />
+            <Route path="post-for-sale/confirm" element={<PostConfirm />} />
+          </Route>
         </Route>
 
-        {/*
-        --- 🔐 Admin Routes ---
-        Protected routes for administrators, using the Admin Layout.
-        */}
+        {/* 🔐 Admin Routes */}
         <Route path="/admin" element={<LayoutAdmin />}>
-          <Route index element={<Approval />} /> {/* Admin's default view */}
-          {/* Posts of Seller Management */}
+          {/* Dashboard */}
+          <Route index element={<Approval />} />
           <Route path="approval" element={<Approval />} />
           <Route path="accept-post" element={<AcceptPost />} />
           <Route path="reject-post" element={<RejectPost />} />
-          {/* User Account Management */}
+
+          {/* User Management */}
           <Route path="buyer-id" element={<BuyerId />} />
           <Route path="seller-id/verify" element={<VerificationSeller />} />
           <Route path="seller-id/verified" element={<VerifiedSeller />} />
           <Route path="seller-id/reject" element={<RejectSeller />} />
+
           {/* Payment Management */}
           <Route path="pay-deposit" element={<PayDeposit />} />
           <Route path="pay-bank" element={<PayBank />} />
