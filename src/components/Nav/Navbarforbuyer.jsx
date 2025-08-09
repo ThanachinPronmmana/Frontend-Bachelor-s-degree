@@ -7,7 +7,7 @@ import Home from "./Home";
 
 const Navbarforbuyer = () => {
   return (
-    <nav className="py-4 px-5 shadow-md border-b border-gray-200 bg-white">
+    <nav className="py-4 px-5 shadow-md border-b border-gray-200 bg-[#2c3e50] text-white">
       <div className="flex justify-center sm:justify-end mr-70">
         <Link to="Login" className="flex">
           <h1>Login</h1>

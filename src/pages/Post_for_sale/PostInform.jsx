@@ -1,153 +1,95 @@
-import React from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import PostLayout from "@/layouts/PostLayout";
 import { useNavigate } from "react-router-dom";
-import { FaLine, FaFacebook } from "react-icons/fa";
-import { useForm } from "@/context/FormContext";
+import { Card, CardContent } from "@/components/ui/card";
+import { User } from "lucide-react";
+
+const schema = z.object({
+  sellerName: z.string().min(2),
+  phone: z.string().min(10).max(15),
+});
 
 const PostInform = () => {
   const navigate = useNavigate();
-  const { formData, updateFormData } = useForm();
+  const form = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      sellerName: "",
+      phone: "",
+    },
+  });
 
-  const handleChange = (field, value) => {
-    updateFormData(field, value);
-  };
-
-  const handleNext = () => {
+  const onSubmit = (values) => {
     navigate("/post-for-sale/upload");
   };
 
-  const handleBack = () => {
-    navigate("/post-for-sale/price");
-  };
-
   return (
-    <div className="min-h-screen bg-[#34495E] flex flex-col items-center">
-      <div className="bg-white mt-10 px-10 py-6 rounded-lg shadow-md w-[700px]">
-        {/* Step Indicator */}
-        <div className="flex justify-between mb-8">
-          {[
-            "Title",
-            "Details",
-            "Price & Terms",
-            "Seller Information",
-            "Upload Photos",
-            "Confirmation",
-          ].map((label, index) => (
-            <div key={index} className="flex flex-col items-center w-1/6">
-              <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${index === 3 ? "bg-gray-800" : "bg-gray-300"}`}
-              >
-                {index + 1}
-              </div>
-              <span className="text-xs mt-1 text-center">{label}</span>
+    <PostLayout currentStep={4}>
+      <div className="flex justify-center">
+        <Card className="w-full max-w-xl shadow-xl">
+          <CardContent className="py-8 px-6 space-y-6">
+            <div className="text-center">
+              <User className="mx-auto w-10 h-10 text-primary" />
+              <h2 className="text-2xl font-semibold mt-2">ข้อมูลผู้ขาย</h2>
+              <p className="text-muted-foreground text-sm">
+                โปรดกรอกชื่อและเบอร์โทรศัพท์ของผู้ขาย
+              </p>
             </div>
-          ))}
-        </div>
 
-        {/* Name / Phone */}
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className="block text-sm mb-1 text-black">Name</label>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-              className="w-full p-2 border rounded shadow-sm"
-            />
-          </div>
-          <div>
-            <label className="block text-sm mb-1 text-black">
-              Phone number
-            </label>
-            <input
-              type="text"
-              value={formData.phone}
-              onChange={(e) => handleChange("phone", e.target.value)}
-              className="w-full p-2 border rounded shadow-sm"
-            />
-          </div>
-        </div>
-
-        {/* Email */}
-        <div className="mb-4">
-          <label className="block text-sm mb-1 text-black">E-mail</label>
-          <input
-            type="email"
-            value={formData.email}
-            onChange={(e) => handleChange("email", e.target.value)}
-            className="w-full p-2 border rounded shadow-sm"
-          />
-        </div>
-
-        {/* Social Media */}
-        <div className="mb-4 text-black">
-          <label className="block text-sm mb-2">Social Media</label>
-
-          {/* Line */}
-          <div className="mb-2">
-            <label className="flex items-center mb-1">
-              <input
-                type="checkbox"
-                checked={formData.useLine}
-                onChange={() => handleChange("useLine", !formData.useLine)}
-                className="mr-2"
-              />
-              <FaLine className="text-green-500 mr-2" />
-              Line
-            </label>
-            {formData.useLine && (
-              <input
-                type="text"
-                placeholder="Enter Line ID"
-                value={formData.line}
-                onChange={(e) => handleChange("line", e.target.value)}
-                className="w-full p-2 border rounded shadow-sm"
-              />
-            )}
-          </div>
-
-          {/* Facebook */}
-          <div>
-            <label className="flex items-center mb-1">
-              <input
-                type="checkbox"
-                checked={formData.useFacebook}
-                onChange={() =>
-                  handleChange("useFacebook", !formData.useFacebook)
-                }
-                className="mr-2"
-              />
-              <FaFacebook className="text-blue-600 mr-2" />
-              Facebook
-            </label>
-            {formData.useFacebook && (
-              <input
-                type="text"
-                placeholder="Enter Facebook profile link"
-                value={formData.facebook}
-                onChange={(e) => handleChange("facebook", e.target.value)}
-                className="w-full p-2 border rounded shadow-sm"
-              />
-            )}
-          </div>
-        </div>
-
-        {/* Navigation Buttons */}
-        <div className="flex justify-between mt-6">
-          <button
-            onClick={handleBack}
-            className="px-6 py-2 bg-[#95A5A6] text-white rounded hover:opacity-90"
-          >
-            Back
-          </button>
-          <button
-            onClick={handleNext}
-            className="px-6 py-2 bg-[#34495E] text-white rounded hover:bg-[#2c3e50]"
-          >
-            Next
-          </button>
-        </div>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
+                <FormField
+                  control={form.control}
+                  name="sellerName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ชื่อผู้ขาย</FormLabel>
+                      <Input {...field} placeholder="นายสมชาย บ้านดี" />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>เบอร์โทรศัพท์</FormLabel>
+                      <Input {...field} placeholder="0812345678" />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex justify-between pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => navigate("/post-for-sale/price")}
+                  >
+                    ย้อนกลับ
+                  </Button>
+                  <Button type="submit">ถัดไป</Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
       </div>
-    </div>
+    </PostLayout>
   );
 };
 

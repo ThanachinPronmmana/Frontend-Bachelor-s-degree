@@ -14,7 +14,7 @@ const Credit = () => {
   }, []);
   return (
     <div className="w-full bg-white ">
-      <div className="flex items-center justify-between bg-[#3D4C63] h-20 border-b-2 border-white px-6 sm:px-10 lg:px-70">
+      <div className="flex items-center justify-between bg-[#2c3e50] h-20 border-b-2 border-white px-6 sm:px-10 lg:px-70">
         <div className="flex space-x-8">
           <p className="text-white">Contact Us</p>
           <Link to="/Support">
@@ -34,7 +34,9 @@ const Credit = () => {
       </div>
       <div className="bg-gray-200 w-full lg:px-70 sm:px-10 pt-5 pb-8">
         <p
-          className={`text-black text-sm opacity-70 transition-all duration-300 ease-in-out ${expanded ? "line-clamp-none" : "line-clamp-1"}`}
+          className={`text-black text-sm opacity-70 transition-all duration-300 ease-in-out ${
+            expanded ? "line-clamp-none" : "line-clamp-1"
+          }`}
         >
           Yuu Yenn Property - “เพราะบ้าน...คือมากกว่าหลังคาและผนัง”
           มันคือจุดเริ่มต้นของชีวิตใหม่ ความฝันของครอบครัว พื้นที่เล็ก ๆ
@@ -70,7 +72,7 @@ const Credit = () => {
           </ul>
         </div>
       </div>
-      <div className=" flex bg-[#3D4C63] h-20 w-full  border-t-2 border-while  justify-between pl-70 pr-70 pt-5">
+      <div className=" flex bg-[#2c3e50] h-20 w-full  border-t-2 border-while  justify-between pl-70 pr-70 pt-5">
         <Link to="Support">
           <p className="text-white">...</p>
         </Link>

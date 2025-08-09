@@ -1,195 +1,246 @@
-import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import PostLayout from "@/layouts/PostLayout";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "@/context/FormContext";
+import { useEffect, useState } from "react";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent } from "@/components/ui/card";
+import { MapPin } from "lucide-react";
+
+const schema = z.object({
+  province_id: z.string(),
+  amphure_id: z.string(),
+  tambon_id: z.string(),
+});
 
 const PostLocation = () => {
   const navigate = useNavigate();
-  const { formData, updateFormData } = useForm(); // ✅ ใช้งาน FormContext
+  const form = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      province_id: "",
+      amphure_id: "",
+      tambon_id: "",
+    },
+  });
+
+  const province_id = form.watch("province_id");
+  const amphure_id = form.watch("amphure_id");
 
   const [provinces, setProvinces] = useState([]);
   const [amphures, setAmphures] = useState([]);
   const [tambons, setTambons] = useState([]);
 
-  const [allAmphures, setAllAmphures] = useState([]);
-  const [allTambons, setAllTambons] = useState([]);
+  const [loadingProvince, setLoadingProvince] = useState(true);
+  const [loadingAmphure, setLoadingAmphure] = useState(false);
+  const [loadingTambon, setLoadingTambon] = useState(false);
 
-  // ✅ โหลดข้อมูลจังหวัด/อำเภอ/ตำบล
   useEffect(() => {
-    const fetchData = async () => {
-      const [provinceRes, amphureRes, tambonRes] = await Promise.all([
-        fetch(
-          "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json",
-        ),
-        fetch(
-          "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json",
-        ),
-        fetch(
-          "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json",
-        ),
-      ]);
-
-      const [provinceData, amphureData, tambonData] = await Promise.all([
-        provinceRes.json(),
-        amphureRes.json(),
-        tambonRes.json(),
-      ]);
-
-      setProvinces(provinceData);
-      setAllAmphures(amphureData);
-      setAllTambons(tambonData);
-    };
-
-    fetchData();
+    setLoadingProvince(true);
+    fetch(
+      "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json"
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setProvinces(data);
+        setLoadingProvince(false);
+      });
   }, []);
 
-  // ✅ เปลี่ยนอำเภอเมื่อเลือกจังหวัด
   useEffect(() => {
-    if (formData.province) {
-      const province = provinces.find((p) => p.name_th === formData.province);
-      const filteredAmphures = allAmphures.filter(
-        (a) => a.province_id === province?.id,
-      );
-      setAmphures(filteredAmphures);
-      updateFormData("district", ""); // เคลียร์ค่าถ้าเปลี่ยน
-      updateFormData("subDistrict", "");
-      setTambons([]);
-    }
-  }, [formData.province, provinces, allAmphures]);
+    if (!province_id) return;
 
-  // ✅ เปลี่ยนตำบลเมื่อเลือกอำเภอ
+    form.setValue("amphure_id", "");
+    form.setValue("tambon_id", "");
+    setAmphures([]);
+    setTambons([]);
+
+    setLoadingAmphure(true);
+    fetch(
+      "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json"
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setAmphures(
+          data.filter((a) => a.province_id.toString() === province_id)
+        );
+        setLoadingAmphure(false);
+      });
+  }, [province_id]);
+
   useEffect(() => {
-    if (formData.district) {
-      const amphure = amphures.find((a) => a.name_th === formData.district);
-      const filteredTambons = allTambons.filter(
-        (t) => t.amphure_id === amphure?.id,
-      );
-      setTambons(filteredTambons);
-      updateFormData("subDistrict", "");
-    }
-  }, [formData.district, amphures, allTambons]);
+    if (!amphure_id) return;
 
-  const handleNext = () => {
+    form.setValue("tambon_id", "");
+    setTambons([]);
+
+    setLoadingTambon(true);
+    fetch(
+      "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json"
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setTambons(data.filter((t) => t.amphure_id.toString() === amphure_id));
+        setLoadingTambon(false);
+      });
+  }, [amphure_id]);
+
+  const onSubmit = (values) => {
     navigate("/post-for-sale/detail");
   };
 
-  const handleBack = () => {
-    navigate("/post-for-sale/title");
-  };
-
   return (
-    <div className="min-h-screen bg-[#34495E] flex flex-col items-center">
-      <div className="bg-white mt-10 px-10 py-6 rounded-lg shadow-md w-[700px]">
-        {/* Steps */}
-        <div className="flex justify-between mb-6">
-          {[
-            "Location",
-            "Details",
-            "Price & Terms",
-            "Seller Information",
-            "Upload Photos",
-            "Confirmation",
-          ].map((label, index) => (
-            <div key={index} className="flex flex-col items-center w-1/6">
-              <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${index === 0 ? "bg-gray-800" : "bg-gray-300"}`}
-              >
-                {index + 1}
-              </div>
-              <span className="text-xs mt-1 text-center">{label}</span>
+    <PostLayout currentStep={1}>
+      <div className="flex justify-center">
+        <Card className="w-full max-w-xl shadow-xl">
+          <CardContent className="py-8 px-6 space-y-6">
+            <div className="text-center">
+              <MapPin className="mx-auto w-10 h-10 text-primary" />
+              <h2 className="text-2xl font-semibold mt-2">เลือกทำเลที่ตั้ง</h2>
+              <p className="text-muted-foreground text-sm">
+                กรุณาเลือกจังหวัด อำเภอ และตำบลของทรัพย์สินของคุณ
+              </p>
             </div>
-          ))}
-        </div>
 
-        {/* Form */}
-        <div className="flex flex-col gap-4 mb-6">
-          {/* Province */}
-          <div>
-            <label className="block mb-1 text-sm text-black">
-              Province <span className="text-red-500">*</span>
-            </label>
-            <select
-              value={formData.province}
-              onChange={(e) => updateFormData("province", e.target.value)}
-              className="w-full p-2 border rounded shadow-sm"
-            >
-              <option value="">Select province</option>
-              {provinces.map((item) => (
-                <option key={item.id} value={item.name_th}>
-                  {item.name_th}
-                </option>
-              ))}
-            </select>
-          </div>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
+                <div className="flex flex-col gap-4 items-center">
+                  <div className="w-full max-w-sm ml-60 mr-0">
+                    <FormField
+                      control={form.control}
+                      name="province_id"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>จังหวัด</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            disabled={loadingProvince}
+                          >
+                            <SelectTrigger>
+                              <SelectValue
+                                placeholder={
+                                  loadingProvince
+                                    ? "กำลังโหลด..."
+                                    : "เลือกจังหวัด"
+                                }
+                              />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {provinces.map((p) => (
+                                <SelectItem key={p.id} value={p.id.toString()}>
+                                  {p.name_th}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-          {/* District */}
-          <div>
-            <label className="block mb-1 text-sm text-black">
-              District <span className="text-red-500">*</span>
-            </label>
-            <select
-              value={formData.district}
-              onChange={(e) => updateFormData("district", e.target.value)}
-              className="w-full p-2 border rounded shadow-sm"
-              disabled={!amphures.length}
-            >
-              <option value="">Select district</option>
-              {amphures.map((item) => (
-                <option key={item.id} value={item.name_th}>
-                  {item.name_th}
-                </option>
-              ))}
-            </select>
-          </div>
+                  <div className="w-full max-w-sm ml-60 mr-0">
+                    <FormField
+                      control={form.control}
+                      name="amphure_id"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>อำเภอ</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            disabled={loadingAmphure || !province_id}
+                          >
+                            <SelectTrigger>
+                              <SelectValue
+                                placeholder={
+                                  loadingAmphure ? "กำลังโหลด..." : "เลือกอำเภอ"
+                                }
+                              />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {amphures.map((a) => (
+                                <SelectItem key={a.id} value={a.id.toString()}>
+                                  {a.name_th}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-          {/* Subdistrict */}
-          <div>
-            <label className="block mb-1 text-sm text-black">
-              Subdistrict <span className="text-red-500">*</span>
-            </label>
-            <select
-              value={formData.subDistrict}
-              onChange={(e) => updateFormData("subDistrict", e.target.value)}
-              className="w-full p-2 border rounded shadow-sm"
-              disabled={!tambons.length}
-            >
-              <option value="">Select subdistrict</option>
-              {tambons.map((item) => (
-                <option key={item.id} value={item.name_th}>
-                  {item.name_th}
-                </option>
-              ))}
-            </select>
-          </div>
+                  <div className="w-full max-w-sm ml-60 mr-0">
+                    <FormField
+                      control={form.control}
+                      name="tambon_id"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>ตำบล</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            disabled={loadingTambon || !amphure_id}
+                          >
+                            <SelectTrigger>
+                              <SelectValue
+                                placeholder={
+                                  loadingTambon ? "กำลังโหลด..." : "เลือกตำบล"
+                                }
+                              />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {tambons.map((t) => (
+                                <SelectItem key={t.id} value={t.id.toString()}>
+                                  {t.name_th}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
 
-          {/* Address */}
-          <div>
-            <label className="block mb-1 text-sm text-black">Address</label>
-            <input
-              type="text"
-              value={formData.address}
-              onChange={(e) => updateFormData("address", e.target.value)}
-              className="w-full p-2 border rounded shadow-sm"
-            />
-          </div>
-        </div>
-
-        {/* Buttons */}
-        <div className="flex justify-between">
-          <button
-            onClick={handleBack}
-            className="px-6 py-2 bg-[#95A5A6] text-white rounded hover:opacity-90"
-          >
-            Back
-          </button>
-          <button
-            onClick={handleNext}
-            className="px-6 py-2 bg-[#34495E] text-white rounded hover:bg-[#2c3e50]"
-          >
-            Next
-          </button>
-        </div>
+                <div className="flex justify-between pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => navigate("/post-for-sale/title")}
+                  >
+                    ย้อนกลับ
+                  </Button>
+                  <Button type="submit">ถัดไป</Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
       </div>
-    </div>
+    </PostLayout>
   );
 };
 

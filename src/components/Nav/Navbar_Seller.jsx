@@ -1,9 +1,7 @@
 import Logo from "./Logo";
-import Home from "./Home";
-import Profile from "./Profile";
 import Post_for_sale from "./Post_for_sale";
 import Support from "./Support";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import Noti from "./Noti";
 import {
   DropdownMenu,
@@ -37,7 +35,7 @@ const Navbar_Seller = () => {
     navigate("/");
   };
   return (
-    <nav className="py-4 px-5 shadow-md border-b border-gray-200 bg-white">
+    <nav className="py-4 px-5 shadow-md border-b border-gray-200 bg-[#2c3e50] text-white">
       <div className="flex flex-col sm:flex-row sm:justify-between items-center ml-70 mr-70">
         <Logo />
         <div className="flex space-x-30 py-2">

@@ -1,101 +1,65 @@
-import React from "react";
+import PostLayout from "@/layouts/PostLayout";
+import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "@/context/FormContext";
+import { Card, CardContent } from "@/components/ui/card";
+import { CheckCircle } from "lucide-react";
+
+const dummyData = {
+  title: "บ้านเดี่ยว 2 ชั้น ย่านลาดพร้าว",
+  province: "กรุงเทพมหานคร",
+  district: "ห้วยขวาง",
+  type: "บ้านเดี่ยว",
+  bedroom: 3,
+  bathroom: 2,
+  price: 3500000,
+  deposit: 50000,
+  sellerName: "นายสมชาย บ้านดี",
+  phone: "0812345678",
+};
 
 const PostConfirm = () => {
   const navigate = useNavigate();
-  const { formData, updateFormData } = useForm(); // << ใช้ context
 
   const handleSubmit = () => {
-    if (!formData.confirm1 || !formData.confirm2) {
-      alert("Please confirm all required items.");
-      return;
-    }
-
-    // ส่ง formData ไปยัง backend (ถ้ามี)
-    alert("Your post has been submitted!");
+    // ส่งข้อมูลจริงไปหลังบ้านที่นี่
     navigate("/");
   };
 
-  const handleBack = () => {
-    navigate("/post-for-sale/upload");
-  };
-
   return (
-    <div className="min-h-screen bg-[#34495E] flex flex-col items-center">
-      <div className="bg-white mt-10 px-10 py-6 rounded-lg shadow-md w-[700px]">
-        {/* Step Indicator */}
-        <div className="flex justify-between mb-8">
-          {[
-            "Title",
-            "Details",
-            "Price & Terms",
-            "Seller Information",
-            "Upload Photos",
-            "Confirmation",
-          ].map((label, index) => (
-            <div key={index} className="flex flex-col items-center w-1/6">
-              <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${index === 5 ? "bg-gray-800" : "bg-gray-300"}`}
-              >
-                {index + 1}
-              </div>
-              <span className="text-xs mt-1 text-center">{label}</span>
+    <PostLayout currentStep={6}>
+      <div className="flex justify-center">
+        <Card className="w-full max-w-xl shadow-xl">
+          <CardContent className="py-8 px-6 space-y-6">
+            <div className="text-center">
+              <CheckCircle className="mx-auto w-10 h-10 text-primary" />
+              <h2 className="text-2xl font-semibold mt-2">ยืนยันข้อมูล</h2>
+              <p className="text-muted-foreground text-sm">
+                กรุณาตรวจสอบข้อมูลของคุณก่อนโพสต์
+              </p>
             </div>
-          ))}
-        </div>
 
-        {/* Confirm Checkboxes */}
-        <div className="text-black space-y-4 mb-8 text-sm">
-          <div className="flex items-start">
-            <input
-              type="checkbox"
-              id="agreeInfo"
-              className="mt-1 mr-2"
-              checked={formData.confirm1}
-              onChange={(e) => updateFormData("confirm1", e.target.checked)}
-            />
-            <label htmlFor="agreeInfo">
-              I confirm that the information provided is correct.
-            </label>
-          </div>
-          <div className="flex items-start">
-            <input
-              type="checkbox"
-              id="agreeReview"
-              className="mt-1 mr-2"
-              checked={formData.confirm2}
-              onChange={(e) => updateFormData("confirm2", e.target.checked)}
-            />
-            <label htmlFor="agreeReview">
-              I understand that the advertisement will be subject to review
-              before being posted on the website.
-            </label>
-          </div>
-        </div>
+            <div className="space-y-2">
+              {Object.entries(dummyData).map(([key, value]) => (
+                <div key={key} className="flex justify-between border-b py-2">
+                  <span className="font-medium capitalize">{key}</span>
+                  <span>{value}</span>
+                </div>
+              ))}
+            </div>
 
-        {/* Navigation Buttons */}
-        <div className="flex justify-between">
-          <button
-            onClick={handleBack}
-            className="px-6 py-2 bg-[#95A5A6] text-white rounded hover:opacity-90"
-          >
-            Back
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={!formData.confirm1 || !formData.confirm2}
-            className={`px-6 py-2 rounded-md text-white w-40 ${
-              formData.confirm1 && formData.confirm2
-                ? "bg-[#34495E] hover:bg-[#2c3e50]"
-                : "bg-gray-400 cursor-not-allowed"
-            }`}
-          >
-            Continue
-          </button>
-        </div>
+            <div className="flex justify-between pt-4">
+              <Button
+                variant="outline"
+                onClick={() => navigate("/post-for-sale/upload")}
+              >
+                ย้อนกลับ
+              </Button>
+              <Button onClick={handleSubmit}>ยืนยันการโพสต์</Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </div>
+    </PostLayout>
   );
 };
 

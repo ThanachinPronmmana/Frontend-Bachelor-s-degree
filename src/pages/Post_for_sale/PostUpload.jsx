@@ -1,117 +1,83 @@
-import React from "react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import PostLayout from "@/layouts/PostLayout";
 import { useNavigate } from "react-router-dom";
-import { FaUpload } from "react-icons/fa";
-import { useForm } from "@/context/FormContext";
+import { Trash2, Image as ImageIcon } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 const PostUpload = () => {
+  const [images, setImages] = useState([]);
   const navigate = useNavigate();
-  const { formData, updateFormData } = useForm(); // << ดึงจาก context
 
-  const handleHousePhotoUpload = (e) => {
+  const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
-    updateFormData("housePhotos", [...formData.housePhotos, ...files]);
+    const fileURLs = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setImages((prev) => [...prev, ...fileURLs]);
   };
 
-  const handleDocumentUpload = (e) => {
-    const files = Array.from(e.target.files);
-    updateFormData("documents", [...formData.documents, ...files]);
+  const handleRemove = (index) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleNext = () => {
-    if (formData.housePhotos.length < 5) {
-      alert("Please upload at least 5 house photos.");
-      return;
-    }
     navigate("/post-for-sale/confirm");
   };
 
-  const handleBack = () => {
-    navigate("/post-for-sale/inform");
-  };
-
   return (
-    <div className="min-h-screen bg-[#34495E] flex flex-col items-center">
-      <div className="bg-white mt-10 px-10 py-6 rounded-lg shadow-md w-[700px]">
-        {/* Step Indicator */}
-        <div className="flex justify-between mb-8">
-          {[
-            "Title",
-            "Details",
-            "Price & Terms",
-            "Seller Information",
-            "Upload Photos",
-            "Confirmation",
-          ].map((label, index) => (
-            <div key={index} className="flex flex-col items-center w-1/6">
-              <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${index === 4 ? "bg-gray-800" : "bg-gray-300"}`}
-              >
-                {index + 1}
-              </div>
-              <span className="text-xs mt-1 text-center">{label}</span>
+    <PostLayout currentStep={5}>
+      <div className="flex justify-center">
+        <Card className="w-full max-w-xl shadow-xl">
+          <CardContent className="py-8 px-6 space-y-6">
+            <div className="text-center">
+              <ImageIcon className="mx-auto w-10 h-10 text-primary" />
+              <h2 className="text-2xl font-semibold mt-2">อัปโหลดรูปภาพ</h2>
+              <p className="text-muted-foreground text-sm">
+                เลือกรูปภาพอสังหาริมทรัพย์ของคุณ (อัปโหลดได้หลายรูป)
+              </p>
             </div>
-          ))}
-        </div>
 
-        {/* Upload house photos */}
-        <div className="mb-6 text-center text-black">
-          <p className="mb-2 font-medium">
-            Upload house photos <br />
-            (minimum 5 photos)
-          </p>
-          <label className="cursor-pointer bg-gray-300 text-black py-2 px-6 rounded-md inline-flex items-center gap-2">
-            <FaUpload />
-            Upload
             <input
               type="file"
               accept="image/*"
               multiple
-              onChange={handleHousePhotoUpload}
-              hidden
+              onChange={handleFileChange}
             />
-          </label>
-          <p className="mt-2 text-sm text-gray-600">
-            {formData.housePhotos.length} photo(s) selected
-          </p>
-        </div>
 
-        {/* Upload documents */}
-        <div className="mb-6 text-center text-black">
-          <p className="mb-2 font-medium">
-            Upload homeowner verification documents
-          </p>
-          <label className="cursor-pointer bg-gray-300 text-black py-2 px-6 rounded-md inline-flex items-center gap-2">
-            <FaUpload />
-            Upload
-            <input
-              type="file"
-              multiple
-              onChange={handleDocumentUpload}
-              hidden
-            />
-          </label>
-          <p className="mt-2 text-sm text-gray-600">
-            {formData.documents.length} document(s) selected
-          </p>
-        </div>
+            <div className="grid grid-cols-3 gap-4">
+              {images.map((img, idx) => (
+                <div key={idx} className="relative">
+                  <img
+                    src={img.preview}
+                    alt="preview"
+                    className="w-full h-32 object-cover rounded"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemove(idx)}
+                    className="absolute top-1 right-1 bg-white rounded-full p-1 shadow"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
 
-        {/* Navigation buttons */}
-        <div className="flex justify-between mt-6">
-          <button
-            onClick={handleBack}
-            className="px-6 py-2 bg-[#95A5A6] text-white rounded hover:opacity-90"
-          >
-            Back
-          </button>
-          <button
-            onClick={handleNext}
-            className="px-6 py-2 bg-[#34495E] text-white rounded hover:bg-[#2c3e50]"
-          >
-            Next
-          </button>
-        </div>
+            <div className="flex justify-between pt-4">
+              <Button
+                variant="outline"
+                onClick={() => navigate("/post-for-sale/inform")}
+              >
+                ย้อนกลับ
+              </Button>
+              <Button onClick={handleNext}>ถัดไป</Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </div>
+    </PostLayout>
   );
 };
 
