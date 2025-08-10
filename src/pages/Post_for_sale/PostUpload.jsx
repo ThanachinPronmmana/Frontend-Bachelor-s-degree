@@ -10,7 +10,7 @@ const MAX_DOC_SIZE = 10 * 1024 * 1024; // 10MB
 const MAX_IMAGES = 10;
 const MAX_DOCS = 5;
 
-export default function PostUpload() {
+function PostUpload() {
   const [images, setImages] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [error, setError] = useState("");
@@ -266,3 +266,5 @@ export default function PostUpload() {
     </PostLayout>
   );
 }
+
+export default PostUpload;
