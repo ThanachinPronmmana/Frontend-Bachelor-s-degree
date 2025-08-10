@@ -1,66 +1,39 @@
-// src/contexts/FormContext.js
-import React, { createContext, useState, useContext } from "react";
+// src/context/FormContext.jsx
+import { createContext, useContext, useEffect, useState } from "react";
 
+const STORAGE_KEY = "postFormData";
 const FormContext = createContext();
 
 export const FormProvider = ({ children }) => {
-  const [formData, setFormData] = useState({
-    // PostTitle
-    title: "",
-    description: "",
+  const [formData, setFormData] = useState({});
 
-    // PostLocation
-    province: "",
-    district: "",
-    subDistrict: "",
-    address: "",
+  // โหลดค่าจาก localStorage ตอน mount
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      setFormData(JSON.parse(saved));
+    }
+  }, []);
 
-    // PostDetail
-    propertyType: "",
-    size: "",
-    totalRooms: "",
-    yearBuilt: "",
-    bedrooms: "",
-    bathrooms: "",
-    nearbyPlaces: [],
-    amenities: [],
-    parking: false,
+  // บันทึกลง localStorage ทุกครั้งที่เปลี่ยน
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+  }, [formData]);
 
-    // PostPrice
-    saleOrRent: "sell", // "sell" or "rent"
-    price: "",
-    installmentType: "", // "owner" or "bank"
-    installmentPeriod: "",
-    interestRate: "",
-    extraExpenses: [],
+  const updateFormData = (newData) => {
+    setFormData((prev) => ({ ...prev, ...newData }));
+  };
 
-    // PostInform
-    name: "",
-    email: "",
-    phone: "",
-    line: "",
-    facebook: "",
-    useLine: false,
-    useFacebook: false,
-
-    // PostUpload
-    housePhotos: [],
-    documents: [],
-
-    // PostConfirm
-    confirm1: false,
-    confirm2: false,
-  });
-
-  const updateFormData = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const resetFormData = () => {
+    setFormData({});
+    localStorage.removeItem(STORAGE_KEY);
   };
 
   return (
-    <FormContext.Provider value={{ formData, updateFormData }}>
+    <FormContext.Provider value={{ formData, updateFormData, resetFormData }}>
       {children}
     </FormContext.Provider>
   );
 };
 
-export const useForm = () => useContext(FormContext);
+export const useFormData = () => useContext(FormContext);

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -76,6 +77,40 @@ const PostDetail = () => {
     },
   });
 
+  // โหลดข้อมูลจาก localStorage ตอน mount
+  useEffect(() => {
+    const saved = localStorage.getItem("postData");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      form.reset({
+        type: parsed.type || "",
+        size: parsed.size,
+        landArea: parsed.landArea,
+        totalRooms: parsed.totalRooms,
+        yearBuilt: parsed.yearBuilt,
+        bedrooms: parsed.bedrooms ?? 1,
+        bathrooms: parsed.bathrooms ?? 1,
+        nearbyPlaces: parsed.nearbyPlaces || [],
+        amenities: parsed.amenities || [],
+        parking: parsed.parking || "",
+        notes: parsed.notes || "",
+      });
+    }
+  }, [form]);
+
+  // บันทึกข้อมูลทุกครั้งที่ form เปลี่ยน
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      const saved = localStorage.getItem("postData");
+      const currentData = saved ? JSON.parse(saved) : {};
+      localStorage.setItem(
+        "postData",
+        JSON.stringify({ ...currentData, ...value })
+      );
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
+
   const toggleArrayValue = (field, value) => {
     const current = form.getValues(field);
     if (current.includes(value)) {
@@ -89,8 +124,7 @@ const PostDetail = () => {
   };
 
   const onSubmit = (values) => {
-    console.log(values);
-    navigate("/post-for-sale/price");
+    navigate("/seller/post-for-sale/price");
   };
 
   return (
@@ -113,7 +147,7 @@ const PostDetail = () => {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-6"
               >
-                {/* Property Type (Single Select) */}
+                {/* Property Type */}
                 <FormField
                   control={form.control}
                   name="type"
@@ -298,7 +332,7 @@ const PostDetail = () => {
                   )}
                 />
 
-                {/* Additional Amenities */}
+                {/* Amenities */}
                 <FormField
                   control={form.control}
                   name="amenities"
@@ -342,6 +376,7 @@ const PostDetail = () => {
                         <option value="1">1 คัน</option>
                         <option value="2">2 คัน</option>
                         <option value="3">3 คันขึ้นไป</option>
+                        <option value="4">ไม่มีที่จอด</option>
                       </select>
                       <FormMessage />
                     </FormItem>
@@ -371,7 +406,7 @@ const PostDetail = () => {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => navigate("/post-for-sale/location")}
+                    onClick={() => navigate("/seller/post-for-sale/location")}
                   >
                     ย้อนกลับ
                   </Button>

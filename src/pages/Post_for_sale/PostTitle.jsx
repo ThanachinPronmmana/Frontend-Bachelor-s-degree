@@ -1,7 +1,9 @@
-// --- PostTitle.tsx ---
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,41 +14,78 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import PostLayout from "@/layouts/PostLayout";
-import { useNavigate } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
+
 import { FileText } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 const schema = z.object({
   title: z.string().min(5, "กรุณากรอกหัวข้ออย่างน้อย 5 ตัวอักษร"),
-  description: z.string().min(10, "กรุณากรอกรายละเอียด"),
+  description: z.string().min(10, "กรุณากรอกรายละเอียดอย่างน้อย 10 ตัวอักษร"),
 });
 
-export const PostTitle = () => {
+const PostTitle = () => {
   const navigate = useNavigate();
+
   const form = useForm({
     resolver: zodResolver(schema),
-    defaultValues: { title: "", description: "" },
+    defaultValues: {
+      title: "",
+      description: "",
+    },
   });
-  const onSubmit = (values) => navigate("/post-for-sale/location");
+
+  // โหลดค่าจาก localStorage ถ้ามี
+  useEffect(() => {
+    const saved = localStorage.getItem("postData");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      form.reset({
+        title: parsed.title || "",
+        description: parsed.description || "",
+      });
+    }
+  }, [form]);
+
+  // บันทึกค่าลง localStorage ทุกครั้งที่เปลี่ยน
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      const saved = localStorage.getItem("postData");
+      const currentData = saved ? JSON.parse(saved) : {};
+      localStorage.setItem(
+        "postData",
+        JSON.stringify({ ...currentData, ...value })
+      );
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
+
+  const onSubmit = (data) => {
+    const saved = localStorage.getItem("postData");
+    const currentData = saved ? JSON.parse(saved) : {};
+    localStorage.setItem(
+      "postData",
+      JSON.stringify({ ...currentData, ...data })
+    );
+    navigate("/seller/post-for-sale/location");
+  };
 
   return (
     <PostLayout currentStep={0}>
       <div className="flex justify-center">
-        <Card className="w-full max-w-xl bg-white border border-blue-100 shadow-lg">
+        <Card className="w-full max-w-3xl shadow-xl">
           <CardContent className="py-8 px-6 space-y-6">
             <div className="text-center">
-              <FileText className="mx-auto w-10 h-10 text-blue-600" />
-              <h2 className="text-2xl font-semibold mt-2 text-blue-800">
-                กรอกหัวข้อประกาศ
-              </h2>
-              <p className="text-gray-600 text-sm">
-                โปรดกรอกหัวข้อและคำอธิบายเกี่ยวกับอสังหาริมทรัพย์ของคุณ
+              <FileText className="mx-auto w-10 h-10 text-primary" />
+              <h2 className="text-2xl font-semibold mt-2">ตั้งหัวข้อประกาศ</h2>
+              <p className="text-muted-foreground text-sm">
+                โปรดตั้งหัวข้อและรายละเอียดเพื่อดึงดูดความสนใจของผู้ซื้อ
               </p>
             </div>
+
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-4"
+                className="space-y-6"
               >
                 <FormField
                   control={form.control}
@@ -55,34 +94,31 @@ export const PostTitle = () => {
                     <FormItem>
                       <FormLabel>หัวข้อประกาศ</FormLabel>
                       <Input
+                        placeholder="เช่น บ้านเดี่ยว 2 ชั้น ใกล้รถไฟฟ้า"
                         {...field}
-                        placeholder="เช่น บ้านเดี่ยว 2 ชั้น ย่านลาดพร้าว"
                       />
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>รายละเอียดเบื้องต้น</FormLabel>
+                      <FormLabel>รายละเอียด</FormLabel>
                       <Input
+                        placeholder="กรอกรายละเอียดของทรัพย์สิน เช่น ทำเล ขนาด สภาพ"
                         {...field}
-                        placeholder="บรรยายบ้าน จุดเด่น และบริเวณใกล้เคียง"
                       />
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <div className="flex justify-end pt-4">
-                  <Button
-                    type="submit"
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
-                  >
-                    ถัดไป
-                  </Button>
+
+                <div className="flex justify-end">
+                  <Button type="submit">ถัดไป</Button>
                 </div>
               </form>
             </Form>

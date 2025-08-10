@@ -31,7 +31,7 @@ const PostInform = () => {
   });
 
   const onSubmit = (values) => {
-    navigate("/post-for-sale/upload");
+    navigate("/seller/post-for-sale/upload");
   };
 
   return (
@@ -78,7 +78,7 @@ const PostInform = () => {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => navigate("/post-for-sale/price")}
+                    onClick={() => navigate("/seller/post-for-sale/price")}
                   >
                     ย้อนกลับ
                   </Button>

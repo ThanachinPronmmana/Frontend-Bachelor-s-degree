@@ -96,7 +96,7 @@ function PostUpload() {
       return;
     }
     setError("");
-    navigate("/post-for-sale/confirm");
+    navigate("/seller/post-for-sale/confirm");
   };
 
   return (
@@ -208,7 +208,7 @@ function PostUpload() {
             <div className="flex justify-between pt-4">
               <Button
                 variant="outline"
-                onClick={() => navigate("/post-for-sale/inform")}
+                onClick={() => navigate("/seller/post-for-sale/inform")}
               >
                 ย้อนกลับ
               </Button>

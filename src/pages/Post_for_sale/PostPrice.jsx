@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -48,10 +49,40 @@ function PostPrice() {
     },
   });
 
+  useEffect(() => {
+    const saved = localStorage.getItem("postData");
+    console.log("loaded from localStorage:", saved);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      form.reset({
+        saleType: parsed.saleType || "",
+        salePrice: parsed.salePrice ?? undefined,
+        repaymentPeriod: parsed.repaymentPeriod || "",
+        interest: parsed.interest || "",
+        rentPrice: parsed.rentPrice ?? undefined,
+        deposit: parsed.deposit ?? undefined,
+        expenses: parsed.expenses || "",
+      });
+    }
+  }, [form]);
+
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      console.log("saving to localStorage:", value);
+      const saved = localStorage.getItem("postData");
+      const currentData = saved ? JSON.parse(saved) : {};
+      localStorage.setItem(
+        "postData",
+        JSON.stringify({ ...currentData, ...value })
+      );
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
+
   const saleType = form.watch("saleType");
 
   const onSubmit = (values) => {
-    navigate("/post-for-sale/inform");
+    navigate("/seller/post-for-sale/inform");
   };
 
   return (
@@ -215,7 +246,7 @@ function PostPrice() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => navigate("/post-for-sale/detail")}
+                    onClick={() => navigate("/seller/post-for-sale/detail")}
                   >
                     ย้อนกลับ
                   </Button>

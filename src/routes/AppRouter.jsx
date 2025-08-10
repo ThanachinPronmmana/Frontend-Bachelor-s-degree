@@ -21,6 +21,9 @@ import ProfileSeller from "@/pages/Profile/ProfileSeller";
 import ProfileBuyer from "@/pages/Profile/ProfileBuyer";
 import BuyerNoti from "@/pages/Profile/BuyerNoti";
 
+// Post for Sale Layout
+import PostForSaleLayout from "@/pages/Post_for_sale/PostForSaleLayout";
+
 // Post for Sale Pages
 import PostTitle from "@/pages/Post_for_sale/PostTitle";
 import PostLocation from "@/pages/Post_for_sale/PostLocation";
@@ -79,15 +82,6 @@ const AppRouter = () => {
             element={<ProfileTypeSelector />}
           />
 
-          {/* Post For Sale (Accessible Publicly - or relocate under seller if restricted) */}
-          <Route path="/post-for-sale/title" element={<PostTitle />} />
-          <Route path="/post-for-sale/location" element={<PostLocation />} />
-          <Route path="/post-for-sale/detail" element={<PostDetail />} />
-          <Route path="/post-for-sale/price" element={<PostPrice />} />
-          <Route path="/post-for-sale/inform" element={<PostInform />} />
-          <Route path="/post-for-sale/upload" element={<PostUpload />} />
-          <Route path="/post-for-sale/confirm" element={<PostConfirm />} />
-
           {/* Auth */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -122,13 +116,17 @@ const AppRouter = () => {
             <Route index element={<Home />} />
             <Route path="profile" element={<ProfileSeller />} />
             <Route path="support" element={<Support />} />
-            <Route path="post-for-sale/title" element={<PostTitle />} />
-            <Route path="post-for-sale/location" element={<PostLocation />} />
-            <Route path="post-for-sale/detail" element={<PostDetail />} />
-            <Route path="post-for-sale/price" element={<PostPrice />} />
-            <Route path="post-for-sale/inform" element={<PostInform />} />
-            <Route path="post-for-sale/upload" element={<PostUpload />} />
-            <Route path="post-for-sale/confirm" element={<PostConfirm />} />
+
+            {/* Post For Sale - Seller Access */}
+            <Route path="post-for-sale" element={<PostForSaleLayout />}>
+              <Route path="title" element={<PostTitle />} />
+              <Route path="location" element={<PostLocation />} />
+              <Route path="detail" element={<PostDetail />} />
+              <Route path="price" element={<PostPrice />} />
+              <Route path="inform" element={<PostInform />} />
+              <Route path="upload" element={<PostUpload />} />
+              <Route path="confirm" element={<PostConfirm />} />
+            </Route>
           </Route>
         </Route>
 

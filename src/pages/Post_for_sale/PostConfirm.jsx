@@ -63,7 +63,7 @@ const PostConfirm = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => navigate("/post-for-sale/title")}
+                  onClick={() => navigate("/seller/post-for-sale/title")}
                 >
                   <Edit className="w-4 h-4 mr-1" /> แก้ไข
                 </Button>
@@ -95,7 +95,7 @@ const PostConfirm = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => navigate("/post-for-sale/location")}
+                  onClick={() => navigate("/seller/post-for-sale/location")}
                 >
                   <Edit className="w-4 h-4 mr-1" /> แก้ไข
                 </Button>
@@ -119,7 +119,7 @@ const PostConfirm = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => navigate("/post-for-sale/price")}
+                  onClick={() => navigate("/seller/post-for-sale/price")}
                 >
                   <Edit className="w-4 h-4 mr-1" /> แก้ไข
                 </Button>
@@ -143,7 +143,7 @@ const PostConfirm = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => navigate("/post-for-sale/inform")}
+                  onClick={() => navigate("/seller/post-for-sale/inform")}
                 >
                   <Edit className="w-4 h-4 mr-1" /> แก้ไข
                 </Button>
@@ -167,7 +167,7 @@ const PostConfirm = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => navigate("/post-for-sale/upload")}
+                  onClick={() => navigate("/seller/post-for-sale/upload")}
                 >
                   <Edit className="w-4 h-4 mr-1" /> แก้ไข
                 </Button>
@@ -197,7 +197,7 @@ const PostConfirm = () => {
             <div className="flex justify-between pt-4">
               <Button
                 variant="outline"
-                onClick={() => navigate("/post-for-sale/upload")}
+                onClick={() => navigate("/seller/post-for-sale/upload")}
               >
                 ย้อนกลับ
               </Button>
