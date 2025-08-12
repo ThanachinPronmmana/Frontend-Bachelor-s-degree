@@ -6,7 +6,9 @@ const ProfileTypeSelector = () => {
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center pt-20">
-      <h1 className="text-2xl font-semibold mb-10 text-gray-800">Select Profile Type</h1>
+      <h1 className="text-2xl font-semibold mb-10 text-gray-800">
+        Select Profile Type
+      </h1>
       <div className="flex gap-16">
         {/* Buyer Card */}
         <div

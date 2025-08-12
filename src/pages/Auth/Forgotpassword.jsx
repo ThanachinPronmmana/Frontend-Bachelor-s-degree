@@ -15,7 +15,6 @@ const ForgotPassword = () => {
       const res = await forgotpassword(data); // ส่ง email ไปยัง backend
       setSent(true); // แสดงว่า success แล้ว
       alert(res.message || "Reset link sent to your email.");
-
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Server error");

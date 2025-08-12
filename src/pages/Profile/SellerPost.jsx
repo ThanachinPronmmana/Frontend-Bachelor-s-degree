@@ -6,52 +6,41 @@ const mockPosts = [
     propertyType: "บ้านเดี่ยว",
     province: "กรุงเทพมหานคร",
     price: "3500000",
-    housePhotos: [
-      "https://source.unsplash.com/featured/?house,modern1",
-    ],
+    housePhotos: ["https://source.unsplash.com/featured/?house,modern1"],
   },
   {
     title: "คอนโดใกล้ BTS อ่อนนุช",
     propertyType: "คอนโดมิเนียม",
     province: "กรุงเทพมหานคร",
     price: "2500000",
-    housePhotos: [
-      "https://source.unsplash.com/featured/?condo,city",
-    ],
+    housePhotos: ["https://source.unsplash.com/featured/?condo,city"],
   },
   {
     title: "ที่ดินเปล่าแปลงใหญ่ จังหวัดเชียงใหม่",
     propertyType: "ที่ดิน",
     province: "เชียงใหม่",
     price: "5000000",
-    housePhotos: [
-      "https://source.unsplash.com/featured/?land,nature",
-    ],
+    housePhotos: ["https://source.unsplash.com/featured/?land,nature"],
   },
   {
     title: "ขายบ้านพร้อมที่ดิน จังหวัดขอนแก่น",
     propertyType: "บ้านพร้อมที่ดิน",
     province: "ขอนแก่น",
     price: "4200000",
-    housePhotos: [
-      "https://source.unsplash.com/featured/?house,village",
-    ],
+    housePhotos: ["https://source.unsplash.com/featured/?house,village"],
   },
   {
     title: "ทาวน์เฮาส์ 2 ชั้น ทำเลดีนนทบุรี",
     propertyType: "ทาวน์เฮาส์",
     province: "นนทบุรี",
     price: "1900000",
-    housePhotos: [
-      "https://source.unsplash.com/featured/?townhouse,street",
-    ],
+    housePhotos: ["https://source.unsplash.com/featured/?townhouse,street"],
   },
 ];
 
 const SellerPost = () => {
   return (
     <div className="p-6 max-w-3xl mx-auto">
-
       {/* Search and Filter Controls */}
       <div className="flex items-center justify-between mb-6 space-x-4">
         <input

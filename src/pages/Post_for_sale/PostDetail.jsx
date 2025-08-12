@@ -1,199 +1,423 @@
-import React from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import PostLayout from "@/layouts/PostLayout";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "@/context/FormContext";
+import { Card, CardContent } from "@/components/ui/card";
+import { Home } from "lucide-react";
+
+const schema = z.object({
+  type: z.string().min(1, "กรุณาเลือกประเภท"),
+  size: z.number().min(0).optional(),
+  landArea: z.number().min(0).optional(),
+  totalRooms: z.number().min(0).optional(),
+  yearBuilt: z.number().min(0).optional(),
+  bedrooms: z.number().min(0),
+  bathrooms: z.number().min(0),
+  nearbyPlaces: z.array(z.string()).optional(),
+  amenities: z.array(z.string()).optional(),
+  parking: z.string().optional(),
+  notes: z.string().optional(),
+});
+
+const propertyTypes = [
+  "House",
+  "Villa",
+  "Townhouse",
+  "Shop House",
+  "Apartment",
+  "Condo",
+  "Penthouse",
+  "Resort",
+  "Hotel",
+  "Office",
+  "Commercial Building",
+  "Factory",
+  "Warehouse",
+  "Land",
+  "Other",
+];
+
+const landmarks = ["BTS / MRT", "School", "Hospital", "Mall/Market", "Park"];
+
+const amenitiesList = [
+  "Swimming Pool",
+  "Fitness Center",
+  "Co-working Space",
+  "Pet Friendly",
+  "Children's Playground",
+];
 
 const PostDetail = () => {
   const navigate = useNavigate();
-  const { formData, updateFormData } = useForm();
+  const form = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      type: "",
+      size: undefined,
+      landArea: undefined,
+      totalRooms: undefined,
+      yearBuilt: undefined,
+      bedrooms: 1,
+      bathrooms: 1,
+      nearbyPlaces: [],
+      amenities: [],
+      parking: "",
+      notes: "",
+    },
+  });
 
-  const toggleSelection = (value, stateArrayName) => {
-    const current = formData[stateArrayName];
+  // โหลดข้อมูลจาก localStorage ตอน mount
+  useEffect(() => {
+    const saved = localStorage.getItem("postData");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      form.reset({
+        type: parsed.type || "",
+        size: parsed.size,
+        landArea: parsed.landArea,
+        totalRooms: parsed.totalRooms,
+        yearBuilt: parsed.yearBuilt,
+        bedrooms: parsed.bedrooms ?? 1,
+        bathrooms: parsed.bathrooms ?? 1,
+        nearbyPlaces: parsed.nearbyPlaces || [],
+        amenities: parsed.amenities || [],
+        parking: parsed.parking || "",
+        notes: parsed.notes || "",
+      });
+    }
+  }, [form]);
+
+  // บันทึกข้อมูลทุกครั้งที่ form เปลี่ยน
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      const saved = localStorage.getItem("postData");
+      const currentData = saved ? JSON.parse(saved) : {};
+      localStorage.setItem(
+        "postData",
+        JSON.stringify({ ...currentData, ...value })
+      );
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
+
+  const toggleArrayValue = (field, value) => {
+    const current = form.getValues(field);
     if (current.includes(value)) {
-      updateFormData(stateArrayName, current.filter((item) => item !== value));
+      form.setValue(
+        field,
+        current.filter((item) => item !== value)
+      );
     } else {
-      updateFormData(stateArrayName, [...current, value]);
+      form.setValue(field, [...current, value]);
     }
   };
 
-  const propertyTypes = [
-    "Condo", "House", "Townhouse", "Apartment", "Land",
-    "Office", "Warehouse", "Hotel", "Factory", "Commercial Building"
-  ];
-  const landmarks = ["BTS / MRT", "School", "Hospital", "Mall/Market", "Park"];
-  const amenities = ["Swimming Pool", "Fitness Center", "Co-working Space", "Pet Friendly", "Children's Playground"];
-
-  const handleBack = () => navigate("/post-for-sale/location");
-  
-  const handleNext = () => navigate("/post-for-sale/price");
+  const onSubmit = (values) => {
+    navigate("/seller/post-for-sale/price");
+  };
 
   return (
-    <div className="min-h-screen bg-[#34495E] flex flex-col items-center">
-      <div className="bg-white mt-10 px-10 py-6 rounded-lg shadow-md w-[700px]">
-        <div className="flex justify-between mb-6">
-          {["Location", "Details", "Price & Terms", "Seller Information", "Upload Photos", "Confirmation"].map((label, index) => (
-            <div key={index} className="flex flex-col items-center w-1/6">
-              <div className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${index === 1 ? "bg-gray-800" : "bg-gray-300"}`}>
-                {index + 1}
-              </div>
-              <span className="text-xs mt-1 text-center">{label}</span>
+    <PostLayout currentStep={2}>
+      <div className="flex justify-center">
+        <Card className="w-full max-w-3xl shadow-xl">
+          <CardContent className="py-8 px-6 space-y-6">
+            <div className="text-center">
+              <Home className="mx-auto w-10 h-10 text-primary" />
+              <h2 className="text-2xl font-semibold mt-2">
+                รายละเอียดทรัพย์สิน
+              </h2>
+              <p className="text-muted-foreground text-sm">
+                โปรดกรอกข้อมูลทรัพย์สินของคุณ
+              </p>
             </div>
-          ))}
-        </div>
 
-        {/* Property Type */}
-        <div className="mb-6">
-          <label className="block mb-2 text-sm text-black">Property Type<span className="text-red-500">*</span></label>
-          <div className="grid grid-cols-5 gap-2">
-            {propertyTypes.map((type) => (
-              <button
-                key={type}
-                onClick={() => toggleSelection(type, "propertyType")}
-                className={`border rounded px-2 py-1 text-sm ${formData.propertyType.includes(type) ? "bg-[#34495E] text-white" : "bg-white"}`}
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
               >
-                {type}
-              </button>
-            ))}
-          </div>
-        </div>
+                {/* Property Type */}
+                <FormField
+                  control={form.control}
+                  name="type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ประเภทบ้าน</FormLabel>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        {propertyTypes.map((type) => (
+                          <Button
+                            type="button"
+                            key={type}
+                            variant={
+                              field.value === type ? "default" : "outline"
+                            }
+                            onClick={() => field.onChange(type)}
+                          >
+                            {type}
+                          </Button>
+                        ))}
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-        {/* Property Details */}
-        <div className="grid grid-cols-3 gap-6 mb-6">
-          <div>
-            <label className="block mb-1 text-sm text-black">Area Size (sqm)</label>
-            <input
-              type="number"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              value={formData.size}
-              onChange={(e) => updateFormData("size", e.target.value)}
-              className="w-full p-2 border rounded shadow-sm"
-              placeholder="Enter area in square meters"
-            />
-          </div>
-          <div>
-            <label className="block mb-1 text-sm text-black">Total Rooms</label>
-            <input
-              type="number"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              value={formData.totalRooms}
-              onChange={(e) => updateFormData("totalRooms", e.target.value)}
-              className="w-full p-2 border rounded shadow-sm"
-              placeholder="Enter total number of rooms"
-            />
-          </div>
-          <div>
-            <label className="block mb-1 text-sm text-black">
-              Year Built <span className="text-gray-500 text-xs">(If unknown,leave blank)</span>
-            </label>
-            <input
-              type="number"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              value={formData.yearBuilt}
-              onChange={(e) => updateFormData("yearBuilt", e.target.value)}
-              className="w-full p-2 border rounded shadow-sm"
-              placeholder="e.g., 2015"
-            />
-          </div>
+                {/* Size / Land Area / Year Built */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="size"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>พื้นที่ (ตร.ม.)</FormLabel>
+                        <Input
+                          type="number"
+                          placeholder="เช่น 120"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value
+                                ? Number(e.target.value)
+                                : undefined
+                            )
+                          }
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="landArea"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>พื้นที่ดิน (ตร.วา)</FormLabel>
+                        <Input
+                          type="number"
+                          placeholder="เช่น 50"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value
+                                ? Number(e.target.value)
+                                : undefined
+                            )
+                          }
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="yearBuilt"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>ปีที่สร้าง</FormLabel>
+                        <Input
+                          type="number"
+                          placeholder="เช่น 2015"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value
+                                ? Number(e.target.value)
+                                : undefined
+                            )
+                          }
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-          {/* Bedrooms */}
-          <div>
-            <label className="block mb-1 text-sm text-black">Bedrooms</label>
-            <div className="flex items-center gap-2">
-              <button onClick={() => updateFormData("bedrooms", Math.max(Number(formData.bedrooms) - 1, 0))} className="px-3 py-1 border rounded bg-gray-100">-</button>
-              <input
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                value={formData.bedrooms}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  if (/^\d*$/.test(val)) updateFormData("bedrooms", val);
-                }}
-                className="w-16 text-center p-2 border rounded shadow-sm"
-                placeholder="1,2,3,.."
-              />
-              <button onClick={() => updateFormData("bedrooms", Number(formData.bedrooms) + 1)} className="px-3 py-1 border rounded bg-gray-100">+</button>
-            </div>
-          </div>
+                {/* Bedrooms / Bathrooms / Total Rooms */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="bedrooms"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>ห้องนอน</FormLabel>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value))
+                          }
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="bathrooms"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>ห้องน้ำ</FormLabel>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value))
+                          }
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="totalRooms"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>จำนวนห้องทั้งหมด</FormLabel>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value
+                                ? Number(e.target.value)
+                                : undefined
+                            )
+                          }
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-          {/* Bathrooms */}
-          <div>
-            <label className="block mb-1 text-sm text-black">Bathrooms</label>
-            <div className="flex items-center gap-2">
-              <button onClick={() => updateFormData("bathrooms", Math.max(Number(formData.bathrooms) - 1, 0))} className="px-3 py-1 border rounded bg-gray-100">-</button>
-              <input
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                value={formData.bathrooms}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  if (/^\d*$/.test(val)) updateFormData("bathrooms", val);
-                }}
-                className="w-16 text-center p-2 border rounded shadow-sm"
-                placeholder="1,2,3,.."
-              />
-              <button onClick={() => updateFormData("bathrooms", Number(formData.bathrooms) + 1)} className="px-3 py-1 border rounded bg-gray-100">+</button>
-            </div>
-          </div>
-        </div>
+                {/* Nearby Landmarks */}
+                <FormField
+                  control={form.control}
+                  name="nearbyPlaces"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>สถานที่ใกล้เคียง</FormLabel>
+                      <div className="flex flex-wrap gap-2">
+                        {landmarks.map((item) => (
+                          <Button
+                            type="button"
+                            key={item}
+                            variant={
+                              form.getValues("nearbyPlaces").includes(item)
+                                ? "default"
+                                : "outline"
+                            }
+                            onClick={() =>
+                              toggleArrayValue("nearbyPlaces", item)
+                            }
+                          >
+                            {item}
+                          </Button>
+                        ))}
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-        {/* Nearby Landmarks */}
-        <div className="mb-6">
-          <label className="block mb-2 text-sm text-black">Nearby Landmarks</label>
-          <div className="flex flex-wrap gap-2">
-            {landmarks.map((item) => (
-              <button
-                key={item}
-                onClick={() => toggleSelection(item, "nearbyPlaces")}
-                className={`border rounded px-3 py-1 text-sm ${formData.nearbyPlaces.includes(item) ? "bg-[#34495E] text-white" : "bg-white"}`}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-        </div>
+                {/* Amenities */}
+                <FormField
+                  control={form.control}
+                  name="amenities"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>สิ่งอำนวยความสะดวก</FormLabel>
+                      <div className="flex flex-wrap gap-2">
+                        {amenitiesList.map((item) => (
+                          <Button
+                            type="button"
+                            key={item}
+                            variant={
+                              form.getValues("amenities").includes(item)
+                                ? "default"
+                                : "outline"
+                            }
+                            onClick={() => toggleArrayValue("amenities", item)}
+                          >
+                            {item}
+                          </Button>
+                        ))}
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-        {/* Additional Amenities */}
-        <div className="mb-6">
-          <label className="block mb-2 text-sm text-black">Additional Amenities</label>
-          <div className="flex flex-wrap gap-2">
-            {amenities.map((item) => (
-              <button
-                key={item}
-                onClick={() => toggleSelection(item, "amenities")}
-                className={`border rounded px-3 py-1 text-sm ${formData.amenities.includes(item) ? "bg-[#34495E] text-white" : "bg-white"}`}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-        </div>
+                {/* Parking */}
+                <FormField
+                  control={form.control}
+                  name="parking"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ที่จอดรถ</FormLabel>
+                      <select
+                        className="w-full p-2 border rounded"
+                        value={field.value}
+                        onChange={(e) => field.onChange(e.target.value)}
+                      >
+                        <option value="">เลือกจำนวนที่จอด</option>
+                        <option value="1">1 คัน</option>
+                        <option value="2">2 คัน</option>
+                        <option value="3">3 คันขึ้นไป</option>
+                        <option value="4">ไม่มีที่จอด</option>
+                      </select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-        {/* Parking Space */}
-        <div className="mb-6">
-          <label className="block mb-2 text-sm text-black">Parking Space</label>
-          <select
-            value={formData.parking}
-            onChange={(e) => updateFormData("parking", e.target.value)}
-            className="w-full p-2 border rounded shadow-sm"
-          >
-            <option value="">Select parking option</option>
-            <option value="1">1 Space</option>
-            <option value="2">2 Spaces</option>
-            <option value="3">3+ Spaces</option>
-          </select>
-        </div>
+                {/* Notes */}
+                <FormField
+                  control={form.control}
+                  name="notes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>หมายเหตุ/คำอธิบาย</FormLabel>
+                      <textarea
+                        className="w-full p-2 border rounded"
+                        placeholder="กรุณาใส่หมายเหตุหรือคำอธิบายเพิ่มเติม"
+                        {...field}
+                        rows={4}
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-        {/* Navigation Buttons */}
-        <div className="flex justify-between">
-          <button onClick={handleBack} className="px-6 py-2 bg-[#95A5A6] text-white rounded hover:opacity-90">Back</button>
-          <button onClick={handleNext} className="px-6 py-2 bg-[#34495E] text-white rounded hover:bg-[#2c3e50]">Next</button>
-        </div>
+                {/* Navigation */}
+                <div className="flex justify-between pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => navigate("/seller/post-for-sale/location")}
+                  >
+                    ย้อนกลับ
+                  </Button>
+                  <Button type="submit">ถัดไป</Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
       </div>
-    </div>
+    </PostLayout>
   );
 };
 

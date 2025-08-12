@@ -2,7 +2,6 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 
-
 const Formuploadimage = ({ userId, onUploadSuccess }) => {
   const {
     register,
@@ -25,9 +24,13 @@ const Formuploadimage = ({ userId, onUploadSuccess }) => {
 
     try {
       setUploading(true);
-      const result = await axios.post(`http://localhost:8200/api/image/${userId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const result = await axios.post(
+        `http://localhost:8200/api/image/${userId}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
       if (onUploadSuccess) {
         onUploadSuccess(result.data.image);

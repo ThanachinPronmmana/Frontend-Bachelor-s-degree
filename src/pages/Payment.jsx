@@ -18,19 +18,21 @@ const Payment = () => {
             <div className="flex space-x-4">
               <span
                 onClick={() => setMethod("credit")}
-                className={`cursor-pointer px-2 pb-1 ${method === "credit"
-                  ? "text-green-600 font-semibold border-b-2 border-green-600"
-                  : "text-gray-400"
-                  }`}
+                className={`cursor-pointer px-2 pb-1 ${
+                  method === "credit"
+                    ? "text-green-600 font-semibold border-b-2 border-green-600"
+                    : "text-gray-400"
+                }`}
               >
                 Credit Card
               </span>
               <span
                 onClick={() => setMethod("qr")}
-                className={`cursor-pointer px-2 pb-1 ${method === "qr"
-                  ? "text-green-600 font-semibold border-b-2 border-green-600"
-                  : "text-gray-400"
-                  }`}
+                className={`cursor-pointer px-2 pb-1 ${
+                  method === "qr"
+                    ? "text-green-600 font-semibold border-b-2 border-green-600"
+                    : "text-gray-400"
+                }`}
               >
                 QR
               </span>
@@ -58,10 +60,11 @@ const Payment = () => {
             </>
           ) : (
             <div className="grid grid-cols-3 w-full h-full  gap-5">
-
               <div className="col-span-2">
                 <div className="flex flex-col items-center ">
-                  <h1 className="flex text-md text-gray-500">Scan QR Code to Pay</h1>
+                  <h1 className="flex text-md text-gray-500">
+                    Scan QR Code to Pay
+                  </h1>
                   <img
                     src="https://apiportal.kasikornbank.com/bucket/SiteCollectionDocuments/assets/page/apiproducts/qrpayment/introduction/img/ci-qrpayment-img-08.png"
                     alt="QR Code"
@@ -70,22 +73,14 @@ const Payment = () => {
                 </div>
               </div>
 
-              
-
-                <div className="col-span-1 ">
-                  <div className="flex justify-end">
-                  
+              <div className="col-span-1 ">
+                <div className="flex justify-end">
                   <div className="mt-100">
-                    <Buttons
-                    text="Upload"
-                  />
-                  </div>
-                   
+                    <Buttons text="Upload" />
                   </div>
                 </div>
-              
+              </div>
             </div>
-            
           )}
         </div>
 
@@ -95,7 +90,9 @@ const Payment = () => {
           <>
             <div className="flex flex-col items-start space-y-7">
               <div className="flex justify-start">
-                <h1 className="text-md text-gray-500">Pay using credit cards</h1>
+                <h1 className="text-md text-gray-500">
+                  Pay using credit cards
+                </h1>
               </div>
               <div className="flex w-full space-x-4">
                 <img
@@ -141,7 +138,6 @@ const Payment = () => {
             </div>
           </>
         )}
-
 
         {/* Summary */}
         <div className="flex">

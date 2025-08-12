@@ -33,7 +33,9 @@ const Resetpassword = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-10 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">ตั้งรหัสผ่านใหม่</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">
+          ตั้งรหัสผ่านใหม่
+        </h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <label className="block mb-1 text-gray-700">รหัสผ่านใหม่</label>
           <input
@@ -61,7 +63,9 @@ const Resetpassword = () => {
             className="w-full p-2 border rounded mb-3"
           />
           {errors.ConfirmPassword && (
-            <p className="text-red-500 text-sm">{errors.ConfirmPassword.message}</p>
+            <p className="text-red-500 text-sm">
+              {errors.ConfirmPassword.message}
+            </p>
           )}
 
           <button

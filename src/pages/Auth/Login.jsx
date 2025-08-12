@@ -15,7 +15,7 @@ const Login = () => {
   const onSubmit = async (formData) => {
     try {
       const response = await login(formData); // ✅ login() ต้อง return res.data แล้ว
-      
+
       const { token, user, message } = response;
       // console.log(response)
       if (!token || !user) {
@@ -72,7 +72,10 @@ const Login = () => {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-4">
-              <label htmlFor="email" className="block text-sm mb-1 text-gray-600">
+              <label
+                htmlFor="email"
+                className="block text-sm mb-1 text-gray-600"
+              >
                 Email
               </label>
               <input
@@ -88,7 +91,10 @@ const Login = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="password" className="block text-sm mb-1 text-gray-600">
+              <label
+                htmlFor="password"
+                className="block text-sm mb-1 text-gray-600"
+              >
                 Password
               </label>
               <input
@@ -99,7 +105,9 @@ const Login = () => {
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2C3E50]"
               />
               {errors.Password && (
-                <p className="text-red-500 text-sm">{errors.Password.message}</p>
+                <p className="text-red-500 text-sm">
+                  {errors.Password.message}
+                </p>
               )}
             </div>
 
@@ -121,9 +129,11 @@ const Login = () => {
             </div>
 
             <Link to="/register">
-              <div className="text-center mt-4 text-sm" >
+              <div className="text-center mt-4 text-sm">
                 Don’t have an account?{" "}
-                <span className="text-[#2C3E50] font-medium cursor-pointer">Sign up now</span>
+                <span className="text-[#2C3E50] font-medium cursor-pointer">
+                  Sign up now
+                </span>
               </div>
             </Link>
           </form>

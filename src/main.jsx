@@ -1,11 +1,11 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
-import { FormProvider } from './context/FormContext'
-import { CompareProvider } from './context/CompareContext'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App from "./App.jsx";
+import { FormProvider } from "./context/FormContext";
+import { CompareProvider } from "./context/CompareContext";
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <CompareProvider>
       <FormProvider>
@@ -13,4 +13,4 @@ createRoot(document.getElementById('root')).render(
       </FormProvider>
     </CompareProvider>
   </StrictMode>,
-)
+);

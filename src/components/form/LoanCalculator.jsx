@@ -27,7 +27,10 @@ const LoanCalculator = () => {
       <h2 className="text-center text-2xl font-semibold mb-6">
         ทดลองคำนวณวงเงินกู้สินเชื่อบ้าน เบื้องต้น
       </h2>
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
+      >
         {/* Occupation */}
         <div>
           <label className="block mb-1 font-medium">Occupation</label>
@@ -62,7 +65,9 @@ const LoanCalculator = () => {
 
         {/* Age */}
         <div>
-          <label className="block mb-1 font-medium">Borrower's Age (years)</label>
+          <label className="block mb-1 font-medium">
+            Borrower's Age (years)
+          </label>
           <input
             type="number"
             name="age"
@@ -76,7 +81,9 @@ const LoanCalculator = () => {
 
         {/* First Home */}
         <div>
-          <label className="block mb-1 font-medium">Is this your first home loan?</label>
+          <label className="block mb-1 font-medium">
+            Is this your first home loan?
+          </label>
           <select
             name="firstHome"
             value={formData.firstHome}
@@ -91,7 +98,9 @@ const LoanCalculator = () => {
 
         {/* Net Income */}
         <div>
-          <label className="block mb-1 font-medium">Monthly Net Income (Baht)</label>
+          <label className="block mb-1 font-medium">
+            Monthly Net Income (Baht)
+          </label>
           <input
             type="number"
             name="income"
@@ -119,7 +128,9 @@ const LoanCalculator = () => {
 
         {/* Debt */}
         <div>
-          <label className="block mb-1 font-medium">Monthly Debt Obligations (Baht)</label>
+          <label className="block mb-1 font-medium">
+            Monthly Debt Obligations (Baht)
+          </label>
           <input
             type="number"
             name="debt"

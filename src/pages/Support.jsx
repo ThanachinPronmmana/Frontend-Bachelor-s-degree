@@ -1,18 +1,16 @@
 import Cardsim from "@/components/Cardsim";
 import Credit from "@/components/Credit";
 import { Button } from "@/components/ui/button";
-import { AlarmCheck, AlertCircle, Circle, Phone } from 'lucide-react';
-import { Mail } from 'lucide-react';
-import { CircleAlert } from 'lucide-react';
+import { AlarmCheck, AlertCircle, Circle, Phone } from "lucide-react";
+import { Mail } from "lucide-react";
+import { CircleAlert } from "lucide-react";
 import { useEffect, useState } from "react";
-import { CircleX } from 'lucide-react';
-
+import { CircleX } from "lucide-react";
 
 const Support = () => {
-
-  const [showModal, setshowModal] = useState(false)
-  const [showsubmit, setsubmit] = useState(false)
-  const [report, setreport] = useState("")
+  const [showModal, setshowModal] = useState(false);
+  const [showsubmit, setsubmit] = useState(false);
+  const [report, setreport] = useState("");
 
   const buttonlabels = [
     "About the seller",
@@ -21,14 +19,12 @@ const Support = () => {
     "About the system",
     "About the appointment",
     "About notifications",
-  ]
-  useEffect(() => {
-
-  })
+  ];
+  useEffect(() => {});
   const handleButtonClick = (name) => {
-    setreport(name)
-    setsubmit(true)
-  }
+    setreport(name);
+    setsubmit(true);
+  };
   return (
     <div className="min-h-screen ">
       {/* Banner Section */}
@@ -86,15 +82,14 @@ const Support = () => {
           />
           <Cardsim
             icon={<CircleAlert />}
-            text={
-              <a>
-                Report
+            text={<a>Report</a>}
+            text2={
+              <a
+                className="text-red-500 font-bold cursor-pointer"
+                onClick={() => setshowModal(true)}
+              >
+                Select a problem to report
               </a>
-            }
-            text2={<a
-              className="text-red-500 font-bold cursor-pointer"
-              onClick={() => setshowModal(true)}
-            >Select a problem to report</a>
             }
           />
         </div>
@@ -103,7 +98,6 @@ const Support = () => {
       {showModal && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
           <div className="flex flex-col bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md relative">
-
             {/* Close Button */}
             <CircleX
               className="absolute top-4 right-4 cursor-pointer text-gray-500 hover:text-black"
@@ -115,18 +109,17 @@ const Support = () => {
             <h2 className="mb-2 font-bold">Select a problem to report</h2>
             {/* Buttons */}
             <div className="w-full flex flex-col">
-              {buttonlabels.map((label,index)=>(
-
+              {buttonlabels.map((label, index) => (
                 <Button
-                key={label}
-                className={`bg-gray-100 px-4 py-2 text-black hover:text-white hover:bg-black !rounded justify-start cursor-pointer ${
-                  index !== 0 ? "border-t-2 border-gray" : ""
-                }`}
-                onClick={() => handleButtonClick(label)}
+                  key={label}
+                  className={`bg-gray-100 px-4 py-2 text-black hover:text-white hover:bg-black !rounded justify-start cursor-pointer ${
+                    index !== 0 ? "border-t-2 border-gray" : ""
+                  }`}
+                  onClick={() => handleButtonClick(label)}
                 >
                   {label}
                 </Button>
-              )) }
+              ))}
             </div>
           </div>
         </div>
@@ -136,7 +129,6 @@ const Support = () => {
       {showsubmit && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md">
-
             {/* Selected Text */}
             <div className="mb-4">
               <h1 className="font-bold text-lg mb-1">You selected:</h1>
@@ -155,9 +147,6 @@ const Support = () => {
           </div>
         </div>
       )}
-
-
-
 
       {/* Footer */}
       <div className="mt-10">

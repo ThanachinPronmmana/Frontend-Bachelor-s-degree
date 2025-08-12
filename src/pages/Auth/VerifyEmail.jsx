@@ -8,8 +8,8 @@ const VerifyEmail = () => {
   const token = searchParams.get("token");
   const navigate = useNavigate();
   const [userType, setUserType] = useState("");
-  const [districts, setDistricts] = useState([])
-  const [provinces, setProvinces] = useState([])
+  const [districts, setDistricts] = useState([]);
+  const [provinces, setProvinces] = useState([]);
   const {
     register,
     handleSubmit,
@@ -18,24 +18,33 @@ const VerifyEmail = () => {
   } = useForm();
 
   useEffect(() => {
-    fetch("https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json")
-      .then((res) => res.json()).then((data) => setProvinces(data))
-  }, [])
+    fetch(
+      "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json",
+    )
+      .then((res) => res.json())
+      .then((data) => setProvinces(data));
+  }, []);
 
   const handleProvinceChange = (e) => {
-    const selectedProvince = e.target.value
-    setValue("Preferred_Province", selectedProvince)
-    setValue("Preferred_District", "")
+    const selectedProvince = e.target.value;
+    setValue("Preferred_Province", selectedProvince);
+    setValue("Preferred_District", "");
 
-    const selectedProvinceId = provinces.find(p => p.name_th === selectedProvince)?.id
+    const selectedProvinceId = provinces.find(
+      (p) => p.name_th === selectedProvince,
+    )?.id;
 
-    fetch("https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json")
-      .then((res) => res.json()
-        .then((data) => {
-          const filtered = data.filter(d => d.province_id === selectedProvinceId)
-          setDistricts(filtered)
-        }))
-  }
+    fetch(
+      "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json",
+    ).then((res) =>
+      res.json().then((data) => {
+        const filtered = data.filter(
+          (d) => d.province_id === selectedProvinceId,
+        );
+        setDistricts(filtered);
+      }),
+    );
+  };
 
   const onSubmit = async (data) => {
     try {
@@ -55,7 +64,9 @@ const VerifyEmail = () => {
 
   return (
     <div className="max-w-xl mx-auto mt-10 bg-white p-6 shadow-md rounded-lg">
-      <h1 className="text-2xl font-semibold mb-4 text-center">Complete Your Registration</h1>
+      <h1 className="text-2xl font-semibold mb-4 text-center">
+        Complete Your Registration
+      </h1>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
@@ -80,7 +91,9 @@ const VerifyEmail = () => {
               {...register("DateofBirth", { required: true })}
               className="input w-full border p-2 rounded mb-2"
             />
-            {errors.DateOfBirth && <p className="text-red-500">Date of birth is required</p>}
+            {errors.DateOfBirth && (
+              <p className="text-red-500">Date of birth is required</p>
+            )}
 
             <input
               {...register("Occupation", { required: true })}
@@ -88,26 +101,27 @@ const VerifyEmail = () => {
               className="input w-full border p-2 rounded mb-2"
             />
             <input
-            type="number"
+              type="number"
               {...register("Monthly_Income", { required: true })}
               placeholder="Monthly Income"
               className="input w-full border p-2 rounded mb-2"
             />
-            {errors.Monthly_Income &&(
+            {errors.Monthly_Income && (
               <p className="text-red-500">{errors.Monthly_Income.message}</p>
             )}
             <input
-            type="number"
+              type="number"
               {...register("Family_Size", { required: true })}
               placeholder="Family Size"
               className="input w-full border p-2 rounded mb-2"
             />
-            {errors.Family_Size &&(
-                <p className="text-red-500">{errors.Family_Size.message}</p>
-              )}
+            {errors.Family_Size && (
+              <p className="text-red-500">{errors.Family_Size.message}</p>
+            )}
 
             <label className="block mb-1">Preferred Province</label>
-            <select {...register("Preferred_Province", { required: true })}
+            <select
+              {...register("Preferred_Province", { required: true })}
               className="input w-full border p-2 rounded mb-2"
               onChange={handleProvinceChange}
             >
@@ -118,13 +132,14 @@ const VerifyEmail = () => {
                 </option>
               ))}
             </select>
-            {errors.Preferred_Province && <p className="text-red-500">Province is required</p>}
+            {errors.Preferred_Province && (
+              <p className="text-red-500">Province is required</p>
+            )}
 
             <label className="block mb-1">Preferred District</label>
             <select
               {...register("Preferred_District", { required: true })}
               className="input w-full border p-2 rounded mb-2"
-              
             >
               <option value="">Select District</option>
               {districts.map((district) => (
@@ -133,16 +148,24 @@ const VerifyEmail = () => {
                 </option>
               ))}
             </select>
-            {errors.Preferred_District && <p className="text-red-500">District is required</p>}
+            {errors.Preferred_District && (
+              <p className="text-red-500">District is required</p>
+            )}
 
-            <select {...register("Parking_Needs", { required: true })} className="input w-full border p-2 rounded mb-2">
+            <select
+              {...register("Parking_Needs", { required: true })}
+              className="input w-full border p-2 rounded mb-2"
+            >
               <option value="">Select Parking Needs</option>
               <option value="oneCar">1 Car</option>
               <option value="twoCars">2 Cars</option>
               <option value="Not_required">Not Required</option>
             </select>
 
-            <select {...register("Nearby_Facilities", { required: true })} className="input w-full border p-2 rounded mb-2">
+            <select
+              {...register("Nearby_Facilities", { required: true })}
+              className="input w-full border p-2 rounded mb-2"
+            >
               <option value="">Nearby Facilities</option>
               <option value="School">School</option>
               <option value="Hospital">Hospital</option>
@@ -150,7 +173,10 @@ const VerifyEmail = () => {
               <option value="Park_Nature">Park</option>
             </select>
 
-            <select {...register("Lifestyle_Preferences", { required: true })} className="input w-full border p-2 rounded mb-2">
+            <select
+              {...register("Lifestyle_Preferences", { required: true })}
+              className="input w-full border p-2 rounded mb-2"
+            >
               <option value="">Lifestyle Preferences</option>
               <option value="Work_from_Home">Work from Home</option>
               <option value="Have_Pets">Have Pets</option>
@@ -160,7 +186,6 @@ const VerifyEmail = () => {
 
             <textarea
               {...register("Special_Requirements")}
-              
               placeholder="Special Requirements"
               className="input w-full border p-2 rounded mb-2"
             />
@@ -188,7 +213,10 @@ const VerifyEmail = () => {
           </>
         )}
 
-        <button type="submit" className="w-full bg-[#2C3E50] text-white py-2 rounded-md hover:bg-[#1a252f] transition">
+        <button
+          type="submit"
+          className="w-full bg-[#2C3E50] text-white py-2 rounded-md hover:bg-[#1a252f] transition"
+        >
           Submit
         </button>
       </form>

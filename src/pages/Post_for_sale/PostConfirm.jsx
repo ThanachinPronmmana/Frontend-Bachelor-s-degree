@@ -1,91 +1,233 @@
-import React from "react";
+import PostLayout from "@/layouts/PostLayout";
+import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "@/context/FormContext";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CheckCircle, Edit, ImageIcon } from "lucide-react";
+import { useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+
+// ตัวอย่างข้อมูลทดสอบ (ในจริงควรใช้ข้อมูลจาก Context หรือ State ของฟอร์ม)
+const dummyData = {
+  title: "บ้านเดี่ยว 2 ชั้น ย่านลาดพร้าว",
+  type: "บ้านเดี่ยว",
+  bedroom: 3,
+  bathroom: 2,
+  price: 3500000,
+  deposit: 50000,
+  province: "กรุงเทพมหานคร",
+  district: "ห้วยขวาง",
+  sellerName: "นายสมชาย บ้านดี",
+  phone: "0812345678",
+  images: [
+    "https://via.placeholder.com/150",
+    "https://via.placeholder.com/160",
+  ],
+};
 
 const PostConfirm = () => {
   const navigate = useNavigate();
-  const { formData, updateFormData } = useForm(); // << ใช้ context
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const handleSubmit = () => {
-    if (!formData.confirm1 || !formData.confirm2) {
-      alert("Please confirm all required items.");
-      return;
-    }
-
-    // ส่ง formData ไปยัง backend (ถ้ามี)
-    alert("Your post has been submitted!");
+    // ส่งข้อมูลจริงไปหลังบ้านที่นี่
+    setShowConfirm(false);
     navigate("/");
   };
 
-  const handleBack = () => {
-    navigate("/post-for-sale/upload");
-  };
-
   return (
-    <div className="min-h-screen bg-[#34495E] flex flex-col items-center">
-      <div className="bg-white mt-10 px-10 py-6 rounded-lg shadow-md w-[700px]">
-        {/* Step Indicator */}
-        <div className="flex justify-between mb-8">
-          {["Title", "Details", "Price & Terms", "Seller Information", "Upload Photos", "Confirmation"].map((label, index) => (
-            <div key={index} className="flex flex-col items-center w-1/6">
-              <div className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${index === 5 ? "bg-gray-800" : "bg-gray-300"}`}>
-                {index + 1}
+    <PostLayout currentStep={6}>
+      <div className="flex justify-center">
+        <Card className="w-full max-w-2xl shadow-xl">
+          <CardHeader className="text-center">
+            <CheckCircle className="mx-auto w-10 h-10 text-primary" />
+            <CardTitle className="text-2xl font-semibold mt-2">
+              ยืนยันข้อมูล
+            </CardTitle>
+            <p className="text-muted-foreground text-sm">
+              กรุณาตรวจสอบข้อมูลของคุณก่อนโพสต์
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* หมวด: ข้อมูลประกาศ */}
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="font-semibold text-lg">ข้อมูลประกาศ</h3>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate("/seller/post-for-sale/title")}
+                >
+                  <Edit className="w-4 h-4 mr-1" /> แก้ไข
+                </Button>
               </div>
-              <span className="text-xs mt-1 text-center">{label}</span>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between border-b py-1">
+                  <span>หัวข้อ</span>
+                  <span>{dummyData.title}</span>
+                </div>
+                <div className="flex justify-between border-b py-1">
+                  <span>ประเภท</span>
+                  <span>{dummyData.type}</span>
+                </div>
+                <div className="flex justify-between border-b py-1">
+                  <span>ห้องนอน</span>
+                  <span>{dummyData.bedroom}</span>
+                </div>
+                <div className="flex justify-between border-b py-1">
+                  <span>ห้องน้ำ</span>
+                  <span>{dummyData.bathroom}</span>
+                </div>
+              </div>
             </div>
-          ))}
-        </div>
 
-        {/* Confirm Checkboxes */}
-        <div className="text-black space-y-4 mb-8 text-sm">
-          <div className="flex items-start">
-            <input
-              type="checkbox"
-              id="agreeInfo"
-              className="mt-1 mr-2"
-              checked={formData.confirm1}
-              onChange={(e) => updateFormData("confirm1", e.target.checked)}
-            />
-            <label htmlFor="agreeInfo">
-              I confirm that the information provided is correct.
-            </label>
-          </div>
-          <div className="flex items-start">
-            <input
-              type="checkbox"
-              id="agreeReview"
-              className="mt-1 mr-2"
-              checked={formData.confirm2}
-              onChange={(e) => updateFormData("confirm2", e.target.checked)}
-            />
-            <label htmlFor="agreeReview">
-              I understand that the advertisement will be subject to review before being posted on the website.
-            </label>
-          </div>
-        </div>
+            {/* หมวด: ที่ตั้ง */}
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="font-semibold text-lg">ที่ตั้ง</h3>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate("/seller/post-for-sale/location")}
+                >
+                  <Edit className="w-4 h-4 mr-1" /> แก้ไข
+                </Button>
+              </div>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between border-b py-1">
+                  <span>จังหวัด</span>
+                  <span>{dummyData.province}</span>
+                </div>
+                <div className="flex justify-between border-b py-1">
+                  <span>อำเภอ/เขต</span>
+                  <span>{dummyData.district}</span>
+                </div>
+              </div>
+            </div>
 
-        {/* Navigation Buttons */}
-        <div className="flex justify-between">
-          <button
-            onClick={handleBack}
-            className="px-6 py-2 bg-[#95A5A6] text-white rounded hover:opacity-90"
-          >
-            Back
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={!formData.confirm1 || !formData.confirm2}
-            className={`px-6 py-2 rounded-md text-white w-40 ${
-              formData.confirm1 && formData.confirm2
-                ? "bg-[#34495E] hover:bg-[#2c3e50]"
-                : "bg-gray-400 cursor-not-allowed"
-            }`}
-          >
-            Continue
-          </button>
-        </div>
+            {/* หมวด: ราคา */}
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="font-semibold text-lg">ราคา</h3>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate("/seller/post-for-sale/price")}
+                >
+                  <Edit className="w-4 h-4 mr-1" /> แก้ไข
+                </Button>
+              </div>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between border-b py-1">
+                  <span>ราคาขาย</span>
+                  <span>{dummyData.price.toLocaleString()} บาท</span>
+                </div>
+                <div className="flex justify-between border-b py-1">
+                  <span>เงินมัดจำ</span>
+                  <span>{dummyData.deposit.toLocaleString()} บาท</span>
+                </div>
+              </div>
+            </div>
+
+            {/* หมวด: ผู้ขาย */}
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="font-semibold text-lg">ข้อมูลผู้ขาย</h3>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate("/seller/post-for-sale/inform")}
+                >
+                  <Edit className="w-4 h-4 mr-1" /> แก้ไข
+                </Button>
+              </div>
+              <div className="space-y-1 text-sm">
+                <div className="flex justify-between border-b py-1">
+                  <span>ชื่อผู้ขาย</span>
+                  <span>{dummyData.sellerName}</span>
+                </div>
+                <div className="flex justify-between border-b py-1">
+                  <span>เบอร์โทร</span>
+                  <span>{dummyData.phone}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* หมวด: รูปภาพ */}
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="font-semibold text-lg">รูปภาพประกาศ</h3>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate("/seller/post-for-sale/upload")}
+                >
+                  <Edit className="w-4 h-4 mr-1" /> แก้ไข
+                </Button>
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                {dummyData.images.map((src, idx) => (
+                  <div
+                    key={idx}
+                    className="relative w-full aspect-square border rounded overflow-hidden"
+                  >
+                    <img
+                      src={src}
+                      alt={`preview-${idx}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+              {dummyData.images.length === 0 && (
+                <div className="text-sm text-muted-foreground flex items-center gap-2">
+                  <ImageIcon className="w-4 h-4" /> ไม่มีรูปภาพ
+                </div>
+              )}
+            </div>
+
+            {/* ปุ่มยืนยัน */}
+            <div className="flex justify-between pt-4">
+              <Button
+                variant="outline"
+                onClick={() => navigate("/seller/post-for-sale/upload")}
+              >
+                ย้อนกลับ
+              </Button>
+              <Button onClick={() => setShowConfirm(true)}>
+                ยืนยันการโพสต์
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </div>
+
+      {/* Modal ยืนยัน */}
+      <AlertDialog open={showConfirm} onOpenChange={setShowConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>ยืนยันการโพสต์ประกาศ</AlertDialogTitle>
+          </AlertDialogHeader>
+          <p className="text-sm text-muted-foreground">
+            คุณแน่ใจหรือไม่ว่าต้องการโพสต์ประกาศนี้?
+            หลังจากโพสต์แล้วคุณยังสามารถแก้ไขได้ภายหลัง
+          </p>
+          <AlertDialogFooter>
+            <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
+            <AlertDialogAction onClick={handleSubmit}>
+              โพสต์ประกาศ
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </PostLayout>
   );
 };
 

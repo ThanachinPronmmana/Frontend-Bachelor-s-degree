@@ -13,16 +13,17 @@ const mockHouses = [
       "https://i.pinimg.com/736x/ea/41/f6/ea41f6f127b1d49c5832d9d4f6acf713.jpg",
       "https://i.pinimg.com/736x/28/a0/24/28a0247fe814c830291874c25a7ed324.jpg",
       "https://i.pinimg.com/736x/a4/9e/3d/a49e3d3bc63a7db375b1a138df32a7e5.jpg",
-      "https://i.pinimg.com/736x/be/3b/17/be3b17441c12ac6b49a1d55227fcc2e3.jpg"
+      "https://i.pinimg.com/736x/be/3b/17/be3b17441c12ac6b49a1d55227fcc2e3.jpg",
     ],
     agent: {
       name: "John smit",
-      avatar: "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
+      avatar:
+        "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
       line: "jhon_sale_house",
       lineLink: "",
       fbLink: "",
-      loan: "20%"
-    }
+      loan: "20%",
+    },
   },
   {
     id: "2",
@@ -38,16 +39,17 @@ const mockHouses = [
       "https://i.pinimg.com/736x/1d/82/95/1d829587e11c43eb9dea01d8b0f19ae7.jpg",
       "https://i.pinimg.com/736x/54/33/b3/5433b38440e1553d045af018aa246380.jpg",
       "https://i.pinimg.com/736x/35/a1/50/35a15040713bb3d397e25e700ddf3e60.jpg",
-      "https://i.pinimg.com/736x/67/dc/4b/67dc4b9e3ee1295aef1e943fa7d11509.jpg"
+      "https://i.pinimg.com/736x/67/dc/4b/67dc4b9e3ee1295aef1e943fa7d11509.jpg",
     ],
     agent: {
       name: "Brian Moser",
-      avatar: "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
+      avatar:
+        "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
       line: "jhon_sale_house",
       lineLink: "",
       fbLink: "",
-      loan: "30%"
-    }
+      loan: "30%",
+    },
   },
   {
     id: "3",
@@ -63,16 +65,17 @@ const mockHouses = [
       "https://i.pinimg.com/736x/ff/33/80/ff3380a120c24c264a7f89abac6c18dd.jpg",
       "https://i.pinimg.com/736x/28/a0/24/28a0247fe814c830291874c25a7ed324.jpg",
       "https://i.pinimg.com/736x/93/52/8a/93528a316f080f11267dd05488a9ae90.jpg",
-      "https://i.pinimg.com/736x/8c/c0/a9/8cc0a9a54048ead1b2fae1338fc586b6.jpg"
+      "https://i.pinimg.com/736x/8c/c0/a9/8cc0a9a54048ead1b2fae1338fc586b6.jpg",
     ],
     agent: {
       name: "Dexter Morgan",
-      avatar: "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
+      avatar:
+        "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
       line: "jhon_sale_house",
       lineLink: "",
       fbLink: "",
-      loan: "25%"
-    }
+      loan: "25%",
+    },
   },
   {
     id: "4",
@@ -88,16 +91,17 @@ const mockHouses = [
       "https://i.pinimg.com/736x/c6/2f/97/c62f9712f89c47b4d907accdd712e2f6.jpg",
       "https://i.pinimg.com/736x/04/fe/49/04fe49bc84bca85bb35d1e8ff9da2f10.jpg",
       "https://i.pinimg.com/736x/1d/dd/a2/1ddda26ef587dcb3fede4f9a342e1966.jpg",
-      "https://i.pinimg.com/736x/0c/eb/84/0ceb84645690ba134b36ad24c5ab578d.jpg"
+      "https://i.pinimg.com/736x/0c/eb/84/0ceb84645690ba134b36ad24c5ab578d.jpg",
     ],
     agent: {
       name: "Joe Goldberg",
-      avatar: "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
+      avatar:
+        "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
       line: "jhon_sale_house",
       lineLink: "",
       fbLink: "",
-      loan: "10%"
-    }
+      loan: "10%",
+    },
   },
   {
     id: "5",
@@ -113,16 +117,17 @@ const mockHouses = [
       "https://i.pinimg.com/736x/08/70/17/08701760abfb5e8bd392280bc0dfc1d0.jpg",
       "https://i.pinimg.com/736x/dd/5b/78/dd5b7832534d5e6b3fa63c44df935617.jpg",
       "https://i.pinimg.com/736x/68/84/5d/68845d6f9fb65996c0ce4f17c5c34142.jpg",
-      "https://i.pinimg.com/736x/81/77/ed/8177ed23625375df49555a352af6b596.jpg"
+      "https://i.pinimg.com/736x/81/77/ed/8177ed23625375df49555a352af6b596.jpg",
     ],
     agent: {
       name: "Miguel Prado",
-      avatar: "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
+      avatar:
+        "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
       line: "jhon_sale_house",
       lineLink: "",
       fbLink: "",
-      loan: "10%"
-    }
+      loan: "10%",
+    },
   },
   {
     id: "6",
@@ -138,16 +143,17 @@ const mockHouses = [
       "https://i.pinimg.com/736x/b1/c9/2a/b1c92ada55672e7f29c93f8ee1d14328.jpg",
       "https://i.pinimg.com/736x/d8/f8/bc/d8f8bc6ae918803d042783547fa592e7.jpg",
       "https://i.pinimg.com/736x/93/4a/65/934a65fa91a67cb02ee4e78ead3e4149.jpg",
-      "https://i.pinimg.com/736x/b3/b2/86/b3b286ca45ed4ea81f401135608e3688.jpg"
+      "https://i.pinimg.com/736x/b3/b2/86/b3b286ca45ed4ea81f401135608e3688.jpg",
     ],
     agent: {
       name: "Travis Marshall",
-      avatar: "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
+      avatar:
+        "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
       line: "jhon_sale_house",
       lineLink: "",
       fbLink: "",
-      loan: "15%"
-    }
+      loan: "15%",
+    },
   },
   {
     id: "7",
@@ -163,16 +169,17 @@ const mockHouses = [
       "https://i.pinimg.com/736x/3b/6c/02/3b6c020aa406e4ee32ecf7c1040289f9.jpg",
       "https://i.pinimg.com/736x/6f/52/4f/6f524fd73e2c75c46a67593bbcebfa34.jpg",
       "https://i.pinimg.com/736x/93/4a/65/934a65fa91a67cb02ee4e78ead3e4149.jpg",
-      "https://i.pinimg.com/736x/df/29/92/df2992b5c563df27b85cb68c57b26b42.jpg"
+      "https://i.pinimg.com/736x/df/29/92/df2992b5c563df27b85cb68c57b26b42.jpg",
     ],
     agent: {
       name: "Thanachin",
-      avatar: "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
+      avatar:
+        "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
       line: "jhon_sale_house",
       lineLink: "",
       fbLink: "",
-      loan: "15%"
-    }
+      loan: "15%",
+    },
   },
   {
     id: "8",
@@ -188,16 +195,17 @@ const mockHouses = [
       "https://i.pinimg.com/736x/06/2b/7c/062b7c24648f15aa9df2401bc7c6fb11.jpg",
       "https://i.pinimg.com/736x/d9/3d/98/d93d98f776fb97c1c35943b0598b1f78.jpg",
       "https://i.pinimg.com/736x/93/4a/65/934a65fa91a67cb02ee4e78ead3e4149.jpg",
-      "https://i.pinimg.com/736x/b6/6e/e1/b66ee1fb6dac5e5ae6d22094e8fc9553.jpg"
+      "https://i.pinimg.com/736x/b6/6e/e1/b66ee1fb6dac5e5ae6d22094e8fc9553.jpg",
     ],
     agent: {
       name: "Thanachin",
-      avatar: "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
+      avatar:
+        "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
       line: "jhon_sale_house",
       lineLink: "",
       fbLink: "",
-      loan: "10%"
-    }
+      loan: "10%",
+    },
   },
   {
     id: "9",
@@ -213,18 +221,20 @@ const mockHouses = [
       "",
       "",
       "",
-      ""
+      "",
     ],
     agent: {
       name: "Thanachin",
-      avatar: "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
+      avatar:
+        "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
       line: "jhon_sale_house",
       lineLink: "",
       fbLink: "",
-      loan: ""
-    }
+      loan: "",
+    },
   },
-  {  id: "10",
+  {
+    id: "10",
     name: "ที่ดิน",
     discription: "สะพานหิน,ภูเก็ต",
     src: "https://i.pinimg.com/736x/2a/1a/88/2a1a8829545a6ab1c0789c3b78be1ae9.jpg",
@@ -237,16 +247,17 @@ const mockHouses = [
       "",
       "",
       "",
-      ""
+      "",
     ],
     agent: {
       name: "Thanachin",
-      avatar: "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
+      avatar:
+        "https://www.atcothermalpaper.com/wp-content/uploads/2024/10/%E0%B9%80%E0%B8%88%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%94%E0%B8%B5-%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%A1%E0%B8%B5%E0%B8%84%E0%B8%B8%E0%B8%93%E0%B8%AA%E0%B8%A1%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3-%E0%B8%88%E0%B8%B6%E0%B8%87%E0%B8%88%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88.jpeg.webp",
       line: "jhon_sale_house",
       lineLink: "",
       fbLink: "",
-      loan: ""
-    } },
-
-]
-export default mockHouses
+      loan: "",
+    },
+  },
+];
+export default mockHouses;

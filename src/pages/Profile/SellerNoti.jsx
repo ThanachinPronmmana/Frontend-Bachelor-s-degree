@@ -1,4 +1,10 @@
-import { Bell, CheckCircle, AlertTriangle, MessageSquare, Info } from "lucide-react";
+import {
+  Bell,
+  CheckCircle,
+  AlertTriangle,
+  MessageSquare,
+  Info,
+} from "lucide-react";
 
 const mockNotifications = [
   {
@@ -56,7 +62,6 @@ const mockNotifications = [
 const SellerNoti = () => {
   return (
     <div className="p-6 max-w-3xl mx-auto">
-
       {/* กล่องแจ้งเตือนแบบ scrollable */}
       <div className="border border-gray-200 rounded-xl shadow bg-white max-h-[500px] overflow-y-auto">
         {mockNotifications.length === 0 ? (

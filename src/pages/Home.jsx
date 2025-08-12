@@ -11,14 +11,13 @@ import { FaBalanceScale, FaMoneyBillWave } from "react-icons/fa";
 import LoanCalculator from "@/components/form/LoanCalculator";
 import { AnimatePresence, motion } from "framer-motion";
 
-
 const Home = () => {
   const videos = [""]; // Video list
 
-  const [showLoanPopup, setShowLoanPopup] = useState(false)
+  const [showLoanPopup, setShowLoanPopup] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(videos[0]);
-  const [imagedata, setImage] = useState(mockHouses)
-  const [searchFilter, setSearch] = useState("")
+  const [imagedata, setImage] = useState(mockHouses);
+  const [searchFilter, setSearch] = useState("");
 
   useEffect(() => {
     if (videos.length > 0) {
@@ -28,14 +27,13 @@ const Home = () => {
     console.log("imagedata state:", imagedata);
   }, [videos]);
 
-
   const handleSearch = () => {
     const filtered = mockHouses.filter((house) =>
       house.name.toLowerCase().includes(searchFilter.toLowerCase())
-    )
+    );
     console.log("Filtered results:", filtered);
-    setImage(filtered)
-  }
+    setImage(filtered);
+  };
   return (
     <div className="w-full">
       {/* Background Video Section */}
@@ -43,7 +41,7 @@ const Home = () => {
       <div className="relative flex items-center justify-center h-150">
         <video
           className="absolute top-0 left-0 w-full h-full object-cover"
-          src=".\video\8302413-uhd_4096_2160_25fps.mp4"
+          src="/video/16919716-uhd_3840_2160_30fps.mp4"
           autoPlay
           loop
           muted
@@ -53,19 +51,19 @@ const Home = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start space-y-3 sm:space-y-0 sm:space-x-3">
             <Iconselect />
             <div className="flex w-full h-full justify-between">
-            <Link to="/compare" className="flex">
-              <Buttons
-                text={
-                  <div className="flex items-center space-x-4">
-                    <FaBalanceScale/>
-                    <span>Compare</span>
-                  </div>
-                }
-                color="bg-blue-600"
-              />
-            </Link>
-            
-            <Buttons text="Ai Search" color="bg-blue-600" />
+              <Link to="/compare" className="flex">
+                <Buttons
+                  text={
+                    <div className="flex items-center space-x-4">
+                      <FaBalanceScale />
+                      <span>Compare</span>
+                    </div>
+                  }
+                  color="bg-blue-600"
+                />
+              </Link>
+
+              <Buttons text="Ai Search" color="bg-blue-600" />
             </div>
           </div>
           <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-4">
@@ -117,9 +115,7 @@ const Home = () => {
             <button
               className="absolute top-2 right-3 text-gray-500 hover:text-red-500 text-4xl"
               onClick={() => setShowLoanPopup(false)}
-            >
-
-            </button>
+            ></button>
             <LoanCalculator />
           </motion.div>
         )}
