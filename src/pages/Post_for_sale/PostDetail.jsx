@@ -1,3 +1,4 @@
+// src/pages/PostDetail.jsx
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,6 +16,7 @@ import PostLayout from "@/layouts/PostLayout";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Home } from "lucide-react";
+import { useFormData } from "@/context/FormContext";
 
 const schema = z.object({
   type: z.string().min(1, "กรุณาเลือกประเภท"),
@@ -60,56 +62,32 @@ const amenitiesList = [
 
 const PostDetail = () => {
   const navigate = useNavigate();
+  const { formData, updateFormData } = useFormData();
+
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      type: "",
-      size: undefined,
-      landArea: undefined,
-      totalRooms: undefined,
-      yearBuilt: undefined,
-      bedrooms: 1,
-      bathrooms: 1,
-      nearbyPlaces: [],
-      amenities: [],
-      parking: "",
-      notes: "",
+      type: formData.type || "",
+      size: formData.size || undefined,
+      landArea: formData.landArea || undefined,
+      totalRooms: formData.totalRooms || undefined,
+      yearBuilt: formData.yearBuilt || undefined,
+      bedrooms: formData.bedrooms ?? 1,
+      bathrooms: formData.bathrooms ?? 1,
+      nearbyPlaces: formData.nearbyPlaces || [],
+      amenities: formData.amenities || [],
+      parking: formData.parking || "",
+      notes: formData.notes || "",
     },
   });
 
-  // โหลดข้อมูลจาก localStorage ตอน mount
-  useEffect(() => {
-    const saved = localStorage.getItem("postData");
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      form.reset({
-        type: parsed.type || "",
-        size: parsed.size,
-        landArea: parsed.landArea,
-        totalRooms: parsed.totalRooms,
-        yearBuilt: parsed.yearBuilt,
-        bedrooms: parsed.bedrooms ?? 1,
-        bathrooms: parsed.bathrooms ?? 1,
-        nearbyPlaces: parsed.nearbyPlaces || [],
-        amenities: parsed.amenities || [],
-        parking: parsed.parking || "",
-        notes: parsed.notes || "",
-      });
-    }
-  }, [form]);
-
-  // บันทึกข้อมูลทุกครั้งที่ form เปลี่ยน
+  // อัพเดต context ทุกครั้งที่ form เปลี่ยน
   useEffect(() => {
     const subscription = form.watch((value) => {
-      const saved = localStorage.getItem("postData");
-      const currentData = saved ? JSON.parse(saved) : {};
-      localStorage.setItem(
-        "postData",
-        JSON.stringify({ ...currentData, ...value })
-      );
+      updateFormData(value);
     });
     return () => subscription.unsubscribe();
-  }, [form]);
+  }, [form, updateFormData]);
 
   const toggleArrayValue = (field, value) => {
     const current = form.getValues(field);
@@ -124,6 +102,7 @@ const PostDetail = () => {
   };
 
   const onSubmit = (values) => {
+    updateFormData(values);
     navigate("/seller/post-for-sale/price");
   };
 

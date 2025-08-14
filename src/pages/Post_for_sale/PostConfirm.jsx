@@ -18,11 +18,12 @@ import { useFormData } from "@/context/FormContext";
 
 const PostConfirm = () => {
   const navigate = useNavigate();
-  const { formData } = useFormData(); // แก้ชื่อ hook ให้ตรงกับที่ export จริง
+  const { formData } = useFormData(); // ดึงข้อมูลจาก context
   const [showConfirm, setShowConfirm] = useState(false);
 
   const handleSubmit = () => {
     console.log("Submit data:", formData);
+    // ส่งข้อมูลจริงไปหลังบ้านที่นี่
     setShowConfirm(false);
     navigate("/");
   };
@@ -60,15 +61,21 @@ const PostConfirm = () => {
                 </div>
                 <div className="flex justify-between border-b py-1">
                   <span>ประเภท</span>
-                  <span>{formData.type || "-"}</span>
+                  <span>
+                    {formData.saleType === "sale"
+                      ? "ขาย"
+                      : formData.saleType === "rent"
+                      ? "ให้เช่า"
+                      : "-"}
+                  </span>
                 </div>
                 <div className="flex justify-between border-b py-1">
                   <span>ห้องนอน</span>
-                  <span>{formData.bedroom || "-"}</span>
+                  <span>{formData.bedrooms ?? "-"}</span>
                 </div>
                 <div className="flex justify-between border-b py-1">
                   <span>ห้องน้ำ</span>
-                  <span>{formData.bathroom || "-"}</span>
+                  <span>{formData.bathrooms ?? "-"}</span>
                 </div>
               </div>
             </div>
@@ -110,19 +117,49 @@ const PostConfirm = () => {
                 </Button>
               </div>
               <div className="space-y-1 text-sm">
-                <div className="flex justify-between border-b py-1">
-                  <span>ราคาขาย</span>
-                  <span>
-                    {formData.price ? formData.price.toLocaleString() : "-"} บาท
-                  </span>
-                </div>
-                <div className="flex justify-between border-b py-1">
-                  <span>เงินมัดจำ</span>
-                  <span>
-                    {formData.deposit ? formData.deposit.toLocaleString() : "-"}{" "}
-                    บาท
-                  </span>
-                </div>
+                {formData.saleType === "sale" && (
+                  <>
+                    <div className="flex justify-between border-b py-1">
+                      <span>ราคาขาย</span>
+                      <span>
+                        {formData.salePrice
+                          ? formData.salePrice.toLocaleString()
+                          : "-"}{" "}
+                        บาท
+                      </span>
+                    </div>
+                    <div className="flex justify-between border-b py-1">
+                      <span>ระยะเวลาผ่อน</span>
+                      <span>{formData.repaymentPeriod || "-"} ปี</span>
+                    </div>
+                    <div className="flex justify-between border-b py-1">
+                      <span>ดอกเบี้ย</span>
+                      <span>{formData.interest || "-"} %</span>
+                    </div>
+                  </>
+                )}
+                {formData.saleType === "rent" && (
+                  <>
+                    <div className="flex justify-between border-b py-1">
+                      <span>ค่าเช่า</span>
+                      <span>
+                        {formData.rentPrice
+                          ? formData.rentPrice.toLocaleString()
+                          : "-"}{" "}
+                        บาท/เดือน
+                      </span>
+                    </div>
+                    <div className="flex justify-between border-b py-1">
+                      <span>ค่ามัดจำ</span>
+                      <span>
+                        {formData.deposit
+                          ? formData.deposit.toLocaleString()
+                          : "-"}{" "}
+                        บาท
+                      </span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
@@ -164,13 +201,13 @@ const PostConfirm = () => {
               </div>
               {formData.images?.length > 0 ? (
                 <div className="grid grid-cols-3 gap-3">
-                  {formData.images.map((src, idx) => (
+                  {formData.images.map((imgObj, idx) => (
                     <div
                       key={idx}
                       className="relative w-full aspect-square border rounded overflow-hidden"
                     >
                       <img
-                        src={src}
+                        src={imgObj.preview || imgObj.file || imgObj}
                         alt={`preview-${idx}`}
                         className="w-full h-full object-cover"
                       />

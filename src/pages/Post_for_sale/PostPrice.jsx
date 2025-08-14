@@ -1,7 +1,10 @@
-import { useEffect } from "react";
-import { z } from "zod";
+// src/pages/Post_for_sale/PostPrice.jsx
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   Form,
   FormField,
@@ -20,68 +23,50 @@ import {
 } from "@/components/ui/select";
 import PostLayout from "@/layouts/PostLayout";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Coins } from "lucide-react";
 
+import { useFormData } from "@/context/FormContext";
+
 const priceSchema = z.object({
   saleType: z.enum(["sale", "rent"], { required_error: "กรุณาเลือกประเภท" }),
-  salePrice: z.number().min(1, "กรุณากรอกราคาขาย").optional().nullable(),
+  salePrice: z.number().min(1).optional().nullable(),
   repaymentPeriod: z.string().optional(),
   interest: z.string().optional(),
-  rentPrice: z.number().min(1, "กรุณากรอกค่าเช่า").optional().nullable(),
+  rentPrice: z.number().min(1).optional().nullable(),
   deposit: z.number().min(0).optional().nullable(),
   expenses: z.string().optional(),
 });
 
-function PostPrice() {
+const PostPrice = () => {
   const navigate = useNavigate();
+  const { formData, updateFormData } = useFormData();
+
   const form = useForm({
     resolver: zodResolver(priceSchema),
     defaultValues: {
-      saleType: "",
-      salePrice: undefined,
-      repaymentPeriod: "",
-      interest: "",
-      rentPrice: undefined,
-      deposit: undefined,
-      expenses: "",
+      saleType: formData.saleType || "",
+      salePrice: formData.salePrice ?? undefined,
+      repaymentPeriod: formData.repaymentPeriod || "",
+      interest: formData.interest || "",
+      rentPrice: formData.rentPrice ?? undefined,
+      deposit: formData.deposit ?? undefined,
+      expenses: formData.expenses || "",
     },
   });
 
-  useEffect(() => {
-    const saved = localStorage.getItem("postData");
-    console.log("loaded from localStorage:", saved);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      form.reset({
-        saleType: parsed.saleType || "",
-        salePrice: parsed.salePrice ?? undefined,
-        repaymentPeriod: parsed.repaymentPeriod || "",
-        interest: parsed.interest || "",
-        rentPrice: parsed.rentPrice ?? undefined,
-        deposit: parsed.deposit ?? undefined,
-        expenses: parsed.expenses || "",
-      });
-    }
-  }, [form]);
-
-  useEffect(() => {
-    const subscription = form.watch((value) => {
-      console.log("saving to localStorage:", value);
-      const saved = localStorage.getItem("postData");
-      const currentData = saved ? JSON.parse(saved) : {};
-      localStorage.setItem(
-        "postData",
-        JSON.stringify({ ...currentData, ...value })
-      );
-    });
-    return () => subscription.unsubscribe();
-  }, [form]);
-
   const saleType = form.watch("saleType");
 
+  // อัปเดต context ทุกครั้งที่มีการเปลี่ยนค่า
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      updateFormData(value);
+    });
+    return () => subscription.unsubscribe();
+  }, [form, updateFormData]);
+
   const onSubmit = (values) => {
+    updateFormData(values);
     navigate("/seller/post-for-sale/inform");
   };
 
@@ -110,8 +95,8 @@ function PostPrice() {
                     <FormItem>
                       <FormLabel>ประเภท</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
                         value={field.value || ""}
+                        onValueChange={field.onChange}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="เลือกประเภท" />
@@ -259,6 +244,6 @@ function PostPrice() {
       </div>
     </PostLayout>
   );
-}
+};
 
 export default PostPrice;

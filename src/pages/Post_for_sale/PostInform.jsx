@@ -1,3 +1,5 @@
+// src/pages/Post_for_sale/PostInform.jsx
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,7 +16,7 @@ import PostLayout from "@/layouts/PostLayout";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { User } from "lucide-react";
-import { useEffect } from "react";
+import { useFormData } from "@/context/FormContext";
 
 const schema = z.object({
   sellerName: z.string().min(2, "กรุณากรอกชื่ออย่างน้อย 2 ตัวอักษร"),
@@ -26,28 +28,26 @@ const schema = z.object({
 
 const PostInform = () => {
   const navigate = useNavigate();
-
-  // โหลดค่าจาก localStorage ถ้ามี
-  const savedData = JSON.parse(localStorage.getItem("postInform") || "{}");
+  const { formData, updateFormData } = useFormData();
 
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      sellerName: savedData.sellerName || "",
-      phone: savedData.phone || "",
+      sellerName: formData.sellerName || "",
+      phone: formData.phone || "",
     },
   });
 
-  // อัปเดต localStorage ทุกครั้งที่ฟอร์มเปลี่ยน
+  // อัปเดต context ทุกครั้งที่ฟอร์มเปลี่ยน
   useEffect(() => {
     const subscription = form.watch((values) => {
-      localStorage.setItem("postInform", JSON.stringify(values));
+      updateFormData(values);
     });
     return () => subscription.unsubscribe();
-  }, [form]);
+  }, [form, updateFormData]);
 
   const onSubmit = (values) => {
-    localStorage.setItem("postInform", JSON.stringify(values));
+    updateFormData(values);
     navigate("/seller/post-for-sale/upload");
   };
 

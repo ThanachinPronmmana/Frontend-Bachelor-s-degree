@@ -17,6 +17,7 @@ import PostLayout from "@/layouts/PostLayout";
 
 import { FileText } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useFormData } from "@/context/FormContext";
 
 const schema = z.object({
   title: z.string().min(5, "กรุณากรอกหัวข้ออย่างน้อย 5 ตัวอักษร"),
@@ -25,6 +26,7 @@ const schema = z.object({
 
 const PostTitle = () => {
   const navigate = useNavigate();
+  const { formData, updateFormData } = useFormData();
 
   const form = useForm({
     resolver: zodResolver(schema),
@@ -34,38 +36,24 @@ const PostTitle = () => {
     },
   });
 
-  // โหลดค่าจาก localStorage ถ้ามี
+  // โหลดค่าจาก context ตอน mount
   useEffect(() => {
-    const saved = localStorage.getItem("postData");
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      form.reset({
-        title: parsed.title || "",
-        description: parsed.description || "",
-      });
-    }
-  }, [form]);
+    form.reset({
+      title: formData.title || "",
+      description: formData.description || "",
+    });
+  }, [formData, form]);
 
-  // บันทึกค่าลง localStorage ทุกครั้งที่เปลี่ยน
+  // อัปเดต context ทุกครั้งที่ค่าฟอร์มเปลี่ยน
   useEffect(() => {
     const subscription = form.watch((value) => {
-      const saved = localStorage.getItem("postData");
-      const currentData = saved ? JSON.parse(saved) : {};
-      localStorage.setItem(
-        "postData",
-        JSON.stringify({ ...currentData, ...value })
-      );
+      updateFormData(value);
     });
     return () => subscription.unsubscribe();
-  }, [form]);
+  }, [form, updateFormData]);
 
   const onSubmit = (data) => {
-    const saved = localStorage.getItem("postData");
-    const currentData = saved ? JSON.parse(saved) : {};
-    localStorage.setItem(
-      "postData",
-      JSON.stringify({ ...currentData, ...data })
-    );
+    updateFormData(data);
     navigate("/seller/post-for-sale/location");
   };
 
