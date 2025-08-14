@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,10 +13,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import PostLayout from "@/layouts/PostLayout";
-
 import { FileText } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFormData } from "@/context/FormContext";
+import axios from "axios";
 
 const schema = z.object({
   title: z.string().min(5, "กรุณากรอกหัวข้ออย่างน้อย 5 ตัวอักษร"),
@@ -36,21 +35,46 @@ const PostTitle = () => {
     },
   });
 
-  // โหลดค่าจาก context ตอน mount
+  // เรียก createpost ครั้งเดียวตอนเข้าหน้า
+  useEffect(() => {
+    const createInitialPost = async () => {
+      if (!formData.postId) {
+        try {
+          const payload = new FormData();
+          payload.append("Property_Name", "");
+          payload.append("Description", "");
+          payload.append("Price", 0);
+          payload.append("Usable_Area", 0);
+          payload.append("Land_Size", 0);
+          payload.append("Bedrooms", 0);
+          payload.append("Bathroom", 0);
+          payload.append("categoryId", "DEFAULT_CATEGORY_ID");
+          // ถ้าไม่มีรูปภาพ ก็ไม่ต้อง append images
+
+          const userId = formData.userId || "YOUR_USER_ID";
+          const res = await axios.post(
+            `http://localhost:8200/propertypost/${userId}`,
+            payload,
+            {
+              headers: { "Content-Type": "multipart/form-data" },
+            }
+          );
+
+          updateFormData({ postId: res.data.id });
+        } catch (error) {
+          console.error("Error creating initial post:", error);
+        }
+      }
+    };
+    createInitialPost();
+  }, [formData, updateFormData]);
+
   useEffect(() => {
     form.reset({
       title: formData.title || "",
       description: formData.description || "",
     });
   }, [formData, form]);
-
-  // อัปเดต context ทุกครั้งที่ค่าฟอร์มเปลี่ยน
-  useEffect(() => {
-    const subscription = form.watch((value) => {
-      updateFormData(value);
-    });
-    return () => subscription.unsubscribe();
-  }, [form, updateFormData]);
 
   const onSubmit = (data) => {
     updateFormData(data);

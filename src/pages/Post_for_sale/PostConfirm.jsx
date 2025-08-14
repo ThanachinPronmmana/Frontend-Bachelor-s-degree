@@ -18,14 +18,92 @@ import { useFormData } from "@/context/FormContext";
 
 const PostConfirm = () => {
   const navigate = useNavigate();
-  const { formData } = useFormData(); // ดึงข้อมูลจาก context
+  const { formData } = useFormData();
   const [showConfirm, setShowConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {
-    console.log("Submit data:", formData);
-    // ส่งข้อมูลจริงไปหลังบ้านที่นี่
-    setShowConfirm(false);
-    navigate("/");
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const userId = formData.userId; // ต้องมี userId จริง
+      const form = new FormData();
+
+      // Map frontend formData -> backend keys
+      form.append("Property_Name", formData.title || "");
+      form.append("categoryId", formData.categoryId ?? 1);
+      form.append("Bedrooms", formData.bedrooms ?? 0);
+      form.append("Bathroom", formData.bathrooms ?? 0);
+      form.append("Total_Rooms", formData.totalRooms ?? 0);
+      form.append(
+        "Price",
+        formData.saleType === "sale"
+          ? formData.Price ?? 0
+          : formData.rentPrice ?? 0
+      );
+
+      form.append(
+        "Deposit_Amount",
+        formData.saleType === "rent" ? formData.Deposit_Amount ?? 0 : 0
+      );
+
+      form.append("Name", formData.sellerName || "");
+      form.append("Phone", formData.phone || "");
+      form.append("Province", formData.province || "");
+      form.append("District", formData.district || "");
+      form.append("Subdistrict", formData.subdistrict || "");
+      form.append("Address", formData.address || "");
+      form.append("Usable_Area", formData.size ?? 0);
+      form.append("Land_Size", formData.landArea ?? 0);
+      form.append("Year_Built", formData.yearBuilt || "");
+      form.append(
+        "Nearby_Landmarks",
+        JSON.stringify(formData.nearbyPlaces || [])
+      );
+      form.append(
+        "Additional_Amenities",
+        JSON.stringify(formData.amenities || [])
+      );
+      form.append("Parking_Space", formData.parking ?? 0);
+      form.append("Description", formData.description || "");
+      form.append("Sell_Rent", formData.saleType || "sell");
+      form.append("Other_related_expenses", formData.expenses || "");
+
+      // ฟิลด์ผ่อน/ดอกเบี้ย เฉพาะขาย
+      if (formData.saleType === "sale") {
+        form.append("repaymentPeriod", formData.repaymentPeriod || "");
+        form.append("interest", formData.interest || "");
+      }
+
+      // Append รูปภาพ
+      if (formData.images?.length) {
+        formData.images.forEach((file) => {
+          form.append("files", file);
+        });
+      }
+
+      const res = await fetch(
+        `http://localhost:4000/api/posts/create/${userId}`,
+        {
+          method: "POST",
+          body: form,
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("โพสต์สำเร็จ!");
+        navigate("/seller/my-posts"); // redirect หลังโพสต์สำเร็จ
+      } else {
+        alert("เกิดข้อผิดพลาด: " + data.message);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("เกิดข้อผิดพลาดในการโพสต์");
+    } finally {
+      setLoading(false);
+      setShowConfirm(false);
+    }
   };
 
   return (
@@ -61,21 +139,15 @@ const PostConfirm = () => {
                 </div>
                 <div className="flex justify-between border-b py-1">
                   <span>ประเภท</span>
-                  <span>
-                    {formData.saleType === "sale"
-                      ? "ขาย"
-                      : formData.saleType === "rent"
-                      ? "ให้เช่า"
-                      : "-"}
-                  </span>
+                  <span>{formData.category || "-"}</span>
                 </div>
                 <div className="flex justify-between border-b py-1">
                   <span>ห้องนอน</span>
-                  <span>{formData.bedrooms ?? "-"}</span>
+                  <span>{formData.bedrooms || "-"}</span>
                 </div>
                 <div className="flex justify-between border-b py-1">
                   <span>ห้องน้ำ</span>
-                  <span>{formData.bathrooms ?? "-"}</span>
+                  <span>{formData.bathrooms || "-"}</span>
                 </div>
               </div>
             </div>
@@ -101,6 +173,10 @@ const PostConfirm = () => {
                   <span>อำเภอ/เขต</span>
                   <span>{formData.district || "-"}</span>
                 </div>
+                <div className="flex justify-between border-b py-1">
+                  <span>ตำบล/แขวง</span>
+                  <span>{formData.subdistrict || "-"}</span>
+                </div>
               </div>
             </div>
 
@@ -117,16 +193,11 @@ const PostConfirm = () => {
                 </Button>
               </div>
               <div className="space-y-1 text-sm">
-                {formData.saleType === "sale" && (
+                {formData.saleType === "sale" ? (
                   <>
                     <div className="flex justify-between border-b py-1">
                       <span>ราคาขาย</span>
-                      <span>
-                        {formData.salePrice
-                          ? formData.salePrice.toLocaleString()
-                          : "-"}{" "}
-                        บาท
-                      </span>
+                      <span>{formData.Price?.toLocaleString() || "-"} บาท</span>
                     </div>
                     <div className="flex justify-between border-b py-1">
                       <span>ระยะเวลาผ่อน</span>
@@ -137,53 +208,22 @@ const PostConfirm = () => {
                       <span>{formData.interest || "-"} %</span>
                     </div>
                   </>
-                )}
-                {formData.saleType === "rent" && (
+                ) : (
                   <>
                     <div className="flex justify-between border-b py-1">
                       <span>ค่าเช่า</span>
                       <span>
-                        {formData.rentPrice
-                          ? formData.rentPrice.toLocaleString()
-                          : "-"}{" "}
-                        บาท/เดือน
+                        {formData.rentPrice?.toLocaleString() || "-"} บาท/เดือน
                       </span>
                     </div>
                     <div className="flex justify-between border-b py-1">
-                      <span>ค่ามัดจำ</span>
+                      <span>เงินมัดจำ</span>
                       <span>
-                        {formData.deposit
-                          ? formData.deposit.toLocaleString()
-                          : "-"}{" "}
-                        บาท
+                        {formData.Deposit_Amount?.toLocaleString() || "-"} บาท
                       </span>
                     </div>
                   </>
                 )}
-              </div>
-            </div>
-
-            {/* ข้อมูลผู้ขาย */}
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="font-semibold text-lg">ข้อมูลผู้ขาย</h3>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => navigate("/seller/post-for-sale/inform")}
-                >
-                  <Edit className="w-4 h-4 mr-1" /> แก้ไข
-                </Button>
-              </div>
-              <div className="space-y-1 text-sm">
-                <div className="flex justify-between border-b py-1">
-                  <span>ชื่อผู้ขาย</span>
-                  <span>{formData.sellerName || "-"}</span>
-                </div>
-                <div className="flex justify-between border-b py-1">
-                  <span>เบอร์โทร</span>
-                  <span>{formData.phone || "-"}</span>
-                </div>
               </div>
             </div>
 
@@ -201,13 +241,17 @@ const PostConfirm = () => {
               </div>
               {formData.images?.length > 0 ? (
                 <div className="grid grid-cols-3 gap-3">
-                  {formData.images.map((imgObj, idx) => (
+                  {formData.images.map((src, idx) => (
                     <div
                       key={idx}
                       className="relative w-full aspect-square border rounded overflow-hidden"
                     >
                       <img
-                        src={imgObj.preview || imgObj.file || imgObj}
+                        src={
+                          typeof src === "string"
+                            ? src
+                            : URL.createObjectURL(src)
+                        }
                         alt={`preview-${idx}`}
                         className="w-full h-full object-cover"
                       />
@@ -229,8 +273,8 @@ const PostConfirm = () => {
               >
                 ย้อนกลับ
               </Button>
-              <Button onClick={() => setShowConfirm(true)}>
-                ยืนยันการโพสต์
+              <Button onClick={() => setShowConfirm(true)} disabled={loading}>
+                {loading ? "กำลังโพสต์..." : "ยืนยันการโพสต์"}
               </Button>
             </div>
           </CardContent>

@@ -1,4 +1,4 @@
-// src/pages/PostDetail.jsx
+// src/pages/Post_for_sale/PostDetail.jsx
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -18,18 +18,20 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Home } from "lucide-react";
 import { useFormData } from "@/context/FormContext";
 
+// Validation schema
 const schema = z.object({
-  type: z.string().min(1, "กรุณาเลือกประเภท"),
-  size: z.number().min(0).optional(),
-  landArea: z.number().min(0).optional(),
-  totalRooms: z.number().min(0).optional(),
-  yearBuilt: z.number().min(0).optional(),
-  bedrooms: z.number().min(0),
-  bathrooms: z.number().min(0),
-  nearbyPlaces: z.array(z.string()).optional(),
-  amenities: z.array(z.string()).optional(),
-  parking: z.string().optional(),
-  notes: z.string().optional(),
+  category: z.string().min(1, "กรุณาเลือกประเภท"),
+  Usable_Area: z.number().min(0).optional(),
+  Land_Size: z.number().min(0).optional(),
+  Total_Rooms: z.number().min(0).optional(),
+  Year_Built: z.number().min(0).optional(),
+  Bedrooms: z.number().min(0),
+  Bathroom: z.number().min(0),
+  Nearby_Landmarks: z.array(z.string()).optional(),
+  Additional_Amenities: z.array(z.string()).optional(),
+  Parking_Space: z.string().optional(),
+  Description: z.string().optional(),
+  images: z.array(z.any()).optional(), // File[]
 });
 
 const propertyTypes = [
@@ -51,7 +53,6 @@ const propertyTypes = [
 ];
 
 const landmarks = ["BTS / MRT", "School", "Hospital", "Mall/Market", "Park"];
-
 const amenitiesList = [
   "Swimming Pool",
   "Fitness Center",
@@ -67,24 +68,25 @@ const PostDetail = () => {
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      type: formData.type || "",
-      size: formData.size || undefined,
-      landArea: formData.landArea || undefined,
-      totalRooms: formData.totalRooms || undefined,
-      yearBuilt: formData.yearBuilt || undefined,
-      bedrooms: formData.bedrooms ?? 1,
-      bathrooms: formData.bathrooms ?? 1,
-      nearbyPlaces: formData.nearbyPlaces || [],
-      amenities: formData.amenities || [],
-      parking: formData.parking || "",
-      notes: formData.notes || "",
+      category: formData.category || "",
+      Usable_Area: formData.Usable_Area || undefined,
+      Land_Size: formData.Land_Size || undefined,
+      Total_Rooms: formData.Total_Rooms || undefined,
+      Year_Built: formData.Year_Built || undefined,
+      Bedrooms: formData.Bedrooms ?? 1,
+      Bathroom: formData.Bathroom ?? 1,
+      Nearby_Landmarks: formData.Nearby_Landmarks || [],
+      Additional_Amenities: formData.Additional_Amenities || [],
+      Parking_Space: formData.Parking_Space || "",
+      Description: formData.Description || "",
+      images: formData.images || [],
     },
   });
 
-  // อัพเดต context ทุกครั้งที่ form เปลี่ยน
+  // update formData whenever form changes
   useEffect(() => {
-    const subscription = form.watch((value) => {
-      updateFormData(value);
+    const subscription = form.watch((values) => {
+      updateFormData(values);
     });
     return () => subscription.unsubscribe();
   }, [form, updateFormData]);
@@ -129,7 +131,7 @@ const PostDetail = () => {
                 {/* Property Type */}
                 <FormField
                   control={form.control}
-                  name="type"
+                  name="category"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>ประเภทบ้าน</FormLabel>
@@ -156,18 +158,17 @@ const PostDetail = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <FormField
                     control={form.control}
-                    name="size"
+                    name="Usable_Area"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>พื้นที่ (ตร.ม.)</FormLabel>
                         <Input
                           type="number"
-                          placeholder="เช่น 120"
                           {...field}
                           onChange={(e) =>
                             field.onChange(
                               e.target.value
-                                ? Number(e.target.value)
+                                ? parseFloat(e.target.value)
                                 : undefined
                             )
                           }
@@ -178,18 +179,17 @@ const PostDetail = () => {
                   />
                   <FormField
                     control={form.control}
-                    name="landArea"
+                    name="Land_Size"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>พื้นที่ดิน (ตร.วา)</FormLabel>
                         <Input
                           type="number"
-                          placeholder="เช่น 50"
                           {...field}
                           onChange={(e) =>
                             field.onChange(
                               e.target.value
-                                ? Number(e.target.value)
+                                ? parseFloat(e.target.value)
                                 : undefined
                             )
                           }
@@ -200,18 +200,17 @@ const PostDetail = () => {
                   />
                   <FormField
                     control={form.control}
-                    name="yearBuilt"
+                    name="Year_Built"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>ปีที่สร้าง</FormLabel>
                         <Input
                           type="number"
-                          placeholder="เช่น 2015"
                           {...field}
                           onChange={(e) =>
                             field.onChange(
                               e.target.value
-                                ? Number(e.target.value)
+                                ? parseInt(e.target.value)
                                 : undefined
                             )
                           }
@@ -226,7 +225,7 @@ const PostDetail = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <FormField
                     control={form.control}
-                    name="bedrooms"
+                    name="Bedrooms"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>ห้องนอน</FormLabel>
@@ -234,7 +233,7 @@ const PostDetail = () => {
                           type="number"
                           {...field}
                           onChange={(e) =>
-                            field.onChange(Number(e.target.value))
+                            field.onChange(parseInt(e.target.value))
                           }
                         />
                         <FormMessage />
@@ -243,7 +242,7 @@ const PostDetail = () => {
                   />
                   <FormField
                     control={form.control}
-                    name="bathrooms"
+                    name="Bathroom"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>ห้องน้ำ</FormLabel>
@@ -251,7 +250,7 @@ const PostDetail = () => {
                           type="number"
                           {...field}
                           onChange={(e) =>
-                            field.onChange(Number(e.target.value))
+                            field.onChange(parseInt(e.target.value))
                           }
                         />
                         <FormMessage />
@@ -260,7 +259,7 @@ const PostDetail = () => {
                   />
                   <FormField
                     control={form.control}
-                    name="totalRooms"
+                    name="Total_Rooms"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>จำนวนห้องทั้งหมด</FormLabel>
@@ -270,7 +269,7 @@ const PostDetail = () => {
                           onChange={(e) =>
                             field.onChange(
                               e.target.value
-                                ? Number(e.target.value)
+                                ? parseInt(e.target.value)
                                 : undefined
                             )
                           }
@@ -284,7 +283,7 @@ const PostDetail = () => {
                 {/* Nearby Landmarks */}
                 <FormField
                   control={form.control}
-                  name="nearbyPlaces"
+                  name="Nearby_Landmarks"
                   render={() => (
                     <FormItem>
                       <FormLabel>สถานที่ใกล้เคียง</FormLabel>
@@ -294,12 +293,12 @@ const PostDetail = () => {
                             type="button"
                             key={item}
                             variant={
-                              form.getValues("nearbyPlaces").includes(item)
+                              form.getValues("Nearby_Landmarks").includes(item)
                                 ? "default"
                                 : "outline"
                             }
                             onClick={() =>
-                              toggleArrayValue("nearbyPlaces", item)
+                              toggleArrayValue("Nearby_Landmarks", item)
                             }
                           >
                             {item}
@@ -314,7 +313,7 @@ const PostDetail = () => {
                 {/* Amenities */}
                 <FormField
                   control={form.control}
-                  name="amenities"
+                  name="Additional_Amenities"
                   render={() => (
                     <FormItem>
                       <FormLabel>สิ่งอำนวยความสะดวก</FormLabel>
@@ -324,11 +323,15 @@ const PostDetail = () => {
                             type="button"
                             key={item}
                             variant={
-                              form.getValues("amenities").includes(item)
+                              form
+                                .getValues("Additional_Amenities")
+                                .includes(item)
                                 ? "default"
                                 : "outline"
                             }
-                            onClick={() => toggleArrayValue("amenities", item)}
+                            onClick={() =>
+                              toggleArrayValue("Additional_Amenities", item)
+                            }
                           >
                             {item}
                           </Button>
@@ -342,7 +345,7 @@ const PostDetail = () => {
                 {/* Parking */}
                 <FormField
                   control={form.control}
-                  name="parking"
+                  name="Parking_Space"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>ที่จอดรถ</FormLabel>
@@ -362,10 +365,10 @@ const PostDetail = () => {
                   )}
                 />
 
-                {/* Notes */}
+                {/* Description */}
                 <FormField
                   control={form.control}
-                  name="notes"
+                  name="Description"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>หมายเหตุ/คำอธิบาย</FormLabel>

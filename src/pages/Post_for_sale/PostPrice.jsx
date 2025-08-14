@@ -30,11 +30,11 @@ import { useFormData } from "@/context/FormContext";
 
 const priceSchema = z.object({
   saleType: z.enum(["sale", "rent"], { required_error: "กรุณาเลือกประเภท" }),
-  salePrice: z.number().min(1).optional().nullable(),
+  Price: z.number().min(1).optional().nullable(),
   repaymentPeriod: z.string().optional(),
   interest: z.string().optional(),
   rentPrice: z.number().min(1).optional().nullable(),
-  deposit: z.number().min(0).optional().nullable(),
+  Deposit_Amount: z.number().min(0).optional().nullable(),
   expenses: z.string().optional(),
 });
 
@@ -46,11 +46,11 @@ const PostPrice = () => {
     resolver: zodResolver(priceSchema),
     defaultValues: {
       saleType: formData.saleType || "",
-      salePrice: formData.salePrice ?? undefined,
+      Price: formData.Price ?? undefined,
       repaymentPeriod: formData.repaymentPeriod || "",
       interest: formData.interest || "",
       rentPrice: formData.rentPrice ?? undefined,
-      deposit: formData.deposit ?? undefined,
+      Deposit_Amount: formData.Deposit_Amount ?? undefined,
       expenses: formData.expenses || "",
     },
   });
@@ -59,14 +59,26 @@ const PostPrice = () => {
 
   // อัปเดต context ทุกครั้งที่มีการเปลี่ยนค่า
   useEffect(() => {
-    const subscription = form.watch((value) => {
-      updateFormData(value);
+    const subscription = form.watch((values) => {
+      // map ค่าให้ตรง backend field
+      const mappedValues = {
+        ...values,
+        Price: values.Price ?? formData.Price ?? 0,
+        Deposit_Amount: values.Deposit_Amount ?? formData.Deposit_Amount ?? 0,
+      };
+      updateFormData(mappedValues);
     });
     return () => subscription.unsubscribe();
-  }, [form, updateFormData]);
+  }, [form, updateFormData, formData.Price, formData.Deposit_Amount]);
 
   const onSubmit = (values) => {
-    updateFormData(values);
+    // ส่งค่า map ให้ backend
+    const mappedValues = {
+      ...values,
+      Price: values.Price ?? 0,
+      Deposit_Amount: values.Deposit_Amount ?? 0,
+    };
+    updateFormData(mappedValues);
     navigate("/seller/post-for-sale/inform");
   };
 
@@ -115,7 +127,7 @@ const PostPrice = () => {
                   <>
                     <FormField
                       control={form.control}
-                      name="salePrice"
+                      name="Price"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>ราคาขาย (บาท)</FormLabel>
@@ -188,7 +200,7 @@ const PostPrice = () => {
                     />
                     <FormField
                       control={form.control}
-                      name="deposit"
+                      name="Deposit_Amount"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>ค่ามัดจำ (บาท)</FormLabel>
