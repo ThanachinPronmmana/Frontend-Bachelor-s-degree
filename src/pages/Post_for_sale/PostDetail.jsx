@@ -136,7 +136,7 @@ const PostDetail = () => {
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>พื้นที่ (ตร.ม.)</FormLabel>
+                      <FormLabel>พื้นที่ใช้สอย (ตร.ม.)</FormLabel>
                       <Input
                         type="number"
                         placeholder="เช่น 120"

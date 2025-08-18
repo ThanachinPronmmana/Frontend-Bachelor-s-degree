@@ -115,7 +115,9 @@ function PostUpload() {
 
       console.log("สร้างโพสต์สำเร็จ:", response.data);
       form.reset(); // (Optional) ล้างข้อมูลในฟอร์มหลังจากส่งสำเร็จ
-      navigate("/seller/post-for-sale/confirm");
+      navigate("/seller/post-for-sale/confirm", {
+        state: { postId: response.data.id },
+      });
     } catch (apiError) {
       // axios จะโยน error ออกมาถ้า status ไม่ใช่ 2xx
       // เราสามารถดึงข้อความ error จาก response ของ server ได้
