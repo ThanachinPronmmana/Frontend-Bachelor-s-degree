@@ -52,8 +52,12 @@ const Formuploadimage = ({ userId, onUploadSuccess }) => {
   // };
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="space-y-4"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <div className="flex flex-col justify-center space-y-3">
+
         <label className="font-semibold block mb-1">Upload Image</label>
         <input
           type="file"
@@ -72,7 +76,8 @@ const Formuploadimage = ({ userId, onUploadSuccess }) => {
         </button>
 
         {uploading && <p className="text-sm text-gray-500">กำลังอัปโหลด...</p>}
-      </div>
+
+      </div >
     </form>
   );
 };

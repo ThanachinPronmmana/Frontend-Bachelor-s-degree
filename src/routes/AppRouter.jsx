@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 
 // Layouts
 import Layout from "../layouts/Layout";
@@ -64,6 +64,7 @@ import RejectSeller from "@/pages/admin/User account/RejectSeller";
 import PayDeposit from "@/pages/admin/Payment/PayDeposit";
 import PayBank from "@/pages/admin/Payment/PayBank";
 import DescriptionReport from "@/pages/admin/DescriptionReport";
+import { PostFormProvider } from "@/pages/Post_for_sale/PostFormProvider";
 
 const AppRouter = () => {
   return (
@@ -118,6 +119,7 @@ const AppRouter = () => {
             <Route path="support" element={<Support />} />
 
             {/* Post For Sale - Seller Access */}
+            <Route element={<PostFormProvider><Outlet/></PostFormProvider>}>
             <Route path="post-for-sale" element={<PostForSaleLayout />}>
               <Route path="title" element={<PostTitle />} />
               <Route path="location" element={<PostLocation />} />
@@ -126,6 +128,7 @@ const AppRouter = () => {
               <Route path="inform" element={<PostInform />} />
               <Route path="upload" element={<PostUpload />} />
               <Route path="confirm" element={<PostConfirm />} />
+            </Route>
             </Route>
           </Route>
         </Route>

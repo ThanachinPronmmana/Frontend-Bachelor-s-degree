@@ -1,6 +1,4 @@
-// src/pages/Post_for_sale/PostInform.jsx
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
@@ -16,38 +14,42 @@ import PostLayout from "@/layouts/PostLayout";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { User } from "lucide-react";
-import { useFormData } from "@/context/FormContext";
+import { useContext, useEffect } from "react";
 
-const schema = z.object({
-  sellerName: z.string().min(2, "กรุณากรอกชื่ออย่างน้อย 2 ตัวอักษร"),
-  phone: z
-    .string()
-    .min(10, "เบอร์โทรต้องมีอย่างน้อย 10 หลัก")
-    .max(15, "เบอร์โทรต้องไม่เกิน 15 หลัก"),
-});
+// const schema = z.object({
+//   sellerName: z.string().min(2, "กรุณากรอกชื่ออย่างน้อย 2 ตัวอักษร"),
+//   phone: z
+//     .string()
+//     .min(10, "เบอร์โทรต้องมีอย่างน้อย 10 หลัก")
+//     .max(15, "เบอร์โทรต้องไม่เกิน 15 หลัก"),
+// });
 
 const PostInform = () => {
   const navigate = useNavigate();
-  const { formData, updateFormData } = useFormData();
+  const form = useFormContext();
 
-  const form = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      sellerName: formData.sellerName || "",
-      phone: formData.phone || "",
-    },
-  });
+  // โหลดค่าจาก localStorage ถ้ามี
+  // const savedData = JSON.parse(localStorage.getItem("postInform") || "{}");
 
-  // อัปเดต context ทุกครั้งที่ฟอร์มเปลี่ยน
-  useEffect(() => {
-    const subscription = form.watch((values) => {
-      updateFormData(values);
-    });
-    return () => subscription.unsubscribe();
-  }, [form, updateFormData]);
+  // const form = useForm({
+  //   resolver: zodResolver(schema),
+  //   defaultValues: {
+  //     sellerName: savedData.sellerName || "",
+  //     phone: savedData.phone || "",
+  //   },
+  // });
 
-  const onSubmit = (values) => {
-    updateFormData(values);
+  // // อัปเดต localStorage ทุกครั้งที่ฟอร์มเปลี่ยน
+  // useEffect(() => {
+  //   const subscription = form.watch((values) => {
+  //     localStorage.setItem("postInform", JSON.stringify(values));
+  //   });
+  //   return () => subscription.unsubscribe();
+  // }, [form]);
+
+  const onSubmit = (data) => {
+    // localStorage.setItem("postInform", JSON.stringify(values));
+    console.log(data);
     navigate("/seller/post-for-sale/upload");
   };
 
@@ -64,45 +66,40 @@ const PostInform = () => {
               </p>
             </div>
 
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-4"
-              >
-                <FormField
-                  control={form.control}
-                  name="sellerName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>ชื่อผู้ขาย</FormLabel>
-                      <Input {...field} placeholder="นายสมชาย บ้านดี" />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>เบอร์โทรศัพท์</FormLabel>
-                      <Input {...field} placeholder="0812345678" />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="flex justify-between pt-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => navigate("/seller/post-for-sale/price")}
-                  >
-                    ย้อนกลับ
-                  </Button>
-                  <Button type="submit">ถัดไป</Button>
-                </div>
-              </form>
-            </Form>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="Name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>ชื่อผู้ขาย</FormLabel>
+                    <Input {...field} placeholder="นายสมชาย บ้านดี" />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="Phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>เบอร์โทรศัพท์</FormLabel>
+                    <Input {...field} placeholder="0812345678" />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-between pt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => navigate("/seller/post-for-sale/price")}
+                >
+                  ย้อนกลับ
+                </Button>
+                <Button type="submit">ถัดไป</Button>
+              </div>
+            </form>
           </CardContent>
         </Card>
       </div>

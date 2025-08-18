@@ -1,16 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Form,
   FormField,
@@ -18,89 +9,142 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import PostLayout from "@/layouts/PostLayout";
 import { MapPin } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { useFormData } from "@/context/FormContext";
 
 const schema = z.object({
   province: z.string().min(1, "กรุณาเลือกจังหวัด"),
-  district: z.string().min(1, "กรุณาเลือกอำเภอ"),
-  subDistrict: z.string().min(1, "กรุณาเลือกตำบล"),
-  googleMapLink: z.string().url("กรุณากรอกลิงก์ Google Maps ที่ถูกต้อง"),
+  amphure: z.string().min(1, "กรุณาเลือกอำเภอ"),
+  district: z.string().min(1, "กรุณาเลือกตำบล"),
+  mapLink: z
+    .string()
+    .url("กรุณากรอก URL ให้ถูกต้อง")
+    .optional()
+    .or(z.literal("")),
 });
 
 const PostLocation = () => {
   const navigate = useNavigate();
-  const { formData, updateFormData } = useFormData();
-
-  const [provinces, setProvinces] = useState([]);
-  const [districts, setDistricts] = useState([]);
-  const [subDistricts, setSubDistricts] = useState([]);
 
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
       province: "",
+      amphure: "",
       district: "",
-      subDistrict: "",
-      googleMapLink: "",
+      mapLink: "",
     },
   });
 
+  const [provinces, setProvinces] = useState([]);
+  const [amphures, setAmphures] = useState([]);
+  const [districts, setDistricts] = useState([]);
+
+  // watch ค่า province และ amphure
+  const provinceValue = form.watch("province");
+  const amphureValue = form.watch("amphure");
+
   useEffect(() => {
-    Promise.all([
-      fetch(
-        "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json"
-      ).then((res) => res.json()),
-      fetch(
-        "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json"
-      ).then((res) => res.json()),
-      fetch(
-        "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json"
-      ).then((res) => res.json()),
-    ]).then(([provinceData, districtData, subDistrictData]) => {
-      setProvinces(provinceData);
-      setDistricts(districtData);
-      setSubDistricts(subDistrictData);
-    });
+    // โหลดข้อมูลจังหวัด
+    fetch(
+      "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_province.json"
+    )
+      .then((res) => res.json())
+      .then((data) => setProvinces(data));
   }, []);
 
-  // โหลดค่าจาก context
   useEffect(() => {
-    form.reset({
-      province: formData.province || "",
-      district: formData.district || "",
-      subDistrict: formData.subDistrict || "",
-      googleMapLink: formData.googleMapLink || "",
-    });
-  }, [formData, form]);
+    if (!provinceValue) {
+      setAmphures([]);
+      form.setValue("amphure", "");
+      setDistricts([]);
+      form.setValue("district", "");
+      return;
+    }
 
-  // อัปเดต context ทุกครั้งที่ค่าฟอร์มเปลี่ยน
+    // โหลดอำเภอเมื่อ province เปลี่ยน
+    fetch(
+      "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_amphure.json"
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        const filtered = data.filter(
+          (a) => String(a.province_id) === String(provinceValue)
+        );
+
+        setAmphures(filtered);
+      });
+
+    form.setValue("amphure", "");
+    setDistricts([]);
+    form.setValue("district", "");
+  }, [provinceValue, form]);
+
   useEffect(() => {
+    if (!amphureValue) {
+      setDistricts([]);
+      form.setValue("district", "");
+      return;
+    }
+
+    // โหลดตำบลเมื่อ amphure เปลี่ยน
+    fetch(
+      "https://raw.githubusercontent.com/kongvut/thai-province-data/master/api_tambon.json"
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        const filtered = data.filter(
+          (d) => String(d.amphure_id) === String(amphureValue) // แปลงให้ชนิดตรงกัน
+        );
+        setDistricts(filtered);
+      });
+
+    form.setValue("district", "");
+  }, [amphureValue, form]);
+
+  useEffect(() => {
+    // โหลดข้อมูลจาก localStorage แล้ว reset form
+    const saved = localStorage.getItem("postData");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      form.reset({
+        province: parsed.province || "",
+        amphure: parsed.amphure || "",
+        district: parsed.district || "",
+        mapLink: parsed.mapLink || "",
+      });
+    }
+  }, [form]);
+
+  useEffect(() => {
+    // บันทึก localStorage ทุกครั้งที่ form เปลี่ยน
     const subscription = form.watch((value) => {
-      updateFormData(value);
+      const saved = localStorage.getItem("postData");
+      const currentData = saved ? JSON.parse(saved) : {};
+      localStorage.setItem(
+        "postData",
+        JSON.stringify({ ...currentData, ...value })
+      );
     });
     return () => subscription.unsubscribe();
-  }, [form, updateFormData]);
-
-  // กรองอำเภอตามจังหวัด
-  const filteredDistricts = districts.filter(
-    (d) =>
-      d.province_id ===
-      provinces.find((p) => p.name_th === form.watch("province"))?.id
-  );
-
-  // กรองตำบลตามอำเภอ
-  const filteredSubDistricts = subDistricts.filter(
-    (s) =>
-      s.amphure_id ===
-      filteredDistricts.find((d) => d.name_th === form.watch("district"))?.id
-  );
+  }, [form]);
 
   const onSubmit = (data) => {
-    updateFormData(data);
+    const saved = localStorage.getItem("postData");
+    const currentData = saved ? JSON.parse(saved) : {};
+    localStorage.setItem(
+      "postData",
+      JSON.stringify({ ...currentData, ...data })
+    );
     navigate("/seller/post-for-sale/detail");
   };
 
@@ -111,9 +155,11 @@ const PostLocation = () => {
           <CardContent className="py-8 px-6 space-y-6">
             <div className="text-center">
               <MapPin className="mx-auto w-10 h-10 text-primary" />
-              <h2 className="text-2xl font-semibold mt-2">ระบุตำแหน่ง</h2>
+              <h2 className="text-2xl font-semibold mt-2">
+                ตั้งที่ตั้งทรัพย์สิน
+              </h2>
               <p className="text-muted-foreground text-sm">
-                โปรดกรอกข้อมูลสถานที่ตั้งของทรัพย์สิน
+                โปรดเลือกจังหวัด อำเภอ และตำบลของทรัพย์สิน
               </p>
             </div>
 
@@ -129,20 +175,46 @@ const PostLocation = () => {
                     <FormItem>
                       <FormLabel>จังหวัด</FormLabel>
                       <Select
+                        onValueChange={field.onChange}
                         value={field.value}
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          form.setValue("district", "");
-                          form.setValue("subDistrict", "");
-                        }}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="เลือกจังหวัด" />
                         </SelectTrigger>
                         <SelectContent>
-                          {provinces.map((p) => (
-                            <SelectItem key={p.id} value={p.name_th}>
-                              {p.name_th}
+                          {provinces.map((prov) => (
+                            <SelectItem
+                              key={prov.id}
+                              value={prov.id.toString()}
+                            >
+                              {prov.name_th}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="amphure"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>อำเภอ/เขต</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        disabled={!provinceValue}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="เลือกอำเภอ/เขต" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {amphures.map((a) => (
+                            <SelectItem key={a.id} value={a.id.toString()}>
+                              {a.name_th}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -157,21 +229,18 @@ const PostLocation = () => {
                   name="district"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>อำเภอ</FormLabel>
+                      <FormLabel>ตำบล/แขวง</FormLabel>
                       <Select
+                        onValueChange={field.onChange}
                         value={field.value}
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          form.setValue("subDistrict", "");
-                        }}
-                        disabled={!form.watch("province")}
+                        disabled={!amphureValue}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="เลือกอำเภอ" />
+                          <SelectValue placeholder="เลือกตำบล/แขวง" />
                         </SelectTrigger>
                         <SelectContent>
-                          {filteredDistricts.map((d) => (
-                            <SelectItem key={d.id} value={d.name_th}>
+                          {districts.map((d) => (
+                            <SelectItem key={d.id} value={d.id.toString()}>
                               {d.name_th}
                             </SelectItem>
                           ))}
@@ -184,49 +253,22 @@ const PostLocation = () => {
 
                 <FormField
                   control={form.control}
-                  name="subDistrict"
+                  name="mapLink"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>ตำบล</FormLabel>
-                      <Select
-                        value={field.value}
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                        }}
-                        disabled={!form.watch("district")}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="เลือกตำบล" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {filteredSubDistricts.map((s) => (
-                            <SelectItem key={s.id} value={s.name_th}>
-                              {s.name_th}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="googleMapLink"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>ลิงก์ Google Maps</FormLabel>
-                      <Input
+                      <FormLabel>ลิงค์ Google Map (ถ้ามี)</FormLabel>
+                      <input
+                        type="url"
+                        placeholder="https://maps.google.com/..."
                         {...field}
-                        placeholder="วางลิงก์ Google Maps ที่นี่"
+                        className="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <div className="flex justify-between">
+                <div className="flex justify-between pt-4">
                   <Button
                     type="button"
                     variant="outline"

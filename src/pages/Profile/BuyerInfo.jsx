@@ -86,6 +86,8 @@ const BuyerInfo = ({ user, setUser }) => {
                 </p>
                 <p className="text-sm text-gray-600">{user?.Email}</p>
               </div>
+
+
             </div>
 
             {/* ปุ่มแก้ไข */}
@@ -95,7 +97,7 @@ const BuyerInfo = ({ user, setUser }) => {
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  setshowModalimage(true);
+                  setshowModalimage(true)
                 }}
               >
                 แก้ไขรูป
