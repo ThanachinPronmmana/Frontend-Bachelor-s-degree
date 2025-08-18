@@ -1,5 +1,5 @@
-import React from "react"; // 👈 ลบ useEffect, useForm ที่ไม่ใช้ออก
-import { useFormContext } from "react-hook-form"; // 👈 **ใช้ useFormContext**
+import React from "react";
+import { useFormContext } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,7 +16,6 @@ import PostLayout from "@/layouts/PostLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Home } from "lucide-react";
 
-// 1. ปรับ Schema ให้ตรงกับ defaultValues ใน Context (Pascal_Case)
 const detailSchema = z.object({
   categoryId: z.string().min(1, "กรุณาเลือกประเภททรัพย์สิน"),
   Usable_Area: z.number().min(0).optional().or(z.literal(undefined)),
@@ -48,7 +47,6 @@ const categories = [
   { id: "cmegzgxsj000kw2bwebelhpmm", name: "Warehouse" },
 ];
 
-// 2. **สำคัญ:** แก้ไขค่าใน Array ให้ตรงกับ Enum ใน Prisma
 const landmarks = ["BTS_MRT", "School", "Hospital", "Mall_Market", "Park"];
 const amenitiesList = [
   "Swimming_Pool",
@@ -59,9 +57,7 @@ const amenitiesList = [
 
 const PostDetail = () => {
   const navigate = useNavigate();
-  const form = useFormContext(); // 👈 **เชื่อมกับฟอร์มกลาง**
-
-  // 3. ไม่ต้องใช้ useForm, useEffect สำหรับ localStorage อีกต่อไป!
+  const form = useFormContext();
 
   const toggleArrayValue = (fieldName, value) => {
     const currentValues = form.getValues(fieldName) || [];
@@ -325,8 +321,7 @@ const PostDetail = () => {
                       value={field.value ?? ""}
                       onChange={(e) => {
                         const stringValue = e.target.value;
-                        // แปลงค่า string ที่ได้รับให้เป็นตัวเลขก่อนส่งให้ RHF
-                        // ถ้าผู้ใช้เลือก placeholder (ค่า=""), ให้บันทึกเป็น undefined
+
                         field.onChange(
                           stringValue === ""
                             ? undefined
