@@ -128,33 +128,6 @@ const BuyerInfo = ({ user, setUser }) => {
                     if (!imageData?.url) return alert("ไม่พบ URL รูปภาพ");
 
                     try {
-                      const response = await updateprofile(user.id, { image: imageData.url });
-
-                      const mergedUser = {
-                        ...user,
-                        ...response.user,
-                        Buyer: {
-                          ...user.Buyer,
-                          ...response.user.Buyer,
-                        },
-                      };
-
-                      setUser(mergedUser);
-                      localStorage.setItem("user", JSON.stringify(mergedUser));
-                      alert("อัปโหลดและบันทึกรูปภาพสำเร็จ");
-                    } catch (err) {
-                      console.error("อัปเดตรูปภาพล้มเหลว:", err);
-                      alert("ไม่สามารถอัปเดตรูปได้");
-                    }
-                  }}
-
-                />
-              </div>
-            </div>
-          )}
-          {showModal && (
-
-                    try {
                       const response = await updateprofile(user.id, {
                         image: imageData.url,
                       });

@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
@@ -14,40 +14,43 @@ import PostLayout from "@/layouts/PostLayout";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { User } from "lucide-react";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 
-const schema = z.object({
-  sellerName: z.string().min(2, "กรุณากรอกชื่ออย่างน้อย 2 ตัวอักษร"),
-  phone: z
-    .string()
-    .min(10, "เบอร์โทรต้องมีอย่างน้อย 10 หลัก")
-    .max(15, "เบอร์โทรต้องไม่เกิน 15 หลัก"),
-});
+// const schema = z.object({
+//   sellerName: z.string().min(2, "กรุณากรอกชื่ออย่างน้อย 2 ตัวอักษร"),
+//   phone: z
+//     .string()
+//     .min(10, "เบอร์โทรต้องมีอย่างน้อย 10 หลัก")
+//     .max(15, "เบอร์โทรต้องไม่เกิน 15 หลัก"),
+// });
 
 const PostInform = () => {
   const navigate = useNavigate();
+  const form = useFormContext()
+
 
   // โหลดค่าจาก localStorage ถ้ามี
-  const savedData = JSON.parse(localStorage.getItem("postInform") || "{}");
+  // const savedData = JSON.parse(localStorage.getItem("postInform") || "{}");
 
-  const form = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      sellerName: savedData.sellerName || "",
-      phone: savedData.phone || "",
-    },
-  });
+  // const form = useForm({
+  //   resolver: zodResolver(schema),
+  //   defaultValues: {
+  //     sellerName: savedData.sellerName || "",
+  //     phone: savedData.phone || "",
+  //   },
+  // });
 
-  // อัปเดต localStorage ทุกครั้งที่ฟอร์มเปลี่ยน
-  useEffect(() => {
-    const subscription = form.watch((values) => {
-      localStorage.setItem("postInform", JSON.stringify(values));
-    });
-    return () => subscription.unsubscribe();
-  }, [form]);
+  // // อัปเดต localStorage ทุกครั้งที่ฟอร์มเปลี่ยน
+  // useEffect(() => {
+  //   const subscription = form.watch((values) => {
+  //     localStorage.setItem("postInform", JSON.stringify(values));
+  //   });
+  //   return () => subscription.unsubscribe();
+  // }, [form]);
 
-  const onSubmit = (values) => {
-    localStorage.setItem("postInform", JSON.stringify(values));
+  const onSubmit = (data) => {
+    // localStorage.setItem("postInform", JSON.stringify(values));
+    console.log(data)
     navigate("/seller/post-for-sale/upload");
   };
 
@@ -64,14 +67,14 @@ const PostInform = () => {
               </p>
             </div>
 
-            <Form {...form}>
+           
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-4"
               >
                 <FormField
                   control={form.control}
-                  name="sellerName"
+                  name="Name"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>ชื่อผู้ขาย</FormLabel>
@@ -82,7 +85,7 @@ const PostInform = () => {
                 />
                 <FormField
                   control={form.control}
-                  name="phone"
+                  name="Phone"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>เบอร์โทรศัพท์</FormLabel>
@@ -102,7 +105,6 @@ const PostInform = () => {
                   <Button type="submit">ถัดไป</Button>
                 </div>
               </form>
-            </Form>
           </CardContent>
         </Card>
       </div>
