@@ -2,11 +2,9 @@ import React from "react";
 import { useFormContext } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
   FormField,
   FormItem,
   FormLabel,
@@ -14,19 +12,43 @@ import {
 } from "@/components/ui/form";
 import PostLayout from "@/layouts/PostLayout";
 import { Card, CardContent } from "@/components/ui/card";
-import { Home } from "lucide-react";
+import { Home, Info } from "lucide-react";
+import { validateStep } from "@/lib/zodRHF";
+
+// ===== Schema (ใช้ preprocess ป้องกัน NaN และรองรับค่าว่าง) =====
+const currentYear = new Date().getFullYear();
+
+const numOpt = z.preprocess(
+  (v) => (v === "" || v === null || v === undefined ? undefined : Number(v)),
+  z.number().min(0).optional()
+);
+
+const numReq = z.preprocess(
+  (v) => (v === "" || v === null || v === undefined ? undefined : Number(v)),
+  z.number().min(0)
+);
+
+const yearOpt = z.preprocess(
+  (v) => (v === "" || v === null || v === undefined ? undefined : Number(v)),
+  z
+    .number()
+    .int()
+    .min(1800, "ปีที่สร้างไม่สมเหตุสมผล")
+    .max(currentYear + 1, "ปีที่สร้างเกินจริง")
+    .optional()
+);
 
 const detailSchema = z.object({
   categoryId: z.string().min(1, "กรุณาเลือกประเภททรัพย์สิน"),
-  Usable_Area: z.number().min(0).optional().or(z.literal(undefined)),
-  Land_Size: z.number().min(0).optional().or(z.literal(undefined)),
-  Total_Rooms: z.number().min(0).optional().or(z.literal(undefined)),
-  Year_Built: z.string().optional(),
-  Bedrooms: z.number().min(0),
-  Bathroom: z.number().min(0),
+  Usable_Area: numOpt, // ตร.ม.
+  Land_Size: numOpt, // ตร.วา
+  Total_Rooms: numOpt,
+  Year_Built: yearOpt, // ✅ แก้เรื่องปีที่สร้าง
+  Bedrooms: numReq,
+  Bathroom: numReq,
   Nearby_Landmarks: z.array(z.string()).optional(),
   Additional_Amenities: z.array(z.string()).optional(),
-  Parking_Space: z.number().optional().or(z.literal(undefined)),
+  Parking_Space: numOpt,
   notes: z.string().optional(),
 });
 
@@ -71,33 +93,54 @@ const PostDetail = () => {
   };
 
   const onSubmit = (data) => {
-    console.log("Data from Detail Step:", data);
+    const ok = validateStep(form, detailSchema, [
+      "categoryId",
+      "Usable_Area",
+      "Land_Size",
+      "Total_Rooms",
+      "Year_Built",
+      "Bedrooms",
+      "Bathroom",
+      "Nearby_Landmarks",
+      "Additional_Amenities",
+      "Parking_Space",
+      "notes",
+    ]);
+    if (!ok) return;
     navigate("/seller/post-for-sale/price");
   };
 
-  const formatDisplayName = (name) => {
-    return name.replace(/_/g, " ").replace("MRT", "/ MRT");
-  };
+  const formatDisplayName = (name) =>
+    name.replace(/_/g, " ").replace("MRT", "/ MRT");
 
   return (
     <PostLayout currentStep={2}>
       <div className="flex justify-center">
-        <Card className="w-full max-w-3xl shadow-xl">
-          <CardContent className="py-8 px-6 space-y-6">
-            <div className="text-center">
-              <Home className="mx-auto w-10 h-10 text-primary" />
-              <h2 className="text-2xl font-semibold mt-2">
-                รายละเอียดทรัพย์สิน
-              </h2>
+        <Card className="w-full max-w-3xl shadow-xl border-0 ring-1 ring-black/5">
+          <CardContent className="py-8 px-6 md:px-8 space-y-8">
+            {/* Header */}
+            <div className="text-center space-y-2">
+              <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                <Home className="w-6 h-6 text-primary" />
+              </div>
+              <h2 className="text-2xl font-semibold">รายละเอียดทรัพย์สิน</h2>
               <p className="text-muted-foreground text-sm">
                 โปรดกรอกข้อมูลทรัพย์สินของคุณ
               </p>
             </div>
 
-            {/* 4. ไม่ต้องมี <Form {...form}> เพราะ Provider จัดการให้แล้ว */}
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              {/* --- 5. ปรับ name ของ FormField ทั้งหมดเป็น Pascal_Case --- */}
+            {/* Helper banner */}
+            <div className="rounded-lg border bg-muted/30 px-4 py-3 text-sm text-muted-foreground flex items-start gap-3">
+              <Info className="mt-0.5 h-4 w-4 shrink-0" />
+              <p>
+                เลือก <span className="font-medium">ประเภททรัพย์สิน</span>{" "}
+                แล้วกรอกขนาด/จำนวนห้องให้ครบ
+                ระบบจะตรวจสอบความถูกต้องให้อัตโนมัติ
+              </p>
+            </div>
 
+            {/* Form */}
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               {/* Property Type */}
               <FormField
                 control={form.control}
@@ -119,6 +162,8 @@ const PostDetail = () => {
                               shouldDirty: true,
                             })
                           }
+                          aria-pressed={field.value === category.id}
+                          className="h-10"
                         >
                           {category.name}
                         </Button>
@@ -137,16 +182,17 @@ const PostDetail = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>พื้นที่ใช้สอย (ตร.ม.)</FormLabel>
-                      <Input
-                        type="number"
-                        placeholder="เช่น 120"
-                        {...field}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : undefined
-                          )
-                        }
-                      />
+                      <div className="relative">
+                        <Input
+                          type="number"
+                          inputMode="decimal"
+                          placeholder="เช่น 120"
+                          {...field}
+                          value={field.value ?? ""}
+                          onChange={(e) => field.onChange(e.target.value)}
+                          className="h-11"
+                        />
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -157,16 +203,17 @@ const PostDetail = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>พื้นที่ดิน (ตร.วา)</FormLabel>
-                      <Input
-                        type="number"
-                        placeholder="เช่น 50"
-                        {...field}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : undefined
-                          )
-                        }
-                      />
+                      <div className="relative">
+                        <Input
+                          type="number"
+                          inputMode="decimal"
+                          placeholder="เช่น 50"
+                          {...field}
+                          value={field.value ?? ""}
+                          onChange={(e) => field.onChange(e.target.value)}
+                          className="h-11"
+                        />
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -177,16 +224,20 @@ const PostDetail = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>ปีที่สร้าง</FormLabel>
-                      <Input
-                        type="number"
-                        placeholder="เช่น 2015"
-                        {...field}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : undefined
-                          )
-                        }
-                      />
+                      <div className="relative">
+                        <Input
+                          type="number"
+                          inputMode="numeric"
+                          placeholder={`เช่น ${currentYear}`}
+                          {...field}
+                          value={field.value ?? ""}
+                          onChange={(e) => field.onChange(e.target.value)}
+                          className="h-11"
+                        />
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        รองรับช่วงปี 1800 – {currentYear + 1}
+                      </p>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -203,12 +254,11 @@ const PostDetail = () => {
                       <FormLabel>ห้องนอน</FormLabel>
                       <Input
                         type="number"
+                        inputMode="numeric"
                         {...field}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : undefined
-                          )
-                        }
+                        value={field.value ?? ""}
+                        onChange={(e) => field.onChange(e.target.value)}
+                        className="h-11"
                       />
                       <FormMessage />
                     </FormItem>
@@ -222,8 +272,11 @@ const PostDetail = () => {
                       <FormLabel>ห้องน้ำ</FormLabel>
                       <Input
                         type="number"
+                        inputMode="numeric"
                         {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        value={field.value ?? ""}
+                        onChange={(e) => field.onChange(e.target.value)}
+                        className="h-11"
                       />
                       <FormMessage />
                     </FormItem>
@@ -237,12 +290,11 @@ const PostDetail = () => {
                       <FormLabel>จำนวนห้องทั้งหมด</FormLabel>
                       <Input
                         type="number"
+                        inputMode="numeric"
                         {...field}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : undefined
-                          )
-                        }
+                        value={field.value ?? ""}
+                        onChange={(e) => field.onChange(e.target.value)}
+                        className="h-11"
                       />
                       <FormMessage />
                     </FormItem>
@@ -258,21 +310,23 @@ const PostDetail = () => {
                   <FormItem>
                     <FormLabel>สถานที่ใกล้เคียง</FormLabel>
                     <div className="flex flex-wrap gap-2">
-                      {landmarks.map((item) => (
-                        <Button
-                          type="button" // 👈 เพิ่มบรรทัดนี้
-                          variant={
-                            (field.value || []).includes(item)
-                              ? "default"
-                              : "outline"
-                          }
-                          onClick={() =>
-                            toggleArrayValue("Nearby_Landmarks", item)
-                          }
-                        >
-                          {formatDisplayName(item)}
-                        </Button>
-                      ))}
+                      {landmarks.map((item) => {
+                        const selected = (field.value || []).includes(item);
+                        return (
+                          <Button
+                            type="button"
+                            key={item}
+                            variant={selected ? "default" : "outline"}
+                            onClick={() =>
+                              toggleArrayValue("Nearby_Landmarks", item)
+                            }
+                            aria-pressed={selected}
+                            className="h-9"
+                          >
+                            {formatDisplayName(item)}
+                          </Button>
+                        );
+                      })}
                     </div>
                     <FormMessage />
                   </FormItem>
@@ -287,22 +341,23 @@ const PostDetail = () => {
                   <FormItem>
                     <FormLabel>สิ่งอำนวยความสะดวก</FormLabel>
                     <div className="flex flex-wrap gap-2">
-                      {amenitiesList.map((item) => (
-                        <Button
-                          type="button" // 👈 เพิ่มบรรทัดนี้
-                          key={item}
-                          variant={
-                            (field.value || []).includes(item)
-                              ? "default"
-                              : "outline"
-                          }
-                          onClick={() =>
-                            toggleArrayValue("Additional_Amenities", item)
-                          }
-                        >
-                          {formatDisplayName(item)}
-                        </Button>
-                      ))}
+                      {amenitiesList.map((item) => {
+                        const selected = (field.value || []).includes(item);
+                        return (
+                          <Button
+                            type="button"
+                            key={item}
+                            variant={selected ? "default" : "outline"}
+                            onClick={() =>
+                              toggleArrayValue("Additional_Amenities", item)
+                            }
+                            aria-pressed={selected}
+                            className="h-9"
+                          >
+                            {formatDisplayName(item)}
+                          </Button>
+                        );
+                      })}
                     </div>
                     <FormMessage />
                   </FormItem>
@@ -317,17 +372,9 @@ const PostDetail = () => {
                   <FormItem>
                     <FormLabel>ที่จอดรถ</FormLabel>
                     <select
-                      className="w-full p-2 border rounded"
+                      className="w-full h-11 px-3 border rounded bg-background"
                       value={field.value ?? ""}
-                      onChange={(e) => {
-                        const stringValue = e.target.value;
-
-                        field.onChange(
-                          stringValue === ""
-                            ? undefined
-                            : parseInt(stringValue, 10)
-                        );
-                      }}
+                      onChange={(e) => field.onChange(e.target.value)}
                     >
                       <option value="">เลือกจำนวนที่จอด</option>
                       <option value="0">ไม่มีที่จอด</option>
@@ -341,7 +388,7 @@ const PostDetail = () => {
               />
 
               {/* Navigation */}
-              <div className="flex justify-between pt-4">
+              <div className="flex items-center justify-between pt-2">
                 <Button
                   type="button"
                   variant="outline"
@@ -349,7 +396,9 @@ const PostDetail = () => {
                 >
                   ย้อนกลับ
                 </Button>
-                <Button type="submit">ถัดไป</Button>
+                <Button type="submit" className="min-w-[120px]">
+                  ถัดไป
+                </Button>
               </div>
             </form>
           </CardContent>
