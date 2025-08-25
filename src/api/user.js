@@ -1,4 +1,5 @@
 import axios from "axios";
+import { apiClient } from "./authconfig";
 
 const API_URL = "http://localhost:8200";
 export const getbuyer = async (id) => {
@@ -11,18 +12,20 @@ export const getSeller = async (id) => {
   return res.data;
 };
 
-export const updateSeller = async (id, data) => {
-  const res = await axios.patch(`${API_URL}/api/profileseller/${id}`, data);
+export const updateSeller = async (data) => {
+  const res = await apiClient.patch("/profileseller", data)
   return res.data;
 };
 
-export const updateprofile = async (id, data) => {
-  const res = await axios.patch(`${API_URL}/api/profile/${id}`, data);
+export const updateprofile = async (data) => {
+  const res = await apiClient.patch("/profile",data)
   return res.data;
 };
 
-export const updateImage = async (id, data) => {
-  const res = await axios.post(`${API_URL}/api/image/${id}`, data);
+export const updateImage = async (data) => {
+  const res = await apiClient.post("/image", data,{
+    headers:{"Content-Type":"multipart/form-data"}
+  })
   return res.data;
 };
 

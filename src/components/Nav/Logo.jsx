@@ -1,22 +1,15 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import logo from "@/assets/Yuuyen.jpg";
+import { useAuth } from "@/context/AuthContext";
 
 const Logo = () => {
   const navigate = useNavigate();
-  const [userType, setUserType] = useState(null);
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      setUserType(user.userType);
-    }
-  }, []);
+  const { authUser } = useAuth(); // เอา user จาก context
 
   const handleClick = () => {
-    if (userType === "Buyer") {
+    if (authUser?.userType === "Buyer") {
       navigate("/buyer");
-    } else if (userType === "Seller") {
+    } else if (authUser?.userType === "Seller") {
       navigate("/seller");
     } else {
       navigate("/");

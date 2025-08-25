@@ -5,35 +5,22 @@ import BuyerFavorite from "./BuyerFavorite";
 import BuyerNoti from "./BuyerNoti";
 import BuyerDoc from "./BuyerDoc";
 import { getbuyer } from "@/api/user";
+import { useAuth } from "@/context/AuthContext";
 
 const ProfileBuyer = () => {
   const [selectedTab, setSelectedTab] = useState("info");
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { authUser } = useAuth(); 
 
-  // ฟังก์ชันโหลดข้อมูล user
-  const fetchUser = async () => {
-    try {
-      const id = localStorage.getItem("id");
+ 
+  
 
-      const data = await getbuyer(id);
-      setUser(data);
-      setLoading(false);
-    } catch (err) {
-      console.error(err);
-      setLoading(false);
-    }
-  };
 
-  // เรียกใช้ fetchUser ตอน component mount
-  useEffect(() => {
-    fetchUser();
-  }, []);
-
-  // แสดงสถานะโหลดข้อมูล
-  if (loading) {
-    return <div className="text-center mt-10">กำลังโหลดข้อมูลผู้ใช้...</div>;
-  }
+  const tabs = [
+    { label: "My Info", key: "info", icon: <FaUser className="mr-2" /> },
+    { label: "Saved", key: "favorite", icon: <FaHeart className="mr-2" /> },
+    { label: "Notification", key: "noti", icon: <FaBell className="mr-2" /> },
+    { label: "Document", key: "doc", icon: <FaFileAlt className="mr-2" /> },
+  ];
 
   return (
     <div className="min-h-screen bg-[#ecf0f1] px-8 py-10">
@@ -43,42 +30,21 @@ const ProfileBuyer = () => {
           {/* User Info */}
           <div className="mb-10 flex items-center space-x-4">
             <img
-              src={user.image}
+              src={authUser?.image || "https://ui-avatars.com/api/?name=Buyer"}
               alt="avatar"
               className="w-12 h-12 rounded-full"
             />
             <div>
               <p className="text-sm text-gray-300">Welcome</p>
               <p className="font-bold text-white">
-                {user?.First_name} {user?.Last_name}
+                {authUser?.First_name} {authUser?.Last_name}
               </p>
             </div>
           </div>
 
           {/* Tab Menu */}
           <ul className="space-y-2 text-lg">
-            {[
-              {
-                label: "My Info",
-                key: "info",
-                icon: <FaUser className="mr-2" />,
-              },
-              {
-                label: "Saved",
-                key: "favorite",
-                icon: <FaHeart className="mr-2" />,
-              },
-              {
-                label: "Notification",
-                key: "noti",
-                icon: <FaBell className="mr-2" />,
-              },
-              {
-                label: "Document",
-                key: "doc",
-                icon: <FaFileAlt className="mr-2" />,
-              },
-            ].map((tab) => (
+            {tabs.map((tab) => (
               <li key={tab.key} className="relative">
                 <button
                   onClick={() => setSelectedTab(tab.key)}
@@ -109,60 +75,12 @@ const ProfileBuyer = () => {
 
           {/* Page Title */}
           <h1 className="text-3xl font-bold flex items-center mb-8">
-            {
-              [
-                {
-                  label: "My Info",
-                  key: "info",
-                  icon: <FaUser className="mr-2" />,
-                },
-                {
-                  label: "Saved",
-                  key: "favorite",
-                  icon: <FaHeart className="mr-2" />,
-                },
-                {
-                  label: "Notification",
-                  key: "noti",
-                  icon: <FaBell className="mr-2" />,
-                },
-                {
-                  label: "Document",
-                  key: "doc",
-                  icon: <FaFileAlt className="mr-2" />,
-                },
-              ].find((tab) => tab.key === selectedTab)?.icon
-            }
-            {
-              [
-                {
-                  label: "My Info",
-                  key: "info",
-                  icon: <FaUser className="mr-2" />,
-                },
-                {
-                  label: "Saved",
-                  key: "favorite",
-                  icon: <FaHeart className="mr-2" />,
-                },
-                {
-                  label: "Notification",
-                  key: "noti",
-                  icon: <FaBell className="mr-2" />,
-                },
-                {
-                  label: "Document",
-                  key: "doc",
-                  icon: <FaFileAlt className="mr-2" />,
-                },
-              ].find((tab) => tab.key === selectedTab)?.label
-            }
+            {tabs.find((tab) => tab.key === selectedTab)?.icon}
+            {tabs.find((tab) => tab.key === selectedTab)?.label}
           </h1>
 
           {/* Content */}
-          {selectedTab === "info" && (
-            <BuyerInfo user={user} setUser={setUser} />
-          )}
+          {selectedTab === "info" && <BuyerInfo user={authUser} />}
           {selectedTab === "favorite" && <BuyerFavorite />}
           {selectedTab === "noti" && <BuyerNoti />}
           {selectedTab === "doc" && <BuyerDoc />}

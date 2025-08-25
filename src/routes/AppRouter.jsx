@@ -65,10 +65,12 @@ import PayDeposit from "@/pages/admin/Payment/PayDeposit";
 import PayBank from "@/pages/admin/Payment/PayBank";
 import DescriptionReport from "@/pages/admin/DescriptionReport";
 import { PostFormProvider } from "@/pages/Post_for_sale/PostFormProvider";
+import { AuthProvider } from "@/context/AuthContext";
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
+    <AuthProvider>
       <Routes>
         {/* 🌐 Public Routes */}
         <Route element={<Layout />}>
@@ -153,6 +155,7 @@ const AppRouter = () => {
           <Route path="description-report" element={<DescriptionReport />} />
         </Route>
       </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 };

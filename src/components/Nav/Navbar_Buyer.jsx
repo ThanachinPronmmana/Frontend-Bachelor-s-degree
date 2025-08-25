@@ -1,5 +1,4 @@
 import Logo from "./Logo";
-import Support from "./Support";
 import { useNavigate } from "react-router";
 import Noti from "./Noti";
 import {
@@ -10,28 +9,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AlignJustify } from "lucide-react";
 import Profile_Buyer from "./Profile_Buyer";
 import Support_Buyer from "./Support_Buyer";
-import { useState, useEffect } from "react";
+import { AlignJustify, UserPen, HeartPlus } from "lucide-react";  
+import { useAuth } from "@/context/AuthContext";
+import { apiClient } from "@/api/authconfig";
 const Navbar_Buyer = () => {
-  const [user, setUser] = useState(null);
+  const { authUser, setAuthUser } = useAuth()
   const navigate = useNavigate();
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (err) {
-        console.error("Error parsing user data", err);
-      }
+
+  const handleLogout = async () => {
+    try {
+      await apiClient.post("logout")
+      setAuthUser(null)
+      navigate("/login")
+    } catch (err) {
+      console.err("Logout failed:", err)
     }
-  }, []);
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    localStorage.removeItem("id");
-    navigate("/");
   };
 
   return (
@@ -45,17 +39,29 @@ const Navbar_Buyer = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>
-                {user ? `${user.First_name} ${user.Last_name}` : "Guest"}
+                {authUser ? `${authUser.First_name} ${authUser.Last_name}` : "Guest"}
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer">
-                <Profile_Buyer />
+              <DropdownMenuItem className="cursor-pointer" onClick={() => {
+                navigate("/buyer/profile")
+              }}>
+                <div className="flex space-x-2 justify-center items-center">
+                  <UserPen />
+                  <p className="text-gray-500 hover:text-black opacity-100">Profile</p>
+                </div>
               </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer">
                 <Noti />
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">
-                <Support />
+              <DropdownMenuItem className="cursor-pointer" onClick={() => {
+                navigate("/buyer/support")
+              }}>
+                <div
+                  className="flex justify-center items-center space-x-2"
+                >
+                  <HeartPlus />
+                  <p className="text-gray-500 hover:text-black opacity-100">Support</p>
+                </div>
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="cursor-pointer"

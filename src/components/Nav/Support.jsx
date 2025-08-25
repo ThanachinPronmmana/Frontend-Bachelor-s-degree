@@ -2,19 +2,16 @@ import { Breadcrumb, BreadcrumbLink } from "../ui/breadcrumb";
 import { Link, useNavigate } from "react-router";
 import { HeartPlus } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+
 const Support = () => {
   const navigate = useNavigate();
-  const [userType, setUserType] = useState(null);
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      setUserType(user.userType);
-    }
-  });
+  const {authUser} = useAuth()
+  
   const handleSupport = () => {
-    if (userType === "Buyer") {
+    if (authUser?.userType === "Buyer") {
       navigate("/buyer/support");
-    } else if (userType === "Seller") {
+    } else if (authUser?.userType === "Seller") {
       navigate("/seller/support");
     } else {
       navigate("/support");

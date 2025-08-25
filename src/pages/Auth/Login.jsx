@@ -1,45 +1,35 @@
-import { Link, useNavigate } from "react-router-dom"; // ✅ ใช้ react-router-dom แทน "react-router"
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { login } from "@/api/auth";
-import { useState } from "react";
-
+import { useAuth } from "@/context/AuthContext";
+import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
 const Login = () => {
   const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { authUser, revalidateUser } = useAuth();
   const [serverError, setServerError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { register, handleSubmit, formState: { errors } } = useForm();
+
+
+  useEffect(() => {
+    if (authUser) {
+      if (authUser.userType === "Seller") navigate("/seller");
+      else if (authUser.userType === "Buyer") navigate("/buyer");
+    }
+  }, [authUser, navigate]);
 
   const onSubmit = async (formData) => {
+    setServerError("");
+    setIsSubmitting(true);
     try {
-      const response = await login(formData); // ✅ login() ต้อง return res.data แล้ว
+      await login(formData)
+      await revalidateUser();
 
-      const { token, user, message } = response;
-      // console.log(response)
-      if (!token || !user) {
-        throw new Error("Login response missing data");
-      }
-
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("id", user.id)
-      localStorage.setItem("usertype",user.userType)
-     
-      // console.log("userType", user.userType)
-      if (user.userType === "Buyer") {
-        navigate("/buyer");
-      } else if (user.userType === "Seller") {
-        navigate("/seller");
-      } else {
-        alert(message || "User type not recognized");
-      }
     } catch (err) {
-      console.error("Login error:", err);
-      // setServerError(err.message || "Login failed");
-      console.error("Login failed:", err.response?.data); // 👈
-      setServerError(err.response?.data?.message || "Unknown error");
+      setServerError(err.response?.data?.message || "Login failed, please try again.");
+    }finally{
+      setIsSubmitting(false);
     }
   };
 
@@ -72,10 +62,7 @@ const Login = () => {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm mb-1 text-gray-600"
-              >
+              <label htmlFor="email" className="block text-sm mb-1 text-gray-600">
                 Email
               </label>
               <input
@@ -91,10 +78,7 @@ const Login = () => {
             </div>
 
             <div className="mb-4">
-              <label
-                htmlFor="password"
-                className="block text-sm mb-1 text-gray-600"
-              >
+              <label htmlFor="password" className="block text-sm mb-1 text-gray-600">
                 Password
               </label>
               <input
@@ -105,17 +89,20 @@ const Login = () => {
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2C3E50]"
               />
               {errors.Password && (
-                <p className="text-red-500 text-sm">
-                  {errors.Password.message}
-                </p>
+                <p className="text-red-500 text-sm">{errors.Password.message}</p>
               )}
             </div>
 
             <button
               type="submit"
-              className="w-full bg-[#2C3E50] text-white py-2 rounded-md hover:bg-[#1a252f] transition cursor-pointer"
+              disabled={isSubmitting}
+              className="w-full bg-[#2C3E50] text-white py-2 rounded-md hover:bg-[#1a252f] transition cursor-pointer flex items-center justify-center h-[40px] disabled:opacity-50"
             >
-              Sign In
+              {isSubmitting ? (
+                <Loader2 className="w-6 h-6 animate-spin" />
+              ) : (
+                "Sign In"
+              )}
             </button>
 
             <div className="text-right mt-2">

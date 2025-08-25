@@ -2,13 +2,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FormInput, Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
-import { CircleX } from "lucide-react";
+import { CircleX, Loader2 } from "lucide-react";
 import Frominput from "@/components/form/Frominput";
 import { updateprofile } from "@/api/user";
 import { useForm } from "react-hook-form";
 import Formuploadimage from "@/components/form/Formuploadimage";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { buyerSchema } from "@/components/schemas/buyerinfo";
+import { useAuth } from "@/context/AuthContext";
 const formatDateThai = (dateString) => {
   if (!dateString) return "-";
   const date = new Date(dateString);
@@ -20,10 +21,13 @@ const formatDateThai = (dateString) => {
   });
 };
 //*
-const BuyerInfo = ({ user, setUser }) => {
+const BuyerInfo = () => {
   // const [user, setUser] = useState(null);
   const [showModal, setshowModal] = useState(false);
   const [showmodalimage, setshowModalimage] = useState(false);
+  const { authUser: user, revalidateUser } = useAuth()
+  const [isSubmittingInfo, setIsSubmittingInfo] = useState(false);
+  
   const {
     register,
     handleSubmit,
@@ -37,31 +41,44 @@ const BuyerInfo = ({ user, setUser }) => {
     },
   });
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      console.log("Loaded user from localStorage:", parsedUser);
-      setUser(parsedUser);
+    if (user && user.Buyer) {
       reset({
-        DateofBirth: parsedUser?.Buyer?.DateofBirth?.split("T")[0] || "",
+        First_name: user.First_name || "",
+        Last_name: user.Last_name || "",
+        Phone: user.Phone || "",
+        Occupation: user.Buyer.Occupation || "",
+        Monthly_Income: user.Buyer.Monthly_Income || "",
+        Family_Size: user.Buyer.Family_Size || "",
+        Preferred_Province: user.Buyer.Preferred_Province || "",
+        Preferred_District: user.Buyer.Preferred_District || "",
+        Parking_Needs: user.Buyer.Parking_Needs || "",
+        Nearby_Facilities: user.Buyer.Nearby_Facilities || "",
+        Lifestyle_Preferences: user.Buyer.Lifestyle_Preferences || "",
+        Special_Requirements: user.Buyer.Special_Requirements || "",
+        DateofBirth: user?.Buyer?.DateofBirth?.split("T")[0] || "",
       });
     }
-  }, []);
+  }, [user, reset]);
   const onSubmit = async (data) => {
+    setIsSubmittingInfo(true);
     try {
       const filteredData = Object.fromEntries(
         Object.entries(data).filter(
           ([_, value]) => value !== undefined && value !== ""
         )
       );
-      const updateUser = await updateprofile(user.id, filteredData);
+
+      await updateprofile(filteredData);
+      await revalidateUser()
+
       alert("Update Success");
-      setUser(updateUser.user);
-      localStorage.setItem("user", JSON.stringify(updateUser.user));
+
       setshowModal(false);
     } catch (err) {
       console.error("Error update user:", err);
       alert("Server Error");
+    } finally {
+      setIsSubmittingInfo(false);
     }
   };
 
@@ -123,31 +140,20 @@ const BuyerInfo = ({ user, setUser }) => {
                   onClick={() => setshowModalimage(false)}
                 />
                 <Formuploadimage
-                  userId={user.id}
+
                   onUploadSuccess={async (imageData) => {
+                    
                     if (!imageData?.url) return alert("ไม่พบ URL รูปภาพ");
 
                     try {
-                      const response = await updateprofile(user.id, {
-                        image: imageData.url,
-                      });
+                      await updateprofile({ image: imageData.url })
+                      await revalidateUser()
 
-                      const mergedUser = {
-                        ...user,
-                        ...response.user,
-                        Buyer: {
-                          ...user.Buyer,
-                          ...response.user.Buyer,
-                        },
-                      };
-
-                      setUser(mergedUser);
-                      localStorage.setItem("user", JSON.stringify(mergedUser));
                       alert("อัปโหลดและบันทึกรูปภาพสำเร็จ");
                     } catch (err) {
                       console.error("อัปเดตรูปภาพล้มเหลว:", err);
                       alert("ไม่สามารถอัปเดตรูปได้");
-                    }
+                    } 
                   }}
                 />
               </div>
@@ -359,9 +365,14 @@ const BuyerInfo = ({ user, setUser }) => {
                   <div className="flex flex-col justify-center items-center mt-3">
                     <button
                       type="submit"
-                      className="bg-[#2C3E50] w-full text-white rounded-md h-[30px] hover:bg-[#1a252f]"
+                      disabled={isSubmittingInfo} 
+                      className="bg-[#2C3E50] w-full text-white rounded-md h-[40px] hover:bg-[#1a252f] flex justify-center items-center"
                     >
-                      Submit
+                      {isSubmittingInfo ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                      ) : (
+                        "Submit"
+                      )}
                     </button>
                   </div>
                 </form>
@@ -381,23 +392,23 @@ const BuyerInfo = ({ user, setUser }) => {
             </p>
             <p>
               <span className="font-semibold">อาชีพ:</span>{" "}
-              {user?.Buyer?.Occupation || "-"}
+              {user.Buyer?.Occupation || "-"}
             </p>
             <p>
               <span className="font-semibold">รายได้:</span>{" "}
-              {user?.Buyer?.Monthly_Income || "-"}
+              {user.Buyer?.Monthly_Income || "-"}
             </p>
             <p>
               <span className="font-semibold">ขนาดครอบครัว:</span>{" "}
-              {user?.Buyer?.Family_Size || "-"}
+              {user.Buyer?.Family_Size || "-"}
             </p>
             <p>
               <span className="font-semibold">จังหวัดที่สนใจ:</span>{" "}
-              {user?.Buyer?.Preferred_Province || "-"}
+              {user.Buyer?.Preferred_Province || "-"}
             </p>
             <p>
               <span className="font-semibold">เขตที่สนใจ:</span>{" "}
-              {user?.Buyer?.Preferred_District || "-"}
+              {user.Buyer?.Preferred_District || "-"}
             </p>
           </div>
         </CardContent>

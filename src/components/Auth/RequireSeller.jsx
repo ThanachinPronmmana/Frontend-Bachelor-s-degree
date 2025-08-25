@@ -1,17 +1,20 @@
-import { Navigate, Outlet, replace } from "react-router"
+import { Navigate, Outlet } from "react-router";
+import { useAuth } from "@/context/AuthContext"; 
+import { CircleX, Loader2 } from "lucide-react";
 const RequireSeller = () => {
-    const id = localStorage.getItem("id")
-    const usertype = localStorage.getItem("usertype")
-    if (!id) {
-        return <Navigate to="/login" replace />
-    }
-    if (usertype === "Buyer") {
-        return <Navigate to="/buyer" replace />
-    }
-    if (usertype !== "Seller") {
-        return <Navigate to="/login" replace />
-    }
-    return <Outlet />
+    const { authUser, loading } = useAuth();
 
-}
-export default RequireSeller
+    if (loading) return (
+      <div className="flex justify-center items-center min-h-screen bg-[#ecf0f1]">
+        <Loader2 className="h-16 w-16 animate-spin text-gray-600" />
+      </div>
+    )
+
+    if (!authUser) return <Navigate to="/login" replace />;
+
+    if (authUser.userType !== "Seller") return <Navigate to="/" replace />;
+
+    return <Outlet />;
+};
+
+export default RequireSeller;

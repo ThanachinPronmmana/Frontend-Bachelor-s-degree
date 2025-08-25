@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Pencil, CircleX } from "lucide-react";
+import { Pencil, CircleX, FormInput, Loader2 } from "lucide-react";
 import Frominput from "@/components/form/Frominput";
 import Formuploadimage from "@/components/form/Formuploadimage";
 import { useForm } from "react-hook-form";
@@ -8,11 +8,13 @@ import { useEffect, useState } from "react";
 import { updateSeller } from "@/api/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { sellerSchema } from "@/components/schemas/sellerinfo";
+import { useAuth } from "@/context/AuthContext";
 
-const SellerInfo = ({ user, setUser }) => {
+const SellerInfo = () => {
   const [showModal, setShowModal] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
-
+  const { authUser: user, revalidateUser } = useAuth()
+  const [isSubmittingInfo, setIsSubmittingInfo] = useState(false)
   const {
     register,
     handleSubmit,
@@ -36,6 +38,7 @@ const SellerInfo = ({ user, setUser }) => {
   }, [user, reset]);
 
   const onSubmit = async (data) => {
+    setIsSubmittingInfo(true)
     try {
       const filteredData = Object.fromEntries(
         Object.entries(data).filter(
@@ -43,28 +46,23 @@ const SellerInfo = ({ user, setUser }) => {
         )
       );
 
-      const updateUser = await updateSeller(user.id, filteredData);
+      await updateSeller(filteredData);
+      await revalidateUser();
+      console.log("Updated authUser:", user);
 
-      const mergedUser = {
-        ...user,
-        ...updateUser.user,
-        Seller: {
-          ...user.Seller,
-          ...updateUser.user.Seller,
-        },
-      };
 
-      setUser(mergedUser);
-      localStorage.setItem("user", JSON.stringify(mergedUser));
-      alert("✅ บันทึกข้อมูลสำเร็จ");
+
+      alert("Update Success");
       setShowModal(false);
     } catch (err) {
       console.error("Error updating seller:", err);
-      alert("❌ เกิดข้อผิดพลาด");
+      alert("Server Error");
+    } finally {
+      setIsSubmittingInfo(false)
     }
   };
 
-  if (!user) return <p>กำลังโหลดข้อมูล...</p>;
+
 
   return (
     <div className="space-y-6">
@@ -81,9 +79,9 @@ const SellerInfo = ({ user, setUser }) => {
               />
               <div>
                 <p className="text-xl font-bold">
-                  {user.First_name} {user.Last_name}
+                  {user?.First_name} {user?.Last_name}
                 </p>
-                <p className="text-sm text-gray-600">{user.Email}</p>
+                <p className="text-sm text-gray-600">{user?.Email}</p>
               </div>
             </div>
 
@@ -118,26 +116,14 @@ const SellerInfo = ({ user, setUser }) => {
                   อัปโหลดรูปใหม่
                 </h2>
                 <Formuploadimage
-                  userId={user.id}
+
                   onUploadSuccess={async (imageData) => {
                     if (!imageData?.url) return alert("ไม่พบ URL รูปภาพ");
 
                     try {
-                      const updated = await updateSeller(user.id, {
-                        image: imageData.url,
-                      });
+                      await updateSeller({ image: imageData.url })
+                      await revalidateUser();
 
-                      const mergedUser = {
-                        ...user,
-                        ...updated.user,
-                        Seller: {
-                          ...user.Seller,
-                          ...updated.user.Seller,
-                        },
-                      };
-
-                      setUser(mergedUser);
-                      localStorage.setItem("user", JSON.stringify(mergedUser));
                       alert("📸 รูปภาพอัปโหลดและบันทึกแล้ว");
                       setShowImageModal(false);
                     } catch (err) {
@@ -212,9 +198,14 @@ const SellerInfo = ({ user, setUser }) => {
                   <div className="col-span-2">
                     <button
                       type="submit"
-                      className="bg-[#2C3E50] w-full text-white rounded-md h-[40px] hover:bg-[#1a252f]"
+                      disavled={isSubmittingInfo}
+                      className="bg-[#2C3E50] w-full text-white rounded-md h-[40px] hover:bg-[#1a252f] flex justify-center items-center"
                     >
-                      บันทึก
+                      {isSubmittingInfo ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                      ) : (
+                        "Submit"
+                      )}
                     </button>
                   </div>
                 </form>
@@ -243,19 +234,18 @@ const SellerInfo = ({ user, setUser }) => {
             <p>
               <span className="font-semibold">สถานะบัญชี:</span>{" "}
               <span
-                className={`inline-block px-2 py-1 text-xs font-semibold text-white rounded-full ${
-                  user.Status === "APPROVED"
-                    ? "bg-green-500"
-                    : user.Status === "PENDING"
+                className={`inline-block px-2 py-1 text-xs font-semibold text-white rounded-full ${user.Status === "APPROVED"
+                  ? "bg-green-500"
+                  : user.Status === "PENDING"
                     ? "bg-yellow-500"
                     : "bg-red-500"
-                }`}
+                  }`}
               >
                 {user.Status === "APPROVED"
                   ? "ยืนยันแล้ว"
                   : user.Status === "PENDING"
-                  ? "รอดำเนินการ"
-                  : "ถูกปฏิเสธ"}
+                    ? "รอดำเนินการ"
+                    : "ถูกปฏิเสธ"}
               </span>
             </p>
           </div>

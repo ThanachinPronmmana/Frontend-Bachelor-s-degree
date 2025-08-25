@@ -46,7 +46,7 @@ export const buyerSchema = z
       })
       .optional(),
 
-    Occaaption: z
+    Occupation: z
       .string()
       .transform((val) => val.trim())
       .refine((val) => val === "" || val.length >= 2, {
@@ -57,19 +57,40 @@ export const buyerSchema = z
       })
       .optional(),
     Monthly_Income: z
-      .string()
-      .optional()
-      .refine((val) => !val || !isNaN(Number(val)), {
-        message: "ข้อมูลไม่ใช่ตัวเลข",
-      })
-      .transform((val) => (val ? Number(val) : undefined)),
+      .preprocess(
+        (val) => (val !== null && val !== undefined ? String(val).trim() : val),
+        z.string()
+          .optional()
+          .refine((val) => !val || !isNaN(Number(val)), {
+            message: "ข้อมูลรายได้ต้องเป็นตัวเลข",
+          })
+          .transform((val) => (val ? Number(val) : undefined))
+      ),
     Family_Size: z
-      .string()
-      .optional()
-      .refine((val) => !val || !isNaN(Number(val)), {
-        message: "Family Size must be a number",
-      })
-      .transform((val) => (val ? Number(val) : undefined)),
+      .preprocess(
+        // ขั้นตอนเตรียมข้อมูล: เหมือนกับด้านบน
+        (val) => (val !== null && val !== undefined ? String(val).trim() : val),
+        z.string()
+          .optional()
+          // refine: เช็คว่าเป็นค่าว่าง หรือ เป็นสตริงที่ประกอบด้วยตัวเลขจำนวนเต็มเท่านั้น
+          .refine((val) => !val || /^\d+$/.test(val), {
+            message: "ขนาดครอบครัวต้องเป็นเลขจำนวนเต็ม",
+          })
+          // ใช้ parseInt() เพื่อแปลงค่าเป็นจำนวนเต็ม (integer)
+          .transform((val) => (val ? parseInt(val, 10) : undefined))
+      ),
+    Family_Size: z
+      .preprocess(
+        (val) => (val !== null && val !== undefined ? String(val).trim() : val),
+        z.string()
+          .optional()
+          .refine((val) => !val || /^\d+$/.test(val), {
+            message: "ขนาดครอบครัวต้องเป็นเลขจำนวนเต็ม",
+          })
+          .transform((val) => (val ? parseInt(val, 10) : undefined)) // แปลงเป็น Integer
+      ),
+    // --- สิ้นสุดส่วนที่แก้ไข ---
+
     DateofBirth: z.string().optional(),
     Parking_Needs: z.string().optional(),
     Nearby_Facilities: z.string().optional(),

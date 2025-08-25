@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-
-const Formuploadimage = ({ userId, onUploadSuccess }) => {
+import { updateImage } from "@/api/user";
+import { CircleX, Loader2, FormInput, Pencil } from "lucide-react";
+const Formuploadimage = ({ onUploadSuccess }) => {
   const {
     register,
     handleSubmit,
@@ -20,20 +21,14 @@ const Formuploadimage = ({ userId, onUploadSuccess }) => {
 
     const formData = new FormData();
     formData.append("image", data.image[0]);
-    formData.append("userId", userId);
+
 
     try {
       setUploading(true);
-      const result = await axios.post(
-        `http://localhost:8200/api/image/${userId}`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const result = await updateImage(formData)
 
       if (onUploadSuccess) {
-        onUploadSuccess(result.data.image);
+        onUploadSuccess(result.image);
       }
     } catch (err) {
       console.error("Upload failed:", err);
@@ -70,9 +65,14 @@ const Formuploadimage = ({ userId, onUploadSuccess }) => {
         <button
           type="submit"
           disabled={uploading}
-          className="px-4 py-2 bg-[#2C3E50] text-white rounded hover:bg-[#1a252f] max-w-30"
+          className="px-4 py-2 bg-[#2C3E50] text-white rounded hover:bg-[#1a252f] max-w-30 flex justify-center items-center"
         >
-          Upload
+          {uploading ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            "Submit"
+          )
+          }
         </button>
 
         {uploading && <p className="text-sm text-gray-500">กำลังอัปโหลด...</p>}
